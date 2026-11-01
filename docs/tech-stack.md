@@ -1,5 +1,7 @@
 # Tech Stack
 
+All Python code runs on Python 3.11.
+
 ## 1. Data acquisition
 
 | Need | Tool |
@@ -20,6 +22,7 @@
 | Vectors and boundaries | geopandas, shapely |
 | Resampling to a common grid | Earth Engine reduceResolution / reproject, or rioxarray |
 | Storage of outputs | Parquet (features), GeoJSON (map layers) |
+| Map overlay compression | pngquant or Pillow |
 
 ## 3. Science and modeling
 
@@ -27,10 +30,13 @@
 | --- | --- |
 | Season clustering, baseline vs stronger model | scikit-learn |
 | Stronger model | LightGBM |
+| Hyperparameter tuning | Optuna |
 | Explainability for strategy cards | SHAP |
+| Sensitivity analysis | SALib, or a simple loop in Python |
 | Water balance | Plain Python implementing FAO-56 |
 | Crop knowledge base | FAO ECOCROP plus a hand-built YAML or JSON rules file |
 | Notebooks (also proof for judges) | Jupyter |
+| Notebook charts | matplotlib |
 
 ## 4. Backend
 
@@ -60,3 +66,7 @@
 | End to end and mobile checks | Playwright |
 | Data checks (no nulls, ranges sane) | pandera or plain pytest asserts |
 | Linting and formatting | Ruff |
+| Type checking | mypy on `model/` and `api/` |
+| Pre-commit checks | pre-commit, running Ruff and mypy |
+| CI | GitHub Actions, running Ruff, mypy, and pytest |
+| Profiling | py-spy, `time.perf_counter`, `%timeit` |

@@ -12,6 +12,10 @@ The tool supports farmers' judgment and local expertise. It does not replace the
 - [Tech stack](docs/tech-stack.md): the tools for each part of the build
 - [Model evaluation](docs/model-evaluation.md): how we test each model, with metrics and tools
 - [Map architecture](docs/map-architecture.md): map layers, the PNG and GeoJSON split, and API endpoints
+- [Engineering standards](docs/engineering-standards.md): the rules every line of code must follow to merge
+- [Data contract](docs/data-contract.md): the schema shared between the data, modeling, API, and frontend tracks
+- [Data sources](docs/sources.md): every dataset we use, with version and access details
+- [Experiment log](docs/experiments.csv): every model run and its held-out results
 
 ## Challenge summary
 

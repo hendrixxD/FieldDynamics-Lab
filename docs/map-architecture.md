@@ -43,19 +43,19 @@ Be honest in the map legend: SMAP soil moisture is natively about 9 km, so at 1 
 | --- | --- | --- |
 | `/static/layers/state/{layer}.png` | Coloured state image | Map first loads |
 | `/static/layers/lga/{lga}/{layer}.png` | Coloured LGA image | LGA selected |
-| `/layers/{lga}/grid.geojson` | Cells with all values as properties | LGA selected |
-| `/point?lat=&lon=` | Values for one location | Fallback tap outside the grid, or a farmer pinning their field |
-| `/legend/{layer}` | Colour scale and units | Legend panel |
+| `/api/layers/{lga}/grid.geojson` | Cells with all values as properties | LGA selected |
+| `/api/point?lat=&lon=` | Values for one location | Fallback tap outside the grid, or a farmer pinning their field |
+| `/api/legend/{layer}` | Colour scale and units | Legend panel |
 
-All PNGs and GeoJSON are precomputed by the data pipeline and stored as static files. Only `/point` and the scoring run live.
+All PNGs and GeoJSON are precomputed by the data pipeline and stored as static files. Only `/api/point` and the scoring run live.
 
 ### How the pipeline produces them
 
 1. Harmonized rasters (from the data track) are clipped to the state and to each LGA.
 2. A Python script applies one fixed colour scale per layer and writes the PNGs, plus the bounding box for each.
 3. The same script turns each LGA's 1 km raster into grid cells and writes the GeoJSON, with every layer's value stored on each cell.
-4. One command regenerates everything, so if the model changes on day 1, the map updates with it.
+4. One command, `python -m model.build`, regenerates everything, so if the model changes on day 1, the map updates with it.
 
 ### One rule for the team
 
-The colour scale lives in one config file, used both by the PNG script and by the legend endpoint. If those two drift apart, the map shows one thing and the legend says another, and that's the kind of bug a judge notices in a 30-second video.
+The colour scale lives in one config file, `config/layers.yaml`, used both by the PNG script and by the legend endpoint. If those two drift apart, the map shows one thing and the legend says another, and that's the kind of bug a judge notices in a 30-second video.

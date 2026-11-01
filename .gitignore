@@ -1,0 +1,39 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Data: raw pulls are never committed
+data/raw/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Tool caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Tailwind standalone CLI binary
+tailwindcss
+tailwindcss-*
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
