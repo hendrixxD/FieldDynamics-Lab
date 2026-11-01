@@ -46,7 +46,7 @@ Treat "you may" and "consider" as expected deliverables, not optional extras. Do
 ## Repository structure
 
 ```text
-fielddynamics/
+FieldDynamics-Lab/
 ├── data/          # pipeline scripts: extract, harmonize, features
 ├── model/         # clustering, vulnerability model, water balance, scoring
 ├── api/           # FastAPI app, routes, schemas
