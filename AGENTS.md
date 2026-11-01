@@ -16,6 +16,7 @@ The tool supports farmer judgment and local expertise. It never replaces them, a
 - **Branches:** never commit directly to `main`, `staging`, `feat`, or `fix`, and never merge a PR. See [Git workflow](#git-workflow).
 - **Data:** never use placeholder or made-up data. Leave a value blank until it comes from a real source.
 - **Secrets:** keep secrets in `.env` only. Never commit them.
+- **Committed files:** never assume `.env` or any other file is not committed. Check and confirm. See [Check before you commit](#check-before-you-commit).
 - **Naming:** always call the official challenge statement the **first principle validative measure**.
 
 ## How to read the requirements
@@ -70,6 +71,28 @@ Long-lived branches are `main`, `staging`, `feat`, and `fix`.
 Use hyphens, not slashes. Because a branch named `feat` exists, git cannot create `feat/something`.
 
 Keep PRs small enough to review in 10 minutes. The reviewer uses the checklist in section 7 of the [engineering standards](docs/engineering-standards.md).
+
+### Check before you commit
+
+Never assume a file is safe because it is listed in `.gitignore`. A file that was already tracked stays tracked, and an ignore rule can be wrong. Run these checks and read the output every time:
+
+```bash
+# Files about to be committed
+git diff --cached --name-only
+
+# Whether a file is tracked now
+git ls-files -- .env
+
+# Whether a file was ever committed, on any branch
+git log --all --oneline -- .env
+
+# Whether a file is really ignored, and by which rule
+git check-ignore -v .env
+```
+
+Run them for `.env` and for any file that could hold secrets or raw data. Only say a file is not committed after these checks confirm it.
+
+If a secret was ever committed, stop and tell Hendrixx. Treat it as exposed and replace it. Deleting the file does not remove it from git history.
 
 ## Working on code
 
