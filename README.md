@@ -9,6 +9,7 @@ The tool supports farmers' judgment and local expertise. It does not replace the
 - [Competition requirements](docs/competition-requirements.md): the full brief
 - [Deliverables](docs/deliverables.md): the checklist we work through
 - [Tech stack](docs/tech-stack.md): the tools for each part of the build
+- [Model evaluation](docs/model-evaluation.md): how we test each model, with metrics and tools
 
 ## Challenge summary
 
