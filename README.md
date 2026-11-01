@@ -1,13 +1,14 @@
 # FieldDynamics-Lab
 
-Our entry for the **NASA Space Apps Challenge 2026**, **FieldShift** challenge.
+Our entry for the **2026 NASA Space Apps Challenge**, **Field Shift: Adapting Farms with NASA Data** (FieldShift).
 
 We are building a decision-support tool that helps farmers explore crop rotation strategies, using NASA Earth observations together with local soil information, crop characteristics, and farmer priorities. Our state of interest is **Kaduna, Nigeria**.
 
 The tool supports farmers' judgment and local expertise. It does not replace them.
 
-- [Competition requirements](docs/competition-requirements.md): the full brief
-- [Deliverables](docs/deliverables.md): the checklist we work through
+- [First principle validative measure](docs/first-principle-validative-measure.md): the official challenge statement, which we use to check we aren't drifting from the core expectation
+- [Competition requirements](docs/competition-requirements.md): the team's working breakdown of the brief
+- [Deliverables](docs/deliverables.md): the checklist that guides what we build
 - [Tech stack](docs/tech-stack.md): the tools for each part of the build
 - [Model evaluation](docs/model-evaluation.md): how we test each model, with metrics and tools
 - [Map architecture](docs/map-architecture.md): map layers, the PNG and GeoJSON split, and API endpoints
