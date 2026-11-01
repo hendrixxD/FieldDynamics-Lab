@@ -10,6 +10,7 @@ The tool supports farmers' judgment and local expertise. It does not replace the
 - [Deliverables](docs/deliverables.md): the checklist we work through
 - [Tech stack](docs/tech-stack.md): the tools for each part of the build
 - [Model evaluation](docs/model-evaluation.md): how we test each model, with metrics and tools
+- [Map architecture](docs/map-architecture.md): map layers, the PNG and GeoJSON split, and API endpoints
 
 ## Challenge summary
 
