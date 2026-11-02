@@ -122,7 +122,24 @@ uv pip install -r requirements-dev.txt
 .venv/bin/pre-commit install
 ```
 
-CI on GitHub Actions runs on every PR and on pushes to `main`, `staging`, `feat`, and `fix`. Its four checks are Ruff, mypy, pytest, and Tracked files, which fails if env files or raw data are tracked or anywhere in history. Do not merge a PR with a red check.
+CI on GitHub Actions runs on every PR and on pushes to `main`, `staging`, `feat`, and `fix`. Its five checks are Ruff, mypy, pytest, Dependency versions, and Tracked files. Dependency versions fails if the requirements files are stale or hand-edited, the installed versions differ from them, packages conflict, or the Ruff and mypy versions in pre-commit differ from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Do not merge a PR with a red check.
+
+### Dependencies
+
+Every Python library version is pinned, including the packages our libraries depend on. `requirements.in` lists the libraries we choose for the app and pipeline, and `requirements-dev.in` adds testing and tooling. `requirements.txt` and `requirements-dev.txt` are generated from them, so never edit those two by hand.
+
+To add or upgrade a library, edit the `.in` file if needed, then run one of these from the activated `.venv` and commit the `.in` and `.txt` changes together:
+
+```bash
+# After adding or removing a library
+bash .github/scripts/lock-requirements.sh
+
+# Upgrade one library, or all of them
+bash .github/scripts/lock-requirements.sh --upgrade-package pandas
+bash .github/scripts/lock-requirements.sh --upgrade
+```
+
+If Ruff or mypy changes version, update its `rev` in `.pre-commit-config.yaml` in the same PR. New libraries also go in `tests/test_dependencies.py` and the [tech stack](docs/tech-stack.md).
 
 ### Code rules
 
@@ -237,7 +254,7 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 ## Open items
 
 - The repo is private and must be made public before submission.
-- Branch protection is unavailable while the repo is private on the free plan, so GitHub cannot block a red merge. Enable it when the repo goes public, requiring the four CI checks.
+- Branch protection is unavailable while the repo is private on the free plan, so GitHub cannot block a red merge. Enable it when the repo goes public, requiring the five CI checks.
 - The data contract is a draft. Confirm it against real data at first pull.
 - Choose GADM or geoBoundaries for LGA boundaries. The tech stack lists both, while the map architecture uses geoBoundaries.
 - Decide whether `data/processed/` stays in git if the files get large.
