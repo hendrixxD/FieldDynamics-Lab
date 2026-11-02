@@ -1,0 +1,77 @@
+name: Deploy
+
+# This is the only route to Vercel: the project has no Git link, so nothing builds on push.
+# workflow_run runs this file as it is on main, after CI, so a PR cannot edit it to reach the
+# token. The vercel environment only releases the token to runs on main.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_ORG_ID: team_AXYj3X6C7YO2IS5KRQIgIsni
+  VERCEL_PROJECT_ID: prj_FYldY9JbgsQE1hlYZCOsSxLlRQxz
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    # Forks are excluded by repository, because a fork can name its own branch main.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment: vercel
+    permissions:
+      checks: read
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            api.github.com:443
+            github.com:443
+            *.actions.githubusercontent.com:443
+            registry.npmjs.org:443
+            vercel.com:443
+            *.vercel.com:443
+            *.vercel.app:443
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Wait for the checks outside CI
+        if: github.event.workflow_run.event == 'pull_request'
+        run: bash .github/scripts/wait-for-checks.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+      - name: Fetch the commit to deploy
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          path: source
+          persist-credentials: false
+      # --ignore-scripts stops packages running code on install, next to the Vercel token.
+      - run: npm ci --ignore-scripts --prefix .github/deploy
+      - name: Deploy
+        id: deploy
+        run: bash .github/scripts/deploy-vercel.sh
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PRODUCTION: >-
+            ${{ github.event.workflow_run.event == 'push' &&
+            github.event.workflow_run.head_branch == 'main' }}
+      - name: Post the preview link
+        if: github.event.workflow_run.pull_requests[0].number
+        run: >-
+          gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --edit-last --create-if-none
+          --body "Preview for $HEAD_SHA, deployed after all checks passed: $DEPLOY_URL"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.url }}

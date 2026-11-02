@@ -16,6 +16,7 @@ The tool supports farmer judgment and local expertise. It never replaces them, a
 - **Branches:** never commit directly to `main` or `staging`, and never merge a PR. See [Git workflow](#git-workflow).
 - **Data:** never use placeholder or made-up data. Leave a value blank until it comes from a real source.
 - **Secrets:** keep secrets in `.env` only. Never commit them.
+- **Supply chain:** never weaken a security check to get a PR through. See [Supply chain security](#supply-chain-security).
 - **Committed files:** never assume `.env` or any other file is not committed. Check and confirm. See [Check before you commit](#check-before-you-commit).
 - **Naming:** always call the official challenge statement the **first principle validative measure**.
 
@@ -65,7 +66,7 @@ The two long-lived branches are `main` and `staging`.
 
 1. Cut a short-lived branch from `staging`, named `feat-name_of_feat` or `fix-name_of_fix`. Use lowercase letters and digits, separated by underscores or hyphens.
 2. Open a PR from it into `staging` and fill in the PR template, which loads automatically. Tick whether it is a fix or a new feature, and its level of impact.
-3. Vercel posts a preview link on the PR.
+3. Once every check passes, the Deploy workflow posts a preview link on the PR.
 4. Hendrixx reviews it and merges to `staging`.
 5. If checks pass, Hendrixx merges `staging` to `main`.
 
@@ -75,7 +76,11 @@ Keep PRs small enough to review in 10 minutes. The reviewer uses the checklist i
 
 ### Preview links
 
-Every branch pushed to GitHub gets a Vercel preview deployment. `Dockerfile.vercel` builds it as a container because Vercel's Python runtime starts at 3.12 and we pin 3.11. It installs the libraries in `requirements-serve.in`, with versions constrained by `requirements.txt`. When the app starts importing another library, add it to `requirements-serve.in`, and add any new folder the app reads to the `COPY` lines.
+The Deploy workflow is the only route to Vercel. The Vercel project has no Git link, so nothing builds on push. When CI succeeds, and `Security gate` and `PR format` have passed for that commit, the workflow deploys it, tests `/api/health`, and comments the link on the PR. A merge to `main` deploys to production, and every other deployment is a preview.
+
+Only branches in this repo deploy, so only collaborators get previews. Fork PRs never do. The links themselves are public: anyone who has one can open it, and PR comments are public on this repo.
+
+Vercel installs `requirements-serve.txt`, the hashed subset of `requirements.txt` the app imports. When the app starts importing another library, add it to `requirements-serve.in` and run the lock script.
 
 ### Check before you commit
 
@@ -117,21 +122,21 @@ Write one small function at a time, with its test, using the standards, the data
 
 ### Tooling
 
-Python 3.11. Ruff for lint and format, with line length 100. mypy on `model/` and `api/`. pre-commit runs both before every commit, along with the tracked files check.
+Python 3.12, the oldest version Vercel supports. Ruff for lint and format, with line length 100. mypy on `model/` and `api/`. pre-commit runs both before every commit, along with the tracked files check.
 
 Set up once after cloning:
 
 ```bash
-uv venv --python 3.11 .venv
-uv pip install -r requirements-dev.txt
+uv venv --python 3.12 .venv
+uv pip install --require-hashes --only-binary :all: -r requirements-dev.txt
 .venv/bin/pre-commit install
 ```
 
-CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its five checks are Ruff, mypy, pytest, Dependency versions, and Tracked files. PRs also run the PR format check. Dependency versions fails if the requirements files are stale or hand-edited, the installed versions differ from them, packages conflict, or the Ruff and mypy versions in pre-commit differ from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Do not merge a PR with a red check.
+CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its six checks are Security scan, Ruff, mypy, pytest, Dependency versions, and Tracked files. Security scan runs first and nothing installs until it passes. PRs also run PR format and Security gate. Dependency versions fails if the requirements files are stale or hand-edited, the installed versions differ from them, packages conflict, or the Ruff and mypy versions in pre-commit differ from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Rulesets on `main` and `staging` block merging a PR with a red check, for everyone.
 
 ### Dependencies
 
-Every Python library version is pinned, including the packages our libraries depend on. `requirements.in` lists the libraries we choose for the app and pipeline, and `requirements-dev.in` adds testing and tooling. `requirements.txt` and `requirements-dev.txt` are generated from them, so never edit those two by hand.
+Every Python library version is pinned, including the packages our libraries depend on. `requirements.in` lists the libraries we choose for the app and pipeline, and `requirements-dev.in` adds testing and tooling. `requirements-serve.in` lists what the deployed app needs. The three `.txt` files are generated with hashes, so never edit them by hand.
 
 To add or upgrade a library, edit the `.in` file if needed, then run one of these from the activated `.venv` and commit the `.in` and `.txt` changes together:
 
@@ -176,6 +181,21 @@ If Ruff or mypy changes version, update its `rev` in `.pre-commit-config.yaml` i
 - Load models and data once at startup.
 - The live scoring endpoint must respond in under 200 ms.
 - First page load stays under 1 MB, excluding map tiles.
+
+### Supply chain security
+
+Treat every PR as hostile, including its workflow files. A compromised package runs with whatever is in its environment, so the aim is that it never installs, and that it can reach nothing if it does.
+
+- **Security gate** runs from the target branch through `pull_request_target`, so a PR cannot weaken its own scan. It reads the PR as git objects. Never add a step to it that checks out or runs PR code.
+- `.github/scripts/security_scan.py` uses only the standard library, so it runs before anything is installed. It stops env dumping, credential file reads, exfiltration hosts, hidden code, `.pth` files, install-time files, unpinned actions, new privileged triggers, and any package source outside PyPI. It checks every pin against OSV, and each new pin against PyPI for its hashes, yanked status, and age.
+- Packages install from hashes and wheels only, so no `setup.py` runs.
+- New versions wait 7 days. For a security fix that cannot wait, add the exact version to `.github/cooldown-exempt.txt`, and delete the line once it has aged. Every other check still applies.
+- Runners in CI can only reach an allowlist, set with `harden-runner`. PR jobs hold no secrets.
+- Actions and pre-commit hooks are pinned to full commit SHAs. Keep third-party actions to the minimum.
+- `VERCEL_TOKEN` lives in the `vercel` environment, which only releases it to runs on `main`.
+- `.github/CODEOWNERS` lists the files that can weaken these checks.
+
+If a scan flags something you did not expect, stop and tell Hendrixx. Do not edit the rule or the exemption list to clear it.
 
 ## Data pipeline
 
@@ -258,8 +278,6 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 
 ## Open items
 
-- The repo is private and must be made public before submission.
-- Branch protection is unavailable while the repo is private on the free plan, so GitHub cannot block a red merge. Enable it when the repo goes public, requiring the five CI checks and the PR format check.
 - The data contract is a draft. Confirm it against real data at first pull.
 - Choose GADM or geoBoundaries for LGA boundaries. The tech stack lists both, while the map architecture uses geoBoundaries.
 - Decide whether `data/processed/` stays in git if the files get large.

@@ -1,0 +1,38 @@
+name: Security gate
+
+# pull_request_target runs this file and the scanner as they are on the target branch, so a PR
+# cannot weaken its own scan. That trigger is only safe because the PR's code is never checked
+# out or run: it is fetched as git objects and read. Never add a step that executes it.
+on:
+  pull_request_target:
+    branches: [main, staging]
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: Security gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            api.github.com:443
+            github.com:443
+            *.actions.githubusercontent.com:443
+            pypi.org:443
+            api.osv.dev:443
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: git fetch --no-tags origin "pull/${PR_NUMBER}/head"
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+      - run: python3 .github/scripts/security_scan.py --base "$BASE_SHA" --head "$HEAD_SHA"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}

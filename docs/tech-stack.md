@@ -1,6 +1,6 @@
 # Tech Stack
 
-All Python code runs on Python 3.11.
+All Python code runs on Python 3.12.
 
 ## 1. Data acquisition
 
@@ -45,7 +45,7 @@ All Python code runs on Python 3.11.
 | Need | Tool |
 | --- | --- |
 | API and page rendering | FastAPI, Uvicorn |
-| PR preview hosting | Vercel, as a Python 3.11 container from `Dockerfile.vercel` |
+| Preview and production hosting | Vercel Python runtime, deployed by `.github/workflows/deploy.yml` |
 | Templates | Jinja2 |
 | Request and data validation | Pydantic |
 | Settings and `.env` | pydantic-settings, python-dotenv, PyYAML for `config/` |

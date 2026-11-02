@@ -1,18 +1,18 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.3
+    rev: f368fb366ff7f2f808dd324b83a6d32267799e19  # frozen: v0.17.2
     hooks:
       - id: ruff-check
       - id: ruff-format
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.1
+    rev: 2834ec6639549dd6796205c8f011dedcd587288b  # frozen: v2.4.0
     hooks:
       - id: mypy
         args: [model, api]
         pass_filenames: false
         # The hook runs in its own environment, so api/ needs its typed libraries installed here.
         # Keep these versions equal to requirements.txt.
-        additional_dependencies: [fastapi==0.162.0, pydantic==2.14.2]
+        additional_dependencies: [fastapi==0.162.0, pydantic==2.14.1]
   - repo: local
     hooks:
       - id: tracked-files

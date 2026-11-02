@@ -1,0 +1,7 @@
+# Changes here can weaken the security checks or reach the deploy token, so the owner reviews them.
+/.github/                 @hendrixxD
+/requirements*            @hendrixxD
+/pyproject.toml           @hendrixxD
+/.pre-commit-config.yaml  @hendrixxD
+/.vercelignore            @hendrixxD
+/.python-version          @hendrixxD
