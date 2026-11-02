@@ -10,6 +10,9 @@ repos:
       - id: mypy
         args: [model, api]
         pass_filenames: false
+        # The hook runs in its own environment, so api/ needs its typed libraries installed here.
+        # Keep these versions equal to requirements.txt.
+        additional_dependencies: [fastapi==0.162.0, pydantic==2.14.2]
   - repo: local
     hooks:
       - id: tracked-files

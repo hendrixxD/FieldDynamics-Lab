@@ -1,0 +1,21 @@
+name: PR
+
+on:
+  pull_request:
+    # edited reruns the check when the description is fixed, which CI's default types would miss.
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    name: PR format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - run: bash .github/scripts/check-pr.sh
+        env:
+          PR_HEAD: ${{ github.head_ref }}
+          PR_BASE: ${{ github.base_ref }}
+          PR_BODY: ${{ github.event.pull_request.body }}

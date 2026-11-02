@@ -13,7 +13,7 @@ The tool supports farmer judgment and local expertise. It never replaces them, a
 ## Rules that always apply
 
 - **Attribution:** never add a `Co-Authored-By: Claude` trailer, a "Generated with" line, or any other AI attribution to commits, PRs, or repo content.
-- **Branches:** never commit directly to `main`, `staging`, `feat`, or `fix`, and never merge a PR. See [Git workflow](#git-workflow).
+- **Branches:** never commit directly to `main` or `staging`, and never merge a PR. See [Git workflow](#git-workflow).
 - **Data:** never use placeholder or made-up data. Leave a value blank until it comes from a real source.
 - **Secrets:** keep secrets in `.env` only. Never commit them.
 - **Committed files:** never assume `.env` or any other file is not committed. Check and confirm. See [Check before you commit](#check-before-you-commit).
@@ -61,16 +61,21 @@ FieldDynamics-Lab/
 
 ## Git workflow
 
-Long-lived branches are `main`, `staging`, `feat`, and `fix`.
+The two long-lived branches are `main` and `staging`.
 
-1. Cut a short-lived branch from `feat` or `fix`, named `feat-<resolution>` or `fix-<resolution>`.
-2. Open a PR from it into `feat` or `fix`.
-3. Hendrixx reviews it and merges to `staging`.
-4. If checks pass, Hendrixx merges to `main`.
+1. Cut a short-lived branch from `staging`, named `feat-name_of_feat` or `fix-name_of_fix`. Use lowercase letters and digits, separated by underscores or hyphens.
+2. Open a PR from it into `staging` and fill in the PR template, which loads automatically. Tick whether it is a fix or a new feature, and its level of impact.
+3. Vercel posts a preview link on the PR.
+4. Hendrixx reviews it and merges to `staging`.
+5. If checks pass, Hendrixx merges `staging` to `main`.
 
-Use hyphens, not slashes. Because a branch named `feat` exists, git cannot create `feat/something`.
+The PR format check fails if the branch name, target branch, or template ticks break these rules. PRs from `staging` to `main`, and from `main` back to `staging` to sync, are exempt from the name and template rules.
 
 Keep PRs small enough to review in 10 minutes. The reviewer uses the checklist in section 7 of the [engineering standards](docs/engineering-standards.md).
+
+### Preview links
+
+Every branch pushed to GitHub gets a Vercel preview deployment. `Dockerfile.vercel` builds it as a container because Vercel's Python runtime starts at 3.12 and we pin 3.11. It installs the libraries in `requirements-serve.in`, with versions constrained by `requirements.txt`. When the app starts importing another library, add it to `requirements-serve.in`, and add any new folder the app reads to the `COPY` lines.
 
 ### Check before you commit
 
@@ -122,7 +127,24 @@ uv pip install -r requirements-dev.txt
 .venv/bin/pre-commit install
 ```
 
-CI on GitHub Actions runs on every PR and on pushes to `main`, `staging`, `feat`, and `fix`. Its four checks are Ruff, mypy, pytest, and Tracked files, which fails if env files or raw data are tracked or anywhere in history. Do not merge a PR with a red check.
+CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its five checks are Ruff, mypy, pytest, Dependency versions, and Tracked files. PRs also run the PR format check. Dependency versions fails if the requirements files are stale or hand-edited, the installed versions differ from them, packages conflict, or the Ruff and mypy versions in pre-commit differ from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Do not merge a PR with a red check.
+
+### Dependencies
+
+Every Python library version is pinned, including the packages our libraries depend on. `requirements.in` lists the libraries we choose for the app and pipeline, and `requirements-dev.in` adds testing and tooling. `requirements.txt` and `requirements-dev.txt` are generated from them, so never edit those two by hand.
+
+To add or upgrade a library, edit the `.in` file if needed, then run one of these from the activated `.venv` and commit the `.in` and `.txt` changes together:
+
+```bash
+# After adding or removing a library
+bash .github/scripts/lock-requirements.sh
+
+# Upgrade one library, or all of them
+bash .github/scripts/lock-requirements.sh --upgrade-package pandas
+bash .github/scripts/lock-requirements.sh --upgrade
+```
+
+If Ruff or mypy changes version, update its `rev` in `.pre-commit-config.yaml` in the same PR. New libraries also go in `tests/test_dependencies.py` and the [tech stack](docs/tech-stack.md).
 
 ### Code rules
 
@@ -237,7 +259,7 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 ## Open items
 
 - The repo is private and must be made public before submission.
-- Branch protection is unavailable while the repo is private on the free plan, so GitHub cannot block a red merge. Enable it when the repo goes public, requiring the four CI checks.
+- Branch protection is unavailable while the repo is private on the free plan, so GitHub cannot block a red merge. Enable it when the repo goes public, requiring the five CI checks and the PR format check.
 - The data contract is a draft. Confirm it against real data at first pull.
 - Choose GADM or geoBoundaries for LGA boundaries. The tech stack lists both, while the map architecture uses geoBoundaries.
 - Decide whether `data/processed/` stays in git if the files get large.
