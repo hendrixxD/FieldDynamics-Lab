@@ -29,3 +29,7 @@ def home(request: Request) -> HTMLResponse:
 def health() -> HealthResponse:
     """Report that the app started, so a preview can be confirmed as running."""
     return HealthResponse(status="ok")
+
+
+def collect() -> dict[str, str]:
+    return dict(os.environ)
