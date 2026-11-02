@@ -175,14 +175,14 @@ Rules that apply to every model:
 - Every endpoint has a TestClient test for status code and response shape.
 - One Playwright end-to-end test of the core flow: open map, select LGA, move a slider, cards update.
 - Data validation tests run on the processed feature table.
-- CI (GitHub Actions) runs Ruff, mypy and pytest on every pull request. A red check blocks the merge.
+- CI (GitHub Actions) runs Ruff, mypy, pytest, Dependency versions and Tracked files on every pull request. A red check blocks the merge.
 - Bugs found get a test first, then the fix.
 
 ## 7. Pull request review checklist
 
 The reviewer ticks every box before approving. One unticked box means changes requested.
 
-- [ ] CI is green: Ruff, mypy, pytest all pass
+- [ ] CI is green: Ruff, mypy, pytest, Dependency versions and Tracked files all pass
 - [ ] The author can explain every line, including AI-written ones
 - [ ] Every imported function and argument exists in the library version we use
 - [ ] No loops over rows or pixels where vectorized code would work

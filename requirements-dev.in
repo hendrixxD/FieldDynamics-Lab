@@ -1,0 +1,18 @@
+# Testing and tooling, on top of everything in requirements.in. Versions are pinned in
+# requirements-dev.txt, which is generated from this file: after editing, run
+# bash .github/scripts/lock-requirements.sh
+
+-r requirements.in
+# Shared packages must resolve to the same version in both generated files.
+-c requirements.txt
+
+# httpx is required by the FastAPI TestClient.
+httpx
+mypy
+playwright
+pre-commit
+py-spy
+pytest
+pytest-playwright
+ruff
+uv

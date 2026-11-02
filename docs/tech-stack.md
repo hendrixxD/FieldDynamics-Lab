@@ -18,10 +18,10 @@ All Python code runs on Python 3.11.
 | Need | Tool |
 | --- | --- |
 | Tables | pandas |
-| Gridded data | xarray, rioxarray |
+| Gridded data | xarray, rioxarray, dask for lazy loading |
 | Vectors and boundaries | geopandas, shapely |
 | Resampling to a common grid | Earth Engine reduceResolution / reproject, or rioxarray |
-| Storage of outputs | Parquet (features), GeoJSON (map layers) |
+| Storage of outputs | Parquet via pyarrow (features), GeoJSON (map layers) |
 | Map overlay compression | pngquant or Pillow |
 
 ## 3. Science and modeling
@@ -32,6 +32,8 @@ All Python code runs on Python 3.11.
 | Stronger model | LightGBM |
 | Hyperparameter tuning | Optuna |
 | Explainability for strategy cards | SHAP |
+| NDVI smoothing | SciPy (Savitzky-Golay filter) |
+| Long-term water trend | pyMannKendall |
 | Sensitivity analysis | SALib, or a simple loop in Python |
 | Water balance | Plain Python implementing FAO-56 |
 | Crop knowledge base | FAO ECOCROP plus a hand-built YAML or JSON rules file |
@@ -45,6 +47,7 @@ All Python code runs on Python 3.11.
 | API and page rendering | FastAPI, Uvicorn |
 | Templates | Jinja2 |
 | Request and data validation | Pydantic |
+| Settings and `.env` | pydantic-settings, python-dotenv, PyYAML for `config/` |
 | Hausa and English text | JSON dictionaries passed into Jinja |
 
 ## 5. Frontend
@@ -62,11 +65,12 @@ All Python code runs on Python 3.11.
 
 | Need | Tool |
 | --- | --- |
-| Backend tests | pytest, FastAPI TestClient |
-| End to end and mobile checks | Playwright |
+| Backend tests | pytest, FastAPI TestClient (needs httpx) |
+| End to end and mobile checks | Playwright, pytest-playwright |
 | Data checks (no nulls, ranges sane) | pandera or plain pytest asserts |
 | Linting and formatting | Ruff |
 | Type checking | mypy on `model/` and `api/` |
 | Pre-commit checks | pre-commit, running Ruff and mypy |
-| CI | GitHub Actions, running Ruff, mypy, and pytest |
+| Dependency pinning | uv, `requirements.in` compiled to `requirements.txt` |
+| CI | GitHub Actions, running Ruff, mypy, pytest, Dependency versions, and Tracked files |
 | Profiling | py-spy, `time.perf_counter`, `%timeit` |

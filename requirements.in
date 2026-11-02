@@ -1,0 +1,48 @@
+# Libraries the project chooses directly. Versions are pinned in requirements.txt, which is
+# generated from this file: after editing, run bash .github/scripts/lock-requirements.sh
+
+# Data acquisition
+earthengine-api
+geemap
+requests
+
+# Data processing and harmonization
+# dask backs the lazy chunks= raster loading in docs/engineering-standards.md.
+dask
+geopandas
+numpy
+pandas
+pillow
+# pyarrow is the Parquet engine for the feature tables.
+pyarrow
+rioxarray
+shapely
+xarray
+
+# Science and modeling
+lightgbm
+optuna
+# pandera validates processed data on load.
+pandera
+# pymannkendall provides the Mann-Kendall test with Sen's slope for the GRACE-FO trend.
+pymannkendall
+salib
+# scipy provides the Savitzky-Golay filter for NDVI smoothing.
+scipy
+scikit-learn
+shap
+
+# Notebooks
+jupyter
+matplotlib
+
+# Backend
+fastapi
+jinja2
+pydantic
+# pydantic-settings and python-dotenv back the single Settings class that reads .env.
+pydantic-settings
+python-dotenv
+# pyyaml reads the settings in config/.
+pyyaml
+uvicorn
