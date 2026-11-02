@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.4.1
+    hooks:
+      - id: mypy
+        args: [model, api]
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: tracked-files
+        name: Tracked files
+        entry: bash .github/scripts/check-tracked-files.sh
+        language: system
+        pass_filenames: false
+        always_run: true

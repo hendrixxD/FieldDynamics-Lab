@@ -6,6 +6,7 @@ We are building a decision-support tool that helps farmers explore crop rotation
 
 The tool supports farmers' judgment and local expertise. It does not replace them.
 
+- [AGENTS.md](AGENTS.md): project rules, workflow, and structure for contributors and AI agents
 - [First principle validative measure](docs/first-principle-validative-measure.md): the official challenge statement, which we use to check we aren't drifting from the core expectation
 - [Competition requirements](docs/competition-requirements.md): the team's working breakdown of the brief
 - [Deliverables](docs/deliverables.md): the checklist that guides what we build
