@@ -1,0 +1,27 @@
+[project]
+name = "fielddynamics-lab"
+version = "0.1.0"
+description = "Crop rotation decision support for Kaduna using NASA Earth observations"
+requires-python = ">=3.11,<3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# Each rule set backs a line in docs/engineering-standards.md:
+# E, F, I, UP, B: PEP 8 and common bugs
+# N: naming conventions
+# BLE, S110: no blind except or swallowed errors
+# T20: no debug prints
+# ERA: no commented-out code
+select = ["E", "F", "I", "UP", "B", "N", "BLE", "S110", "T20", "ERA"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"

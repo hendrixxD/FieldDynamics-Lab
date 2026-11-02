@@ -112,7 +112,17 @@ Write one small function at a time, with its test, using the standards, the data
 
 ### Tooling
 
-Python 3.11. Ruff for lint and format, with line length 100. mypy on `model/` and `api/`. pre-commit runs both. CI on GitHub Actions runs Ruff, mypy, and pytest on every PR, and a red check blocks the merge.
+Python 3.11. Ruff for lint and format, with line length 100. mypy on `model/` and `api/`. pre-commit runs both before every commit, along with the tracked files check.
+
+Set up once after cloning:
+
+```bash
+uv venv --python 3.11 .venv
+uv pip install -r requirements-dev.txt
+.venv/bin/pre-commit install
+```
+
+CI on GitHub Actions runs on every PR and on pushes to `main`, `staging`, `feat`, and `fix`. Its four checks are Ruff, mypy, pytest, and Tracked files, which fails if env files or raw data are tracked or anywhere in history. Do not merge a PR with a red check.
 
 ### Code rules
 
@@ -227,8 +237,7 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 ## Open items
 
 - The repo is private and must be made public before submission.
-- CI is not set up yet, so no checks run on PRs.
-- Branch protection is not set up, so the workflow is not enforced.
+- Branch protection is unavailable while the repo is private on the free plan, so GitHub cannot block a red merge. Enable it when the repo goes public, requiring the four CI checks.
 - The data contract is a draft. Confirm it against real data at first pull.
 - Choose GADM or geoBoundaries for LGA boundaries. The tech stack lists both, while the map architecture uses geoBoundaries.
 - Decide whether `data/processed/` stays in git if the files get large.
