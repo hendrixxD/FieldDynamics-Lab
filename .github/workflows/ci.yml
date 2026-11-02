@@ -4,7 +4,7 @@ on:
   pull_request:
   # Branch protection is unavailable on this private repo, so direct pushes are checked too.
   push:
-    branches: [main, staging, feat, fix]
+    branches: [main, staging]
 
 permissions:
   contents: read

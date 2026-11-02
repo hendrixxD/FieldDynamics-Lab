@@ -45,6 +45,7 @@ All Python code runs on Python 3.11.
 | Need | Tool |
 | --- | --- |
 | API and page rendering | FastAPI, Uvicorn |
+| PR preview hosting | Vercel, as a Python 3.11 container from `Dockerfile.vercel` |
 | Templates | Jinja2 |
 | Request and data validation | Pydantic |
 | Settings and `.env` | pydantic-settings, python-dotenv, PyYAML for `config/` |

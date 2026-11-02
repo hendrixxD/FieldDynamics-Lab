@@ -1,0 +1,8 @@
+# Libraries the deployed app imports. Dockerfile.vercel installs these with requirements.txt as
+# constraints, so versions stay pinned there and no separate lock file is needed. Add a library
+# here when api/ or anything it imports starts using it.
+
+fastapi
+jinja2
+pydantic
+uvicorn
