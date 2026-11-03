@@ -190,7 +190,8 @@ Treat every PR as hostile, including its workflow files. A compromised package r
 - `.github/scripts/security_scan.py` uses only the standard library, so it runs before anything is installed. It stops env dumping, credential file reads, exfiltration hosts, hidden code, `.pth` files, install-time files, unpinned actions, new privileged triggers, and any package source outside PyPI. It checks every pin against OSV, and each new pin against PyPI for its hashes, yanked status, and age.
 - Packages install from hashes and wheels only, so no `setup.py` runs.
 - New versions wait 7 days. For a security fix that cannot wait, add the exact version to `.github/cooldown-exempt.txt`, and delete the line once it has aged. Every other check still applies.
-- Runners in CI can only reach an allowlist, set with `harden-runner`. PR jobs hold no secrets.
+- PR jobs hold no secrets, and their token is read-only.
+- Every job has a time limit, and the first failed job cancels the rest of the run, so a failure shows within seconds and nothing hangs.
 - Actions and pre-commit hooks are pinned to full commit SHAs. Keep third-party actions to the minimum.
 - `VERCEL_TOKEN` lives in the `vercel` environment, which only releases it to runs on `main`.
 - `.github/CODEOWNERS` lists the files that can weaken these checks.
