@@ -1,0 +1,13 @@
+# Only what the deployed app reads goes to Vercel.
+.github/
+data/
+docs/
+notebooks/
+# Vercel installs from pyproject.toml when it exists, which would skip the hashed lock.
+pyproject.toml
+tests/
+requirements-dev.in
+requirements-dev.txt
+requirements-serve.in
+requirements-serve.txt
+requirements.in

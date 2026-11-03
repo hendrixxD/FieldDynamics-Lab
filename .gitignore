@@ -40,3 +40,6 @@ tailwindcss-*
 
 # Vercel CLI project link
 .vercel/
+
+# Vercel CLI for the Deploy workflow
+node_modules/

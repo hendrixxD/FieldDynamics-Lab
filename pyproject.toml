@@ -2,11 +2,11 @@
 name = "fielddynamics-lab"
 version = "0.1.0"
 description = "Crop rotation decision support for Kaduna using NASA Earth observations"
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.12,<3.13"
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 # Each rule set backs a line in docs/engineering-standards.md:
@@ -18,7 +18,7 @@ target-version = "py311"
 select = ["E", "F", "I", "UP", "B", "N", "BLE", "S110", "T20", "ERA"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 
 [tool.pytest.ini_options]
