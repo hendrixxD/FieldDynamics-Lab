@@ -23,4 +23,4 @@ Tick exactly one.
 
 ## Preview
 
-Vercel posts the preview link as a comment on this PR once the build finishes.
+The deploy workflow comments the preview link here once every check has passed.

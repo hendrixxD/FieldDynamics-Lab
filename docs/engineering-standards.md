@@ -33,7 +33,7 @@ How to prompt for better code: give the AI our standards file, the data contract
 
 ## 2. Code standards
 
-Tooling (enforced in CI, not optional): Python 3.11, Ruff for lint and format, mypy on `model/` and `api/`, pre-commit hooks running both before every commit.
+Tooling (enforced in CI, not optional): Python 3.12, Ruff for lint and format, mypy on `model/` and `api/`, pre-commit hooks running both before every commit.
 
 ### Style and naming
 
