@@ -10,6 +10,8 @@ runs:
         cache: pip
         cache-dependency-path: requirements-dev.txt
     # Wheels only, because a source package runs setup.py on install, with the job's environment.
+    # Short network limits make a stalled download fail in about a minute.
     - shell: bash
       run: |
-        pip install --require-hashes --only-binary :all: -r requirements-dev.txt
+        pip install --require-hashes --only-binary :all: --timeout 20 --retries 2 \
+          -r requirements-dev.txt

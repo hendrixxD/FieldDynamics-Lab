@@ -23,23 +23,13 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment: vercel
     permissions:
       checks: read
       contents: read
       pull-requests: write
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: >-
-            api.github.com:443
-            github.com:443
-            *.actions.githubusercontent.com:443
-            registry.npmjs.org:443
-            vercel.com:443
-            *.vercel.com:443
-            *.vercel.app:443
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false

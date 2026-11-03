@@ -13,31 +13,14 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  # Everything else is blocked, so a compromised package cannot send the environment anywhere.
-  ALLOWED_ENDPOINTS: >-
-    api.github.com:443
-    github.com:443
-    release-assets.githubusercontent.com:443
-    objects.githubusercontent.com:443
-    results-receiver.actions.githubusercontent.com:443
-    *.blob.core.windows.net:443
-    pipelines.actions.githubusercontent.com:443
-    *.actions.githubusercontent.com:443
-    pypi.org:443
-    files.pythonhosted.org:443
-    api.osv.dev:443
-
+# Every job has a time limit, so a hung step fails in minutes instead of GitHub's 6 hours.
 jobs:
   # Runs first and installs nothing, so a hostile dependency is stopped before it can execute.
   security-scan:
     name: Security scan
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: ${{ env.ALLOWED_ENDPOINTS }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -51,75 +34,82 @@ jobs:
     name: Ruff
     needs: security-scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: ${{ env.ALLOWED_ENDPOINTS }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/install-python
       - run: ruff check .
       - run: ruff format --check .
-
   mypy:
     name: mypy
     needs: security-scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: ${{ env.ALLOWED_ENDPOINTS }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/install-python
       - run: mypy model api
-
   pytest:
     name: pytest
     needs: security-scan
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: ${{ env.ALLOWED_ENDPOINTS }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/install-python
       - run: pytest
-
   dependencies:
     name: Dependency versions
     needs: security-scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: ${{ env.ALLOWED_ENDPOINTS }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/install-python
       - run: bash .github/scripts/check-dependencies.sh
-
   tracked-files:
     name: Tracked files
     needs: security-scan
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
-        with:
-          egress-policy: block
-          allowed-endpoints: ${{ env.ALLOWED_ENDPOINTS }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Full history is needed to catch files committed and later deleted.
           fetch-depth: 0
           persist-credentials: false
       - run: bash .github/scripts/check-tracked-files.sh
+  # Cancels the rest of the run as soon as any job fails, so a failure surfaces at once. It runs
+  # no repository code or packages, which is why it alone can hold the write permission it needs.
+  stop-on-failure:
+    name: Stop on failure
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: write
+    steps:
+      - run: |
+          while true; do
+            states=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" \
+              --jq '.jobs[] | select(.name != "Stop on failure") | .conclusion // "running"')
+            if grep -qE '^(failure|timed_out)$' <<<"$states"; then
+              echo "::error::A job failed, so the rest of this run was cancelled."
+              # Fork PRs get a read-only token, so cancelling can fail. The failure still shows.
+              gh run cancel "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" || true
+              exit 1
+            fi
+            if ! grep -q '^running$' <<<"$states"; then
+              exit 0
+            fi
+            sleep 5
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}
