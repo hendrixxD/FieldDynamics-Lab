@@ -4,7 +4,8 @@
 set -euo pipefail
 
 REQUIRED_CHECKS=("Security gate" "PR format")
-POLL_ATTEMPTS=20
+# Security gate has a 5-minute limit, so 6 minutes covers it finishing or timing out.
+POLL_ATTEMPTS=24
 POLL_SECONDS=15
 
 conclusions() {
