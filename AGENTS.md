@@ -193,7 +193,8 @@ Treat every PR as hostile, including its workflow files. A compromised package r
 - PR jobs hold no secrets, and their token is read-only.
 - Every job has a time limit, and the first failed job cancels the rest of the run, so a failure shows within seconds and nothing hangs.
 - Actions and pre-commit hooks are pinned to full commit SHAs. Keep third-party actions to the minimum.
-- `VERCEL_TOKEN` lives in the `vercel` environment, which only releases it to runs on `main`.
+- `VERCEL_TOKEN` lives in the `vercel` environment, which only releases it to runs on `main`. The deploy script, `.github/scripts/deploy_vercel.py`, calls Vercel's API with the standard library, so no third-party package runs next to the token.
+- The project has no JavaScript dependencies. The scan rejects any npm, yarn, pnpm, or bun manifest or lock file, because none of them is scanned.
 - `.github/CODEOWNERS` lists the files that can weaken these checks.
 
 If a scan flags something you did not expect, stop and tell Hendrixx. Do not edit the rule or the exemption list to clear it.

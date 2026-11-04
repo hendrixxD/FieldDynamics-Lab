@@ -32,7 +32,6 @@ SELF_PATHS = frozenset({".github/scripts/security_scan.py", "tests/test_security
 TRUSTED_WORKFLOWS = frozenset(
     {".github/workflows/security-gate.yml", ".github/workflows/deploy.yml"}
 )
-ALLOWED_PACKAGE_MANIFEST = ".github/deploy/package.json"
 ALLOWED_BINARY_SUFFIXES = frozenset(
     {".png", ".jpg", ".jpeg", ".gif", ".webp", ".pdf", ".ico", ".parquet", ".tif", ".tiff"}
 )
@@ -40,6 +39,18 @@ FORBIDDEN_SUFFIXES = frozenset(
     {".pth", ".whl", ".egg", ".so", ".pyd", ".pyc", ".dll", ".dylib", ".exe", ".bin"}
 )
 FORBIDDEN_NAMES = frozenset({"setup.py", ".npmrc", ".pypirc", "pip.conf", "pip.ini", "uv.toml"})
+# The project has no JavaScript dependencies, and their lock files are not scanned here.
+JS_MANIFESTS = frozenset(
+    {
+        "package.json",
+        "package-lock.json",
+        "npm-shrinkwrap.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "bun.lock",
+        "bun.lockb",
+    }
+)
 BLOB_SUFFIXES = frozenset(
     {".py", ".sh", ".yml", ".yaml", ".toml", ".js", ".ts", ".html", ".cfg", ".in"}
 )
@@ -143,8 +154,8 @@ def check_path(path: str, is_binary: bool) -> list[Finding]:
     findings = []
     if suffix in FORBIDDEN_SUFFIXES or name in FORBIDDEN_NAMES:
         findings.append(Finding(path, 0, "adds a file type that runs on install or import"))
-    if name == "package.json" and path != ALLOWED_PACKAGE_MANIFEST:
-        findings.append(Finding(path, 0, "adds a package manifest with install scripts"))
+    if name in JS_MANIFESTS:
+        findings.append(Finding(path, 0, "adds JavaScript dependencies, which no scan covers"))
     if name == ".env" or (name.startswith(".env.") and name != ".env.example"):
         findings.append(Finding(path, 0, "adds an env file"))
     if is_binary and suffix not in ALLOWED_BINARY_SUFFIXES | FORBIDDEN_SUFFIXES:
@@ -330,7 +341,8 @@ def scan_dependencies(base: str, head: str) -> list[Finding]:
 
 def scan(base: str, head: str) -> list[Finding]:
     """Run every check on the change from base to head."""
-    entries = parse_numstat(run_git(*diff_args(base, head), "--numstat", "-z"))
+    # Deleted files are left out: removing a risky file is never a reason to stop a PR.
+    entries = parse_numstat(run_git(*diff_args(base, head), "--numstat", "-z", "--diff-filter=d"))
     added = parse_added_lines(run_git(*diff_args(base, head), "--unified=0"))
     return scan_changes(entries, added) + scan_dependencies(base, head)
 

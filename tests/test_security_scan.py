@@ -109,7 +109,13 @@ def test_requirements_comment_may_contain_a_url() -> None:
         ("lib/evil.pth", False, "adds a file type that runs on install or import"),
         ("setup.py", False, "adds a file type that runs on install or import"),
         ("vendor/x.so", True, "adds a file type that runs on install or import"),
-        ("web/package.json", False, "adds a package manifest with install scripts"),
+        ("web/package.json", False, "adds JavaScript dependencies, which no scan covers"),
+        (
+            ".github/deploy/package-lock.json",
+            False,
+            "adds JavaScript dependencies, which no scan covers",
+        ),
+        ("yarn.lock", False, "adds JavaScript dependencies, which no scan covers"),
         (".env", False, "adds an env file"),
         ("api/.env.production", False, "adds an env file"),
         ("tools/blob.dat", True, "adds an unexpected binary file"),
@@ -125,7 +131,6 @@ def test_dangerous_path_is_flagged(path: str, is_binary: bool, rule: str) -> Non
         ("static/rain.png", True),
         ("docs/plan.pdf", True),
         (".env.example", False),
-        (".github/deploy/package.json", False),
     ],
 )
 def test_expected_path_is_not_flagged(path: str, is_binary: bool) -> None:
@@ -270,3 +275,25 @@ def test_scan_finds_hostile_commit_in_a_real_repository(
         ("evil.pth", "adds a file type that runs on install or import"),
         ("safe.py", "dumps the environment"),
     }
+
+
+def test_scan_ignores_deleted_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def git(*args: str) -> str:
+        identity = ["-c", "user.name=test", "-c", "user.email=test@example.com"]
+        result = subprocess.run(
+            ["git", *identity, *args], cwd=tmp_path, check=True, capture_output=True, text=True
+        )
+        return result.stdout.strip()
+
+    git("init", "-q")
+    (tmp_path / "package.json").write_text("{}\n")
+    git("add", ".")
+    git("commit", "-qm", "base")
+    base = git("rev-parse", "HEAD")
+    git("rm", "-q", "package.json")
+    git("commit", "-qm", "remove npm")
+    head = git("rev-parse", "HEAD")
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(scanner, "scan_dependencies", lambda _base, _head: [])
+    assert scanner.scan(base, head) == []
