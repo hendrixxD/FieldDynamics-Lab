@@ -275,3 +275,25 @@ def test_scan_finds_hostile_commit_in_a_real_repository(
         ("evil.pth", "adds a file type that runs on install or import"),
         ("safe.py", "dumps the environment"),
     }
+
+
+def test_scan_ignores_deleted_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def git(*args: str) -> str:
+        identity = ["-c", "user.name=test", "-c", "user.email=test@example.com"]
+        result = subprocess.run(
+            ["git", *identity, *args], cwd=tmp_path, check=True, capture_output=True, text=True
+        )
+        return result.stdout.strip()
+
+    git("init", "-q")
+    (tmp_path / "package.json").write_text("{}\n")
+    git("add", ".")
+    git("commit", "-qm", "base")
+    base = git("rev-parse", "HEAD")
+    git("rm", "-q", "package.json")
+    git("commit", "-qm", "remove npm")
+    head = git("rev-parse", "HEAD")
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(scanner, "scan_dependencies", lambda _base, _head: [])
+    assert scanner.scan(base, head) == []

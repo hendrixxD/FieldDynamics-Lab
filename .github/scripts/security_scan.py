@@ -341,7 +341,8 @@ def scan_dependencies(base: str, head: str) -> list[Finding]:
 
 def scan(base: str, head: str) -> list[Finding]:
     """Run every check on the change from base to head."""
-    entries = parse_numstat(run_git(*diff_args(base, head), "--numstat", "-z"))
+    # Deleted files are left out: removing a risky file is never a reason to stop a PR.
+    entries = parse_numstat(run_git(*diff_args(base, head), "--numstat", "-z", "--diff-filter=d"))
     added = parse_added_lines(run_git(*diff_args(base, head), "--unified=0"))
     return scan_changes(entries, added) + scan_dependencies(base, head)
 
