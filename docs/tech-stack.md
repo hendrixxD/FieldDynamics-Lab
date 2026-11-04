@@ -45,7 +45,7 @@ All Python code runs on Python 3.12.
 | Need | Tool |
 | --- | --- |
 | API and page rendering | FastAPI, Uvicorn |
-| Preview and production hosting | Vercel Python runtime, deployed by `.github/workflows/deploy.yml` |
+| Preview and production hosting | Vercel Python runtime, deployed through the Vercel REST API by `.github/workflows/deploy.yml` |
 | Templates | Jinja2 |
 | Request and data validation | Pydantic |
 | Settings and `.env` | pydantic-settings, python-dotenv, PyYAML for `config/` |

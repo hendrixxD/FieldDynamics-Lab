@@ -109,7 +109,13 @@ def test_requirements_comment_may_contain_a_url() -> None:
         ("lib/evil.pth", False, "adds a file type that runs on install or import"),
         ("setup.py", False, "adds a file type that runs on install or import"),
         ("vendor/x.so", True, "adds a file type that runs on install or import"),
-        ("web/package.json", False, "adds a package manifest with install scripts"),
+        ("web/package.json", False, "adds JavaScript dependencies, which no scan covers"),
+        (
+            ".github/deploy/package-lock.json",
+            False,
+            "adds JavaScript dependencies, which no scan covers",
+        ),
+        ("yarn.lock", False, "adds JavaScript dependencies, which no scan covers"),
         (".env", False, "adds an env file"),
         ("api/.env.production", False, "adds an env file"),
         ("tools/blob.dat", True, "adds an unexpected binary file"),
@@ -125,7 +131,6 @@ def test_dangerous_path_is_flagged(path: str, is_binary: bool, rule: str) -> Non
         ("static/rain.png", True),
         ("docs/plan.pdf", True),
         (".env.example", False),
-        (".github/deploy/package.json", False),
     ],
 )
 def test_expected_path_is_not_flagged(path: str, is_binary: bool) -> None:

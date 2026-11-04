@@ -45,11 +45,11 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           path: source
           persist-credentials: false
-      # --ignore-scripts stops packages running code on install, next to the Vercel token.
-      - run: npm ci --ignore-scripts --prefix .github/deploy
+      # The deploy script comes from main and uses only the standard library, so no third-party
+      # package ever runs next to the Vercel token.
       - name: Deploy
         id: deploy
-        run: bash .github/scripts/deploy-vercel.sh
+        run: python3 .github/scripts/deploy_vercel.py --source source --production "$PRODUCTION"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           PRODUCTION: >-

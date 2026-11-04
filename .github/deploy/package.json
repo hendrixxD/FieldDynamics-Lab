@@ -1,8 +1,0 @@
-{
-  "name": "fielddynamics-lab-deploy",
-  "private": true,
-  "description": "Pins the Vercel CLI used by the Deploy workflow.",
-  "dependencies": {
-    "vercel": "54.11.1"
-  }
-}
