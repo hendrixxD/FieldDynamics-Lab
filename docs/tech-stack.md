@@ -10,7 +10,7 @@ All Python code runs on Python 3.12.
 | Climate and agroclimate | NASA POWER API (requests) |
 | ECOSTRESS and awkward extracts | NASA AppEEARS |
 | Soil | iSDAsoil (via Earth Engine) |
-| Study area boundaries | GADM or geoBoundaries (Kaduna LGAs) |
+| Study area boundaries | geoBoundaries gbOpen (Kaduna LGAs, GRID3 2022) |
 | Accounts | NASA Earthdata login, Earth Engine noncommercial |
 
 ## 2. Data processing and harmonization

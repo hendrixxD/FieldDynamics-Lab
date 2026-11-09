@@ -1,0 +1,84 @@
+# iSDAsoil v1 (Africa, 30 m) on Earth Engine: all 21 layers.
+# Catalog: https://developers.google.com/earth-engine/datasets/catalog/ISDASOIL_Africa_v1_ph
+# (one page per asset; swap the asset name at the end of the URL).
+asset_root: ISDASOIL/Africa/v1
+source_scale_m: 30
+depths_cm: ["0_20", "20_50"]
+
+# Transforms turn stored integers into real units, from each asset's catalog page:
+#   none: x   div10: x/10   div100: x/100   exp10: exp(x/10)-1   exp100: exp(x/100)-1
+# Exception: sand, silt and clay are stored as plain percent. Their catalog pages say
+# exp(x/10)-1, but Kaduna's raw sand is 33 to 70, which that formula would turn into up to
+# 1,100 percent. Plain percent gives sand about 58 and clay about 22, a believable sandy loam.
+#
+# column is the output name with its unit; the depth is appended, e.g. clay_pct_0_20cm.
+numeric:
+  clay_content: {column: clay_pct, transform: none, valid_min: 0, valid_max: 100}
+  sand_content: {column: sand_pct, transform: none, valid_min: 0, valid_max: 100}
+  silt_content: {column: silt_pct, transform: none, valid_min: 0, valid_max: 100}
+  stone_content: {column: stone_pct, transform: exp10, valid_min: 0, valid_max: 100}
+  bulk_density: {column: bulk_density_g_cm3, transform: div100, valid_min: 0, valid_max: 3}
+  # pH range matches soil_ph in docs/data-contract.md.
+  ph: {column: soil_ph, transform: div10, valid_min: 3, valid_max: 11}
+  carbon_organic: {column: organic_carbon_g_kg, transform: exp10, valid_min: 0}
+  carbon_total: {column: total_carbon_g_kg, transform: exp10, valid_min: 0}
+  nitrogen_total: {column: total_nitrogen_g_kg, transform: exp100, valid_min: 0}
+  cation_exchange_capacity: {column: cec_cmolc_kg, transform: exp10, valid_min: 0}
+  phosphorus_extractable: {column: phosphorus_ppm, transform: exp10, valid_min: 0}
+  potassium_extractable: {column: potassium_ppm, transform: exp10, valid_min: 0}
+  calcium_extractable: {column: calcium_ppm, transform: exp10, valid_min: 0}
+  magnesium_extractable: {column: magnesium_ppm, transform: exp10, valid_min: 0}
+  sulphur_extractable: {column: sulphur_ppm, transform: exp10, valid_min: 0}
+  zinc_extractable: {column: zinc_ppm, transform: exp10, valid_min: 0}
+  iron_extractable: {column: iron_ppm, transform: exp10, valid_min: 0}
+  aluminium_extractable: {column: aluminium_ppm, transform: exp10, valid_min: 0}
+
+# Bedrock depth is already in cm, over a single 0 to 200 cm band, capped at 200.
+bedrock:
+  asset: bedrock_depth
+  column: bedrock_depth_cm
+  band_suffix: "0_200"
+  valid_min: 0
+  valid_max: 200
+
+# USDA texture classes 1 to 12, coded as on the texture_class catalog page.
+texture:
+  asset: texture_class
+  column: texture_class
+  classes:
+    1: Clay
+    2: Silty Clay
+    3: Sandy Clay
+    4: Clay Loam
+    5: Silty Clay Loam
+    6: Sandy Clay Loam
+    7: Loam
+    8: Silt Loam
+    9: Sandy Loam
+    10: Silt
+    11: Loamy Sand
+    12: Sand
+
+# Fertility Capability Classification. The catalog page back-transforms with x mod 3000.
+fcc:
+  asset: fcc
+  column: fcc_code
+  modulo: 3000
+
+# ESA WorldCover v200 (10 m, 2021) gives each cell's cropland share.
+# Class 40 is cropland: https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCover_v200
+worldcover:
+  asset: ESA/WorldCover/v200
+  cropland_class: 40
+  column: cropland_fraction
+  source_scale_m: 10
+
+# Earth Engine refuses a download whose source pixels exceed about 10,000 a side
+# ("Reprojection output too large (10228x9629 pixels)" on 2026-11-09). Each layer is pulled in
+# tiles that stay under this many source pixels a side, with room to spare.
+max_source_px_per_side: 4000
+download_workers: 8
+
+# reduceResolution caps how many source pixels feed one output cell. A 1 km cell holds about
+# 1,100 iSDA pixels at 30 m and 10,000 WorldCover pixels at 10 m. 65,536 is Earth Engine's limit.
+max_source_pixels: 65536
