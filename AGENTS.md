@@ -281,6 +281,5 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 ## Open items
 
 - The data contract is a draft. Confirm it against real data at first pull.
-- Choose GADM or geoBoundaries for LGA boundaries. The tech stack lists both, while the map architecture uses geoBoundaries.
 - Decide whether `data/processed/` stays in git if the files get large.
 - Check the Resources tab of the challenge page, which the first principle validative measure does not cover.
