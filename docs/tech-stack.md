@@ -11,6 +11,7 @@ All Python code runs on Python 3.12.
 | ECOSTRESS and awkward extracts | NASA AppEEARS |
 | Soil | iSDAsoil (via Earth Engine) |
 | Study area boundaries | geoBoundaries gbOpen (Kaduna LGAs, GRID3 2022) |
+| SMAP L4 soil moisture | earthaccess opens SPL4SMGP granules remotely, h5py reads the Kaduna window |
 | Accounts | NASA Earthdata login, Earth Engine noncommercial |
 
 ## 2. Data processing and harmonization

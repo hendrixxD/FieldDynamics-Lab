@@ -8,10 +8,12 @@ import pytest
 LIBRARY_MODULES = [
     "dask",
     "dotenv",
+    "earthaccess",
     "ee",
     "fastapi",
     "geemap",
     "geopandas",
+    "h5py",
     "jinja2",
     "lightgbm",
     "matplotlib",
