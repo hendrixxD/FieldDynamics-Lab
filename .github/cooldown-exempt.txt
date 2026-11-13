@@ -1,4 +1,0 @@
-# Exact versions allowed past the 7-day cooldown, for security fixes that cannot wait. Each line
-# is name==version, then a comment with the advisory it fixes. Delete a line once it is 7 days old.
-# Every other check still applies to these versions, and CODEOWNERS requires owner review here.
-pyasn1==0.6.5  # GHSA-2qm8-x737-gmw5, GHSA-9m75-vc3g-4x39, GHSA-fm9c-5rcf-2q5p, GHSA-mm57-4v3p-rchx

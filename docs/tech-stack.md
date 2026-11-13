@@ -71,7 +71,7 @@ All Python code runs on Python 3.12.
 | Data checks (no nulls, ranges sane) | pandera or plain pytest asserts |
 | Linting and formatting | Ruff |
 | Type checking | mypy on `model/` and `api/` |
-| Pre-commit checks | pre-commit, running Ruff and mypy |
+| Pre-commit checks | pre-commit, running Ruff |
 | Dependency pinning | uv, `requirements.in` compiled to `requirements.txt` |
 | CI | GitHub Actions, running Ruff, mypy, pytest, Dependency versions, and Tracked files |
 | Profiling | py-spy, `time.perf_counter`, `%timeit` |
