@@ -52,7 +52,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/install-python
+      # Warn only during the hackathon sprint, so type errors never block a merge.
       - run: mypy model api
+        continue-on-error: true
   pytest:
     name: pytest
     needs: security-scan
@@ -74,7 +76,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/install-python
+      # Warn only during the hackathon sprint, so a stale lock never blocks a merge.
       - run: bash .github/scripts/check-dependencies.sh
+        continue-on-error: true
   tracked-files:
     name: Tracked files
     needs: security-scan

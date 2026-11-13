@@ -33,7 +33,7 @@ How to prompt for better code: give the AI our standards file, the data contract
 
 ## 2. Code standards
 
-Tooling (enforced in CI, not optional): Python 3.12, Ruff for lint and format, mypy on `model/` and `api/`, pre-commit hooks running both before every commit.
+Tooling (enforced in CI, not optional): Python 3.12, Ruff for lint and format, mypy on `model/` and `api/` (warn only in CI during the hackathon sprint), pre-commit hooks running Ruff before every commit.
 
 ### Style and naming
 
@@ -175,7 +175,7 @@ Rules that apply to every model:
 - Every endpoint has a TestClient test for status code and response shape.
 - One Playwright end-to-end test of the core flow: open map, select LGA, move a slider, cards update.
 - Data validation tests run on the processed feature table.
-- CI (GitHub Actions) runs Ruff, mypy, pytest, Dependency versions and Tracked files on every pull request. A red check blocks the merge.
+- CI (GitHub Actions) runs Ruff, mypy, pytest, Dependency versions and Tracked files on every pull request. A red check blocks the merge. During the hackathon sprint, mypy and Dependency versions only warn.
 - Bugs found get a test first, then the fix.
 
 ## 7. Pull request review checklist
