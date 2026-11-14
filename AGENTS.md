@@ -186,7 +186,7 @@ If Ruff changes version, update its `rev` in `.pre-commit-config.yaml` in the sa
 
 Treat every PR as hostile, including its workflow files. A compromised package runs with whatever is in its environment, so the aim is that it never installs, and that it can reach nothing if it does.
 
-- **Security gate** runs from the target branch through `pull_request_target`, so a PR cannot weaken its own scan. It reads the PR as git objects. Never add a step to it that checks out or runs PR code.
+- **Security gate** runs through `pull_request_target`, which takes the workflow and the scanner from the default branch, `main`, so a PR cannot weaken its own scan. A scanner change only reaches the gate once it is merged to `main`. It reads the PR as git objects. Never add a step to it that checks out or runs PR code.
 - `.github/scripts/security_scan.py` uses only the standard library, so it runs before anything is installed. It stops env dumping, credential file reads, exfiltration hosts, hidden code, `.pth` files, install-time files, unpinned actions, new privileged triggers, and any package source outside PyPI. It checks every pin against OSV, and each new pin against PyPI for its hashes, yanked status, and age.
 - Packages install from hashes and wheels only, so no `setup.py` runs.
 - PR jobs hold no secrets, and their token is read-only.
