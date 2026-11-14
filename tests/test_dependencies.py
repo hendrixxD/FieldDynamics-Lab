@@ -19,6 +19,7 @@ LIBRARY_MODULES = [
     "matplotlib",
     "notebook",
     "numpy",
+    "openpyxl",
     "optuna",
     "pandas",
     "pandera.pandas",

@@ -16,7 +16,7 @@ def test_every_pest_group_is_defined() -> None:
 
 def test_gaps_match_the_fields_that_have_no_value() -> None:
     for crop, rules in CFG.rules().items():
-        assert cr.missing_fields(rules) == set(rules.gaps), crop
+        assert cr.missing_fields(crop, CFG) == set(rules.gaps), crop
 
 
 def test_only_legumes_fix_nitrogen() -> None:
@@ -25,7 +25,5 @@ def test_only_legumes_fix_nitrogen() -> None:
     assert fixers == legumes == {"soybean", "cowpea", "groundnut"}
 
 
-def test_price_band_needs_the_same_market_and_date() -> None:
-    assert cr.price_band("cowpea", CFG) == "high"  # 175,000 against 85,000
-    assert cr.price_band("soybean", CFG) == "medium"
-    assert cr.price_band("groundnut", CFG) is None  # no Kaduna price yet
+def test_kdbs_commodities_are_crops_in_scope() -> None:
+    assert set(CFG.kdbs_commodities) <= set(CFG.rules())

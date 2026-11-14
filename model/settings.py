@@ -1,6 +1,5 @@
 """Validated settings for the models (config/models.yaml) and crops (config/crops.yaml)."""
 
-import datetime
 from pathlib import Path
 from typing import Literal
 
@@ -153,6 +152,7 @@ class Paths(BaseModel):
     isda_stats: Path
     openlandmap: Path
     openlandmap_cropland_fc: Path
+    kdbs_prices: Path
     notebooks: Path
     annual_features: Path
     monthly_features: Path
@@ -222,17 +222,9 @@ class Forage(BaseModel):
     source: str | None = None
 
 
-class Price(BaseModel):
-    ngn_per_100kg: Range
-    market: str
-    date: datetime.date
-    source: str
-
-
 class Market(BaseModel):
     role: Literal["food", "cash", "both"] | None = None
     role_source: str | None = None
-    price: Price | None = None
 
 
 class Labour(BaseModel):
@@ -275,7 +267,7 @@ class CropConfig(BaseModel):
     crops: dict[str, Crop]
     other_crops: dict[str, OtherCrop] = {}
     pest_groups: dict[str, str] = {}
-    price_bands: dict[str, float] = {}
+    kdbs_commodities: dict[str, str] = {}
     sources: dict[str, str] = {}
 
     def rules(self) -> dict[str, CropRules]:

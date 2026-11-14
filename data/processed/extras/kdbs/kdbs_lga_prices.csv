@@ -1,0 +1,553 @@
+lga,commodity,price_ngn,crop
+Birnin Gwari,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Birnin Gwari,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2700.0,
+Birnin Gwari,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Birnin Gwari,"Maize grain, white sold loose (1 mudu)",1000.0,maize
+Birnin Gwari,"Maize grain, yellow sold loose (1 mudu)",1000.0,
+Birnin Gwari,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1300.0,sorghum
+Birnin Gwari,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Birnin Gwari,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Birnin Gwari,"Beans Brown, sold loose (1 mudu)",3000.0,
+Birnin Gwari,"Soya Beans, sold loose (1 mudu)",1500.0,soybean
+Birnin Gwari,"Gari White, sold loose (1 mudu)",1300.0,
+Birnin Gwari,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Birnin Gwari,Palm oil (1 schnap bottle),1100.0,
+Birnin Gwari,Yam tuber (1 Medium Size),1000.0,
+Birnin Gwari,Cassava tuber (5 Medium Size),500.0,
+Birnin Gwari,Irish potato (4 Litre rubber),4500.0,
+Birnin Gwari,Sweet potato (5 Medium Size),500.0,
+Birnin Gwari,Local live chicken,4000.0,
+Birnin Gwari,Groundnut - shelled (fresh),700.0,
+Birnin Gwari,Tomato fresh (4 Litre rubber),2000.0,
+Birnin Gwari,Okro fresh (1 mudu),1000.0,
+Birnin Gwari,Okro dried (1 mudu),1000.0,
+Birnin Gwari,Onion (4 Litre rubber),3000.0,
+Birnin Gwari,Pepper fresh (4 Litre rubber),3000.0,
+Chikun,"Rice, Imported, High Quality Sold loose (1 mudu)",3200.0,
+Chikun,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",3200.0,
+Chikun,"Rice Local, Sold Loose (1 mudu)",2900.0,rice
+Chikun,"Maize grain, white sold loose (1 mudu)",800.0,maize
+Chikun,"Maize grain, yellow sold loose (1 mudu)",800.0,
+Chikun,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1400.0,sorghum
+Chikun,millet (jero or maiwa) sold loose (1 mudu),1200.0,millet
+Chikun,Beans: white black eye. Sold loose (1 mudu),3100.0,cowpea
+Chikun,"Beans Brown, sold loose (1 mudu)",3700.0,
+Chikun,"Soya Beans, sold loose (1 mudu)",1700.0,soybean
+Chikun,"Gari White, sold loose (1 mudu)",1000.0,
+Chikun,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Chikun,Palm oil (1 schnap bottle),1100.0,
+Chikun,Yam tuber (1 Medium Size),600.0,
+Chikun,Cassava tuber (5 Medium Size),500.0,
+Chikun,Irish potato (4 Litre rubber),5500.0,
+Chikun,Sweet potato (5 Medium Size),500.0,
+Chikun,Local live chicken,4000.0,
+Chikun,Groundnut - shelled (fresh),650.0,
+Chikun,Tomato fresh (4 Litre rubber),1500.0,
+Chikun,Okro fresh (1 mudu),500.0,
+Chikun,Okro dried (1 mudu),1600.0,
+Chikun,Onion (4 Litre rubber),3000.0,
+Chikun,Pepper fresh (4 Litre rubber),3000.0,
+Giwa,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Giwa,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",3000.0,
+Giwa,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Giwa,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Giwa,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Giwa,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1200.0,sorghum
+Giwa,millet (jero or maiwa) sold loose (1 mudu),1200.0,millet
+Giwa,Beans: white black eye. Sold loose (1 mudu),2750.0,cowpea
+Giwa,"Beans Brown, sold loose (1 mudu)",3000.0,
+Giwa,"Soya Beans, sold loose (1 mudu)",1750.0,soybean
+Giwa,"Gari White, sold loose (1 mudu)",750.0,
+Giwa,"Gari Yellow, sold loose (1 mudu)",1000.0,
+Giwa,Palm oil (1 schnap bottle),1200.0,
+Giwa,Yam tuber (1 Medium Size),700.0,
+Giwa,Cassava tuber (5 Medium Size),300.0,
+Giwa,Irish potato (4 Litre rubber),3000.0,
+Giwa,Sweet potato (5 Medium Size),500.0,
+Giwa,Local live chicken,3000.0,
+Giwa,Groundnut - shelled (fresh),600.0,
+Giwa,Tomato fresh (4 Litre rubber),1000.0,
+Giwa,Okro fresh (1 mudu),500.0,
+Giwa,Okro dried (1 mudu),1000.0,
+Giwa,Onion (4 Litre rubber),1500.0,
+Giwa,Pepper fresh (4 Litre rubber),3500.0,
+Igabi,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Igabi,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Igabi,"Rice Local, Sold Loose (1 mudu)",2500.0,rice
+Igabi,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Igabi,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Igabi,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1500.0,sorghum
+Igabi,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Igabi,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Igabi,"Beans Brown, sold loose (1 mudu)",3000.0,
+Igabi,"Soya Beans, sold loose (1 mudu)",2000.0,soybean
+Igabi,"Gari White, sold loose (1 mudu)",1300.0,
+Igabi,"Gari Yellow, sold loose (1 mudu)",1300.0,
+Igabi,Palm oil (1 schnap bottle),1200.0,
+Igabi,Yam tuber (1 Medium Size),500.0,
+Igabi,Cassava tuber (5 Medium Size),500.0,
+Igabi,Irish potato (4 Litre rubber),4000.0,
+Igabi,Sweet potato (5 Medium Size),500.0,
+Igabi,Local live chicken,3500.0,
+Igabi,Groundnut - shelled (fresh),700.0,
+Igabi,Tomato fresh (4 Litre rubber),1500.0,
+Igabi,Okro fresh (1 mudu),500.0,
+Igabi,Okro dried (1 mudu),1500.0,
+Igabi,Onion (4 Litre rubber),3000.0,
+Igabi,Pepper fresh (4 Litre rubber),3000.0,
+Ikara,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Ikara,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Ikara,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Ikara,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Ikara,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Ikara,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1150.0,sorghum
+Ikara,millet (jero or maiwa) sold loose (1 mudu),1000.0,millet
+Ikara,Beans: white black eye. Sold loose (1 mudu),2800.0,cowpea
+Ikara,"Beans Brown, sold loose (1 mudu)",3000.0,
+Ikara,"Soya Beans, sold loose (1 mudu)",1400.0,soybean
+Ikara,"Gari White, sold loose (1 mudu)",950.0,
+Ikara,"Gari Yellow, sold loose (1 mudu)",950.0,
+Ikara,Palm oil (1 schnap bottle),1400.0,
+Ikara,Yam tuber (1 Medium Size),700.0,
+Ikara,Cassava tuber (5 Medium Size),500.0,
+Ikara,Irish potato (4 Litre rubber),5000.0,
+Ikara,Sweet potato (5 Medium Size),500.0,
+Ikara,Local live chicken,3000.0,
+Ikara,Groundnut - shelled (fresh),450.0,
+Ikara,Tomato fresh (4 Litre rubber),1000.0,
+Ikara,Okro fresh (1 mudu),500.0,
+Ikara,Okro dried (1 mudu),1000.0,
+Ikara,Onion (4 Litre rubber),2500.0,
+Ikara,Pepper fresh (4 Litre rubber),3000.0,
+Jaba,"Rice, Imported, High Quality Sold loose (1 mudu)",3400.0,
+Jaba,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Jaba,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Jaba,"Maize grain, white sold loose (1 mudu)",1000.0,maize
+Jaba,"Maize grain, yellow sold loose (1 mudu)",1000.0,
+Jaba,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1000.0,sorghum
+Jaba,millet (jero or maiwa) sold loose (1 mudu),1000.0,millet
+Jaba,Beans: white black eye. Sold loose (1 mudu),2800.0,cowpea
+Jaba,"Beans Brown, sold loose (1 mudu)",3000.0,
+Jaba,"Soya Beans, sold loose (1 mudu)",1700.0,soybean
+Jaba,"Gari White, sold loose (1 mudu)",1000.0,
+Jaba,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Jaba,Palm oil (1 schnap bottle),1300.0,
+Jaba,Yam tuber (1 Medium Size),700.0,
+Jaba,Cassava tuber (5 Medium Size),500.0,
+Jaba,Irish potato (4 Litre rubber),4500.0,
+Jaba,Sweet potato (5 Medium Size),500.0,
+Jaba,Local live chicken,5000.0,
+Jaba,Groundnut - shelled (fresh),600.0,
+Jaba,Tomato fresh (4 Litre rubber),1800.0,
+Jaba,Okro fresh (1 mudu),600.0,
+Jaba,Okro dried (1 mudu),1200.0,
+Jaba,Onion (4 Litre rubber),3500.0,
+Jaba,Pepper fresh (4 Litre rubber),3500.0,
+Jema'a,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Jema'a,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Jema'a,"Rice Local, Sold Loose (1 mudu)",2500.0,rice
+Jema'a,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Jema'a,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Jema'a,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1000.0,sorghum
+Jema'a,millet (jero or maiwa) sold loose (1 mudu),1200.0,millet
+Jema'a,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Jema'a,"Beans Brown, sold loose (1 mudu)",2800.0,
+Jema'a,"Soya Beans, sold loose (1 mudu)",1500.0,soybean
+Jema'a,"Gari White, sold loose (1 mudu)",900.0,
+Jema'a,"Gari Yellow, sold loose (1 mudu)",1100.0,
+Jema'a,Palm oil (1 schnap bottle),1200.0,
+Jema'a,Yam tuber (1 Medium Size),600.0,
+Jema'a,Cassava tuber (5 Medium Size),500.0,
+Jema'a,Irish potato (4 Litre rubber),3700.0,
+Jema'a,Sweet potato (5 Medium Size),500.0,
+Jema'a,Local live chicken,4000.0,
+Jema'a,Groundnut - shelled (fresh),400.0,
+Jema'a,Tomato fresh (4 Litre rubber),1700.0,
+Jema'a,Okro fresh (1 mudu),800.0,
+Jema'a,Okro dried (1 mudu),1000.0,
+Jema'a,Onion (4 Litre rubber),3000.0,
+Jema'a,Pepper fresh (4 Litre rubber),3000.0,
+Kachia,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kachia,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2500.0,
+Kachia,"Rice Local, Sold Loose (1 mudu)",2400.0,rice
+Kachia,"Maize grain, white sold loose (1 mudu)",900.0,maize
+Kachia,"Maize grain, yellow sold loose (1 mudu)",900.0,
+Kachia,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1400.0,sorghum
+Kachia,millet (jero or maiwa) sold loose (1 mudu),1400.0,millet
+Kachia,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Kachia,"Beans Brown, sold loose (1 mudu)",3000.0,
+Kachia,"Soya Beans, sold loose (1 mudu)",1600.0,soybean
+Kachia,"Gari White, sold loose (1 mudu)",1000.0,
+Kachia,"Gari Yellow, sold loose (1 mudu)",1300.0,
+Kachia,Palm oil (1 schnap bottle),1200.0,
+Kachia,Yam tuber (1 Medium Size),1000.0,
+Kachia,Cassava tuber (5 Medium Size),500.0,
+Kachia,Irish potato (4 Litre rubber),3000.0,
+Kachia,Sweet potato (5 Medium Size),500.0,
+Kachia,Local live chicken,5000.0,
+Kachia,Groundnut - shelled (fresh),600.0,
+Kachia,Tomato fresh (4 Litre rubber),2000.0,
+Kachia,Okro fresh (1 mudu),1000.0,
+Kachia,Okro dried (1 mudu),1200.0,
+Kachia,Onion (4 Litre rubber),3000.0,
+Kachia,Pepper fresh (4 Litre rubber),3000.0,
+Kaduna North,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kaduna North,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2700.0,
+Kaduna North,"Rice Local, Sold Loose (1 mudu)",2500.0,rice
+Kaduna North,"Maize grain, white sold loose (1 mudu)",950.0,maize
+Kaduna North,"Maize grain, yellow sold loose (1 mudu)",950.0,
+Kaduna North,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1400.0,sorghum
+Kaduna North,millet (jero or maiwa) sold loose (1 mudu),1200.0,millet
+Kaduna North,Beans: white black eye. Sold loose (1 mudu),2800.0,cowpea
+Kaduna North,"Beans Brown, sold loose (1 mudu)",2800.0,
+Kaduna North,"Soya Beans, sold loose (1 mudu)",1800.0,soybean
+Kaduna North,"Gari White, sold loose (1 mudu)",1000.0,
+Kaduna North,"Gari Yellow, sold loose (1 mudu)",1000.0,
+Kaduna North,Palm oil (1 schnap bottle),1200.0,
+Kaduna North,Yam tuber (1 Medium Size),600.0,
+Kaduna North,Cassava tuber (5 Medium Size),500.0,
+Kaduna North,Irish potato (4 Litre rubber),3500.0,
+Kaduna North,Sweet potato (5 Medium Size),500.0,
+Kaduna North,Local live chicken,4000.0,
+Kaduna North,Groundnut - shelled (fresh),700.0,
+Kaduna North,Tomato fresh (4 Litre rubber),1500.0,
+Kaduna North,Okro fresh (1 mudu),1000.0,
+Kaduna North,Okro dried (1 mudu),1500.0,
+Kaduna North,Onion (4 Litre rubber),2500.0,
+Kaduna North,Pepper fresh (4 Litre rubber),3000.0,
+Kaduna South,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kaduna South,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",3000.0,
+Kaduna South,"Rice Local, Sold Loose (1 mudu)",2400.0,rice
+Kaduna South,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Kaduna South,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Kaduna South,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1300.0,sorghum
+Kaduna South,millet (jero or maiwa) sold loose (1 mudu),1100.0,millet
+Kaduna South,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Kaduna South,"Beans Brown, sold loose (1 mudu)",3200.0,
+Kaduna South,"Soya Beans, sold loose (1 mudu)",1700.0,soybean
+Kaduna South,"Gari White, sold loose (1 mudu)",1000.0,
+Kaduna South,"Gari Yellow, sold loose (1 mudu)",1000.0,
+Kaduna South,Palm oil (1 schnap bottle),1200.0,
+Kaduna South,Yam tuber (1 Medium Size),500.0,
+Kaduna South,Cassava tuber (5 Medium Size),500.0,
+Kaduna South,Irish potato (4 Litre rubber),4000.0,
+Kaduna South,Sweet potato (5 Medium Size),500.0,
+Kaduna South,Local live chicken,4000.0,
+Kaduna South,Groundnut - shelled (fresh),650.0,
+Kaduna South,Tomato fresh (4 Litre rubber),1200.0,
+Kaduna South,Okro fresh (1 mudu),500.0,
+Kaduna South,Okro dried (1 mudu),1500.0,
+Kaduna South,Onion (4 Litre rubber),3000.0,
+Kaduna South,Pepper fresh (4 Litre rubber),3000.0,
+Kagarko,"Rice, Imported, High Quality Sold loose (1 mudu)",3500.0,
+Kagarko,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",3200.0,
+Kagarko,"Rice Local, Sold Loose (1 mudu)",2500.0,rice
+Kagarko,"Maize grain, white sold loose (1 mudu)",800.0,maize
+Kagarko,"Maize grain, yellow sold loose (1 mudu)",800.0,
+Kagarko,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1300.0,sorghum
+Kagarko,millet (jero or maiwa) sold loose (1 mudu),1400.0,millet
+Kagarko,Beans: white black eye. Sold loose (1 mudu),3800.0,cowpea
+Kagarko,"Beans Brown, sold loose (1 mudu)",3500.0,
+Kagarko,"Soya Beans, sold loose (1 mudu)",1800.0,soybean
+Kagarko,"Gari White, sold loose (1 mudu)",900.0,
+Kagarko,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Kagarko,Palm oil (1 schnap bottle),1200.0,
+Kagarko,Yam tuber (1 Medium Size),600.0,
+Kagarko,Cassava tuber (5 Medium Size),700.0,
+Kagarko,Irish potato (4 Litre rubber),4000.0,
+Kagarko,Sweet potato (5 Medium Size),500.0,
+Kagarko,Local live chicken,3000.0,
+Kagarko,Groundnut - shelled (fresh),500.0,
+Kagarko,Tomato fresh (4 Litre rubber),2500.0,
+Kagarko,Okro fresh (1 mudu),1000.0,
+Kagarko,Okro dried (1 mudu),1400.0,
+Kagarko,Onion (4 Litre rubber),3000.0,
+Kagarko,Pepper fresh (4 Litre rubber),3000.0,
+Kajuru,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kajuru,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Kajuru,"Rice Local, Sold Loose (1 mudu)",2200.0,rice
+Kajuru,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Kajuru,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Kajuru,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1200.0,sorghum
+Kajuru,millet (jero or maiwa) sold loose (1 mudu),1200.0,millet
+Kajuru,Beans: white black eye. Sold loose (1 mudu),2800.0,cowpea
+Kajuru,"Beans Brown, sold loose (1 mudu)",3000.0,
+Kajuru,"Soya Beans, sold loose (1 mudu)",1600.0,soybean
+Kajuru,"Gari White, sold loose (1 mudu)",1000.0,
+Kajuru,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Kajuru,Palm oil (1 schnap bottle),1300.0,
+Kajuru,Yam tuber (1 Medium Size),700.0,
+Kajuru,Cassava tuber (5 Medium Size),500.0,
+Kajuru,Irish potato (4 Litre rubber),4000.0,
+Kajuru,Sweet potato (5 Medium Size),500.0,
+Kajuru,Local live chicken,3000.0,
+Kajuru,Groundnut - shelled (fresh),550.0,
+Kajuru,Tomato fresh (4 Litre rubber),1200.0,
+Kajuru,Okro fresh (1 mudu),400.0,
+Kajuru,Okro dried (1 mudu),1400.0,
+Kajuru,Onion (4 Litre rubber),2500.0,
+Kajuru,Pepper fresh (4 Litre rubber),3000.0,
+Kaura,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kaura,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Kaura,"Rice Local, Sold Loose (1 mudu)",2400.0,rice
+Kaura,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Kaura,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Kaura,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1200.0,sorghum
+Kaura,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Kaura,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Kaura,"Beans Brown, sold loose (1 mudu)",3000.0,
+Kaura,"Soya Beans, sold loose (1 mudu)",1400.0,soybean
+Kaura,"Gari White, sold loose (1 mudu)",800.0,
+Kaura,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Kaura,Palm oil (1 schnap bottle),1300.0,
+Kaura,Yam tuber (1 Medium Size),600.0,
+Kaura,Cassava tuber (5 Medium Size),500.0,
+Kaura,Irish potato (4 Litre rubber),3000.0,
+Kaura,Sweet potato (5 Medium Size),500.0,
+Kaura,Local live chicken,3500.0,
+Kaura,Groundnut - shelled (fresh),600.0,
+Kaura,Tomato fresh (4 Litre rubber),1500.0,
+Kaura,Okro fresh (1 mudu),300.0,
+Kaura,Okro dried (1 mudu),1000.0,
+Kaura,Onion (4 Litre rubber),4000.0,
+Kaura,Pepper fresh (4 Litre rubber),3000.0,
+Kauru,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kauru,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Kauru,"Rice Local, Sold Loose (1 mudu)",2500.0,rice
+Kauru,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Kauru,"Maize grain, yellow sold loose (1 mudu)",750.0,
+Kauru,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1100.0,sorghum
+Kauru,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Kauru,Beans: white black eye. Sold loose (1 mudu),2850.0,cowpea
+Kauru,"Beans Brown, sold loose (1 mudu)",3200.0,
+Kauru,"Soya Beans, sold loose (1 mudu)",1500.0,soybean
+Kauru,"Gari White, sold loose (1 mudu)",1200.0,
+Kauru,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Kauru,Palm oil (1 schnap bottle),1200.0,
+Kauru,Yam tuber (1 Medium Size),1000.0,
+Kauru,Cassava tuber (5 Medium Size),500.0,
+Kauru,Irish potato (4 Litre rubber),4000.0,
+Kauru,Sweet potato (5 Medium Size),500.0,
+Kauru,Local live chicken,3000.0,
+Kauru,Groundnut - shelled (fresh),800.0,
+Kauru,Tomato fresh (4 Litre rubber),1300.0,
+Kauru,Okro fresh (1 mudu),400.0,
+Kauru,Okro dried (1 mudu),700.0,
+Kauru,Onion (4 Litre rubber),2400.0,
+Kauru,Pepper fresh (4 Litre rubber),2000.0,
+Kubau,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kubau,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Kubau,"Rice Local, Sold Loose (1 mudu)",2000.0,rice
+Kubau,"Maize grain, white sold loose (1 mudu)",800.0,maize
+Kubau,"Maize grain, yellow sold loose (1 mudu)",800.0,
+Kubau,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1100.0,sorghum
+Kubau,millet (jero or maiwa) sold loose (1 mudu),1000.0,millet
+Kubau,Beans: white black eye. Sold loose (1 mudu),2500.0,cowpea
+Kubau,"Beans Brown, sold loose (1 mudu)",3000.0,
+Kubau,"Soya Beans, sold loose (1 mudu)",1450.0,soybean
+Kubau,"Gari White, sold loose (1 mudu)",850.0,
+Kubau,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Kubau,Palm oil (1 schnap bottle),1400.0,
+Kubau,Yam tuber (1 Medium Size),800.0,
+Kubau,Cassava tuber (5 Medium Size),700.0,
+Kubau,Irish potato (4 Litre rubber),5000.0,
+Kubau,Sweet potato (5 Medium Size),500.0,
+Kubau,Local live chicken,3200.0,
+Kubau,Groundnut - shelled (fresh),850.0,
+Kubau,Tomato fresh (4 Litre rubber),1100.0,
+Kubau,Okro fresh (1 mudu),500.0,
+Kubau,Okro dried (1 mudu),600.0,
+Kubau,Onion (4 Litre rubber),2600.0,
+Kubau,Pepper fresh (4 Litre rubber),3300.0,
+Kudan,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Kudan,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Kudan,"Rice Local, Sold Loose (1 mudu)",2000.0,rice
+Kudan,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Kudan,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Kudan,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1250.0,sorghum
+Kudan,millet (jero or maiwa) sold loose (1 mudu),1250.0,millet
+Kudan,Beans: white black eye. Sold loose (1 mudu),2750.0,cowpea
+Kudan,"Beans Brown, sold loose (1 mudu)",3000.0,
+Kudan,"Soya Beans, sold loose (1 mudu)",1550.0,soybean
+Kudan,"Gari White, sold loose (1 mudu)",800.0,
+Kudan,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Kudan,Palm oil (1 schnap bottle),1200.0,
+Kudan,Yam tuber (1 Medium Size),750.0,
+Kudan,Cassava tuber (5 Medium Size),250.0,
+Kudan,Irish potato (4 Litre rubber),2200.0,
+Kudan,Sweet potato (5 Medium Size),500.0,
+Kudan,Local live chicken,3000.0,
+Kudan,Groundnut - shelled (fresh),500.0,
+Kudan,Tomato fresh (4 Litre rubber),1000.0,
+Kudan,Okro fresh (1 mudu),350.0,
+Kudan,Okro dried (1 mudu),850.0,
+Kudan,Onion (4 Litre rubber),1500.0,
+Kudan,Pepper fresh (4 Litre rubber),3200.0,
+Lere,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Lere,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2700.0,
+Lere,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Lere,"Maize grain, white sold loose (1 mudu)",1000.0,maize
+Lere,"Maize grain, yellow sold loose (1 mudu)",1000.0,
+Lere,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1200.0,sorghum
+Lere,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Lere,Beans: white black eye. Sold loose (1 mudu),2500.0,cowpea
+Lere,"Beans Brown, sold loose (1 mudu)",2800.0,
+Lere,"Soya Beans, sold loose (1 mudu)",1400.0,soybean
+Lere,"Gari White, sold loose (1 mudu)",1100.0,
+Lere,"Gari Yellow, sold loose (1 mudu)",1100.0,
+Lere,Palm oil (1 schnap bottle),1200.0,
+Lere,Yam tuber (1 Medium Size),1500.0,
+Lere,Cassava tuber (5 Medium Size),800.0,
+Lere,Irish potato (4 Litre rubber),2500.0,
+Lere,Sweet potato (5 Medium Size),700.0,
+Lere,Local live chicken,4000.0,
+Lere,Groundnut - shelled (fresh),500.0,
+Lere,Tomato fresh (4 Litre rubber),2000.0,
+Lere,Okro fresh (1 mudu),500.0,
+Lere,Okro dried (1 mudu),1000.0,
+Lere,Onion (4 Litre rubber),2500.0,
+Lere,Pepper fresh (4 Litre rubber),3000.0,
+Makarfi,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Makarfi,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2700.0,
+Makarfi,"Rice Local, Sold Loose (1 mudu)",2000.0,rice
+Makarfi,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Makarfi,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Makarfi,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1100.0,sorghum
+Makarfi,millet (jero or maiwa) sold loose (1 mudu),1150.0,millet
+Makarfi,Beans: white black eye. Sold loose (1 mudu),2500.0,cowpea
+Makarfi,"Beans Brown, sold loose (1 mudu)",2500.0,
+Makarfi,"Soya Beans, sold loose (1 mudu)",1400.0,soybean
+Makarfi,"Gari White, sold loose (1 mudu)",1100.0,
+Makarfi,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Makarfi,Palm oil (1 schnap bottle),1200.0,
+Makarfi,Yam tuber (1 Medium Size),1000.0,
+Makarfi,Cassava tuber (5 Medium Size),600.0,
+Makarfi,Irish potato (4 Litre rubber),3800.0,
+Makarfi,Sweet potato (5 Medium Size),500.0,
+Makarfi,Local live chicken,4000.0,
+Makarfi,Groundnut - shelled (fresh),500.0,
+Makarfi,Tomato fresh (4 Litre rubber),1200.0,
+Makarfi,Okro fresh (1 mudu),300.0,
+Makarfi,Okro dried (1 mudu),1000.0,
+Makarfi,Onion (4 Litre rubber),2000.0,
+Makarfi,Pepper fresh (4 Litre rubber),3500.0,
+Sabon Gari,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Sabon Gari,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2700.0,
+Sabon Gari,"Rice Local, Sold Loose (1 mudu)",2500.0,rice
+Sabon Gari,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Sabon Gari,"Maize grain, yellow sold loose (1 mudu)",750.0,
+Sabon Gari,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1200.0,sorghum
+Sabon Gari,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Sabon Gari,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Sabon Gari,"Beans Brown, sold loose (1 mudu)",3200.0,
+Sabon Gari,"Soya Beans, sold loose (1 mudu)",1600.0,soybean
+Sabon Gari,"Gari White, sold loose (1 mudu)",1300.0,
+Sabon Gari,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Sabon Gari,Palm oil (1 schnap bottle),1300.0,
+Sabon Gari,Yam tuber (1 Medium Size),1000.0,
+Sabon Gari,Cassava tuber (5 Medium Size),500.0,
+Sabon Gari,Irish potato (4 Litre rubber),4000.0,
+Sabon Gari,Sweet potato (5 Medium Size),500.0,
+Sabon Gari,Local live chicken,3000.0,
+Sabon Gari,Groundnut - shelled (fresh),800.0,
+Sabon Gari,Tomato fresh (4 Litre rubber),1200.0,
+Sabon Gari,Okro fresh (1 mudu),500.0,
+Sabon Gari,Okro dried (1 mudu),800.0,
+Sabon Gari,Onion (4 Litre rubber),2500.0,
+Sabon Gari,Pepper fresh (4 Litre rubber),3000.0,
+Sanga,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Sanga,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2700.0,
+Sanga,"Rice Local, Sold Loose (1 mudu)",2200.0,rice
+Sanga,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Sanga,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Sanga,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1600.0,sorghum
+Sanga,millet (jero or maiwa) sold loose (1 mudu),1400.0,millet
+Sanga,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Sanga,"Beans Brown, sold loose (1 mudu)",3000.0,
+Sanga,"Soya Beans, sold loose (1 mudu)",1400.0,soybean
+Sanga,"Gari White, sold loose (1 mudu)",750.0,
+Sanga,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Sanga,Palm oil (1 schnap bottle),1200.0,
+Sanga,Yam tuber (1 Medium Size),700.0,
+Sanga,Cassava tuber (5 Medium Size),700.0,
+Sanga,Irish potato (4 Litre rubber),2500.0,
+Sanga,Sweet potato (5 Medium Size),200.0,
+Sanga,Local live chicken,4000.0,
+Sanga,Groundnut - shelled (fresh),600.0,
+Sanga,Tomato fresh (4 Litre rubber),2000.0,
+Sanga,Okro fresh (1 mudu),400.0,
+Sanga,Okro dried (1 mudu),500.0,
+Sanga,Onion (4 Litre rubber),3000.0,
+Sanga,Pepper fresh (4 Litre rubber),3000.0,
+Soba,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Soba,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2600.0,
+Soba,"Rice Local, Sold Loose (1 mudu)",2000.0,rice
+Soba,"Maize grain, white sold loose (1 mudu)",750.0,maize
+Soba,"Maize grain, yellow sold loose (1 mudu)",750.0,
+Soba,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1000.0,sorghum
+Soba,millet (jero or maiwa) sold loose (1 mudu),1000.0,millet
+Soba,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Soba,"Beans Brown, sold loose (1 mudu)",3000.0,
+Soba,"Soya Beans, sold loose (1 mudu)",1500.0,soybean
+Soba,"Gari White, sold loose (1 mudu)",900.0,
+Soba,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Soba,Palm oil (1 schnap bottle),1300.0,
+Soba,Yam tuber (1 Medium Size),1000.0,
+Soba,Cassava tuber (5 Medium Size),500.0,
+Soba,Irish potato (4 Litre rubber),3000.0,
+Soba,Sweet potato (5 Medium Size),500.0,
+Soba,Local live chicken,3000.0,
+Soba,Groundnut - shelled (fresh),500.0,
+Soba,Tomato fresh (4 Litre rubber),1500.0,
+Soba,Okro fresh (1 mudu),1000.0,
+Soba,Okro dried (1 mudu),1400.0,
+Soba,Onion (4 Litre rubber),3000.0,
+Soba,Pepper fresh (4 Litre rubber),3000.0,
+Zangon Kataf,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Zangon Kataf,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Zangon Kataf,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Zangon Kataf,"Maize grain, white sold loose (1 mudu)",700.0,maize
+Zangon Kataf,"Maize grain, yellow sold loose (1 mudu)",700.0,
+Zangon Kataf,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1150.0,sorghum
+Zangon Kataf,millet (jero or maiwa) sold loose (1 mudu),1200.0,millet
+Zangon Kataf,Beans: white black eye. Sold loose (1 mudu),3000.0,cowpea
+Zangon Kataf,"Beans Brown, sold loose (1 mudu)",3000.0,
+Zangon Kataf,"Soya Beans, sold loose (1 mudu)",1500.0,soybean
+Zangon Kataf,"Gari White, sold loose (1 mudu)",800.0,
+Zangon Kataf,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Zangon Kataf,Palm oil (1 schnap bottle),1300.0,
+Zangon Kataf,Yam tuber (1 Medium Size),600.0,
+Zangon Kataf,Cassava tuber (5 Medium Size),500.0,
+Zangon Kataf,Irish potato (4 Litre rubber),3000.0,
+Zangon Kataf,Sweet potato (5 Medium Size),500.0,
+Zangon Kataf,Local live chicken,3500.0,
+Zangon Kataf,Groundnut - shelled (fresh),600.0,
+Zangon Kataf,Tomato fresh (4 Litre rubber),2000.0,
+Zangon Kataf,Okro fresh (1 mudu),300.0,
+Zangon Kataf,Okro dried (1 mudu),400.0,
+Zangon Kataf,Onion (4 Litre rubber),3000.0,
+Zangon Kataf,Pepper fresh (4 Litre rubber),3500.0,
+Zaria,"Rice, Imported, High Quality Sold loose (1 mudu)",3000.0,
+Zaria,"Rice, Agric Sold Loose(Low quality) imported (1 mudu)",2800.0,
+Zaria,"Rice Local, Sold Loose (1 mudu)",2300.0,rice
+Zaria,"Maize grain, white sold loose (1 mudu)",1000.0,maize
+Zaria,"Maize grain, yellow sold loose (1 mudu)",1000.0,
+Zaria,"Sorghum (Guinea Corn) white or brown, sold loose (1 mudu)",1200.0,sorghum
+Zaria,millet (jero or maiwa) sold loose (1 mudu),1300.0,millet
+Zaria,Beans: white black eye. Sold loose (1 mudu),2500.0,cowpea
+Zaria,"Beans Brown, sold loose (1 mudu)",2800.0,
+Zaria,"Soya Beans, sold loose (1 mudu)",1600.0,soybean
+Zaria,"Gari White, sold loose (1 mudu)",1200.0,
+Zaria,"Gari Yellow, sold loose (1 mudu)",1200.0,
+Zaria,Palm oil (1 schnap bottle),1200.0,
+Zaria,Yam tuber (1 Medium Size),1000.0,
+Zaria,Cassava tuber (5 Medium Size),500.0,
+Zaria,Irish potato (4 Litre rubber),4000.0,
+Zaria,Sweet potato (5 Medium Size),500.0,
+Zaria,Local live chicken,3500.0,
+Zaria,Groundnut - shelled (fresh),800.0,
+Zaria,Tomato fresh (4 Litre rubber),1500.0,
+Zaria,Okro fresh (1 mudu),500.0,
+Zaria,Okro dried (1 mudu),700.0,
+Zaria,Onion (4 Litre rubber),3000.0,
+Zaria,Pepper fresh (4 Litre rubber),3000.0,
