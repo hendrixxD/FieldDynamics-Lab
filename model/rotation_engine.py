@@ -93,17 +93,32 @@ def current_rotation(req: Request, data: EngineData) -> Rotation:
 # --------------------------------------------------------------------------- #
 # Step 2: filters
 # --------------------------------------------------------------------------- #
+def must_fit_season(crop: str, data: EngineData) -> bool:
+    """False only for a crop config marks as staying in the ground into the dry season."""
+    entry = data.crops.crops.get(crop) or data.crops.other_crops.get(crop)
+    return entry.must_fit_season if entry else True
+
+
 def water_filter(rotation: Rotation, req: Request, data: EngineData) -> str | None:
-    """Hard reason to drop the rotation on water or season length, else None; adds risk lines."""
+    """Hard reason to drop the rotation on water or season length, else None; adds risk lines.
+
+    A9 gives both the shortfall and the season fit. A crop A9 cannot run has no shortfall, but
+    its fit still comes from A2 season lengths, so a missing water balance never lets a
+    long-season crop past the season-length rule.
+    """
     w = data.cfg.engine.water
     for crop in crops_in(rotation):
         short, fit = water_stats(data, req.lga, crop, req.season_type)
-        if np.isnan(short):
+        if np.isnan(short) and np.isnan(fit):
             continue
-        if not data.crops.crops[crop].must_fit_season:
+        if not must_fit_season(crop, data):
             rotation.risks.append(
                 f"{crop.capitalize()} stays in the ground into the dry season and "
-                f"ran short of water there in {short:.0%} of years"
+                + (
+                    "has no water balance for it here: check with your extension officer"
+                    if np.isnan(short)
+                    else f"ran short of water there in {short:.0%} of years"
+                )
             )
             continue
         if req.water == "Rain only" and short > w.max_short_share:

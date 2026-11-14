@@ -100,6 +100,36 @@ def lga_need(
     )
 
 
+def crop_season_days(suit: pd.DataFrame, crops: CropConfig) -> dict[str, float]:
+    """Days in the ground per crop: FAO-56 stage lengths where A9 has them, else A15's ECOCROP
+    growing period in months (30.4 days each, the mean month length)."""
+    return {
+        **{c: m * 30.4 for c, m in suit.groupby("crop")["season_months"].first().items()},
+        **{k: float(c.stages_days.total) for k, c in crops.crops.items()},
+    }
+
+
+def season_fit_table(types: pd.DataFrame, season_days: dict[str, float]) -> pd.DataFrame:
+    """Share of each LGA's years of each A5 season type whose A2 rainy season (onset to
+    cessation, days) is at least as long as the crop's season, per crop.
+
+    The same test as A9's fits_season (planted at onset, finished by cessation), for crops that
+    have no FAO-56 water balance. types needs lga, season_type and a2_length_days_value.
+    Years without a cessation date (length missing) are left out.
+    """
+    known = types.dropna(subset=["a2_length_days_value"])[
+        ["lga", "season_type", "a2_length_days_value"]
+    ]
+    need = pd.DataFrame({"crop": list(season_days), "need_days": list(season_days.values())})
+    pairs = known.merge(need, how="cross")
+    pairs["fits"] = pairs["a2_length_days_value"] >= pairs["need_days"]
+    return (
+        pairs.groupby(["lga", "crop", "season_type"])["fits"]
+        .agg(years="size", fits_season_share="mean")
+        .reset_index()
+    )
+
+
 def _indexed(path: Path, lgas: list[str]) -> pd.DataFrame:
     table = pd.read_csv(path)
     return table.assign(lga=canonical_lga(table["lga"], lgas))
@@ -107,7 +137,7 @@ def _indexed(path: Path, lgas: list[str]) -> pd.DataFrame:
 
 # Tables the engine needs, as written to the serving bundle. Indexed ones keep their index.
 INDEXED_TABLES = ("land", "confidence", "lga", "type_share", "heat_share", "prices")
-FLAT_TABLES = ("water", "risk_lines", "suitability")
+FLAT_TABLES = ("water", "risk_lines", "suitability", "season_fit")
 
 
 def lga_table(isda: pd.DataFrame, land: pd.DataFrame, year: pd.DataFrame) -> pd.DataFrame:
@@ -131,8 +161,16 @@ def pipeline_tables(cfg: ModelConfig) -> dict[str, pd.DataFrame]:
     land = _indexed(out / "a10" / "a10_lga_land_risk.csv", lgas).set_index("lga")
     a3 = _indexed(out / "a3" / "a3_lga_month_indicators.csv", lgas)
     kdbs = _indexed(cfg.paths.kdbs_prices, lgas).dropna(subset=["crop"])
+    water = _indexed(out / "a9" / "a9_lga_crop_season_type.csv", lgas)
+    suit = pd.read_csv(cfg.paths.suitability)
+    unbalanced = {  # crops A9 cannot run still need the rainy-season length rule
+        c: d
+        for c, d in crop_season_days(suit, load_crop_config()).items()
+        if c not in set(water["crop"])
+    }
+    types = _indexed(out / "a5" / "a5_lga_year_types.csv", lgas)
     return {
-        "water": _indexed(out / "a9" / "a9_lga_crop_season_type.csv", lgas),
+        "water": water,
         "land": land,
         "confidence": _indexed(out / "a12" / "a12_lga_confidence.csv", lgas).set_index("lga"),
         "lga": lga_table(isda, land, year),
@@ -140,7 +178,8 @@ def pipeline_tables(cfg: ModelConfig) -> dict[str, pd.DataFrame]:
         "heat_share": a3.pivot(index="lga", columns="month", values="heat_share_years"),
         "prices": kdbs.pivot(index="lga", columns="crop", values="price_ngn"),
         "risk_lines": pd.read_csv(cfg.paths.risk_lines),
-        "suitability": pd.read_csv(cfg.paths.suitability),
+        "suitability": suit,
+        "season_fit": season_fit_table(types, unbalanced),
     }
 
 
@@ -148,6 +187,14 @@ def assemble(cfg: ModelConfig, t: dict[str, pd.DataFrame]) -> EngineData:
     """Build the engine's data object, with its fast lookups, from the tables."""
     crops, suit, water, lga = load_crop_config(), t["suitability"], t["water"], t["lga"]
     need = lga.filter(like="need_").rename(columns=lambda c: c.removeprefix("need_"))
+    # A9 gives (short share, fit share); crops A9 cannot run get (unknown, fit from A2 lengths).
+    water_lookup = {
+        (r.lga, r.crop, r.season_type): (float("nan"), float(r.fits_season_share))
+        for r in t["season_fit"].itertuples()
+    } | {
+        (r.lga, r.crop, r.season_type): (float(r.short_share), float(r.fits_season_share))
+        for r in water.itertuples()
+    }
     return EngineData(
         cfg=cfg,
         crops=crops,
@@ -163,18 +210,12 @@ def assemble(cfg: ModelConfig, t: dict[str, pd.DataFrame]) -> EngineData:
         heat_share=t["heat_share"].rename(columns=int),
         onset_doy=lga["onset_doy"],
         need=need,
-        water_lookup={
-            (r.lga, r.crop, r.season_type): (float(r.short_share), float(r.fits_season_share))
-            for r in water.itertuples()
-        },
+        water_lookup=water_lookup,
         prices=t["prices"],
         risk_lines=t["risk_lines"].set_index(["lga", "crop", "line"]),
         suitability=suit.set_index(["lga", "crop"]).sort_index(),
         suit_lookup={(r["lga"], r["crop"]): r for r in suit.to_dict("records")},
-        season_days={
-            **{c: m * 30.4 for c, m in suit.groupby("crop")["season_months"].first().items()},
-            **{k: float(c.stages_days.total) for k, c in crops.crops.items()},
-        },
+        season_days=crop_season_days(suit, crops),
     )
 
 
