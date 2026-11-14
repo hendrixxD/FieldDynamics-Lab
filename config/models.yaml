@@ -237,6 +237,8 @@ paths:
   onset: data/processed/a2/a2_lga_year.csv
   # Every mid-season dry spell of 7+ days (python -m data.onset_a2): the season strip's window.
   dry_spells: data/processed/a2/a2_dry_spells.csv
+  # iSDA 1 km grid with cropland share per cell (python -m data.isda): engine P and S line.
+  isda_grid: data/processed/isda_kaduna_1000m.parquet
   # A9 reads the soil water chosen by A8.
   soil: data/processed/models/a8/a8_lga_soil_water.csv
   isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
@@ -336,6 +338,18 @@ engine:
     pests_weight_bonus: 2       # design: High Striga risk adds weight to the Pests row
   levels: {high: 0.67, medium: 0.34}   # design: score cut-offs for Low / Medium / High
   sensitivity: {runs: 200, max_nudge: 0.2, swap_share: 0.3}  # PRD Step 6
+  # Who to check each risk line with (R12): the first pattern found in the line wins.
+  check_with:
+    - [Striga, "your extension officer (ask for a Striga-resistant variety)"]
+    - [armyworm, your extension officer or ADP pest scout]
+    - [thrips, your extension officer or ADP pest scout]
+    - [blight, your extension officer or ADP pest scout]
+    - [aflatoxin, your extension officer]
+    - [soil, a soil test through your extension officer]
+    - [price, buyers in your market]
+  check_with_default: your extension officer
+  # Franke et al. 2008 (Zaria): legume and maize responses depended on P and S, not N alone.
+  phosphorus_sulphur_line: "Soils around here may also need phosphorus and sulphur (Franke et al. 2008, Zaria trials): ask your extension officer about a soil test"
   scouting:                   # docs/pest-risk.md: standing lines, no weather needed
     fall_armyworm_host: "Check maize and sorghum for fall armyworm 2 to 6 weeks after planting"
     cowpea_flowering_pests: "Check cowpea for thrips and pod borers at flowering"

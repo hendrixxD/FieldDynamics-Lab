@@ -57,6 +57,8 @@ class EngineData:
     risk_lines: pd.DataFrame  # A14: share of seasons with each weather risk, per LGA and crop
     suitability: pd.DataFrame  # A15: EcoCrop climate and soil fit, indexed by LGA and crop
     suit_lookup: dict[tuple[str, str], dict]  # fast A15 access
+    trends: pd.DataFrame  # A7 card series per LGA: Sen slope per decade and significance
+    phosphorus_ppm: pd.Series  # iSDA extractable P, 0-20 cm, cropland mean per LGA
     season_days: dict[str, float]  # days in the ground per crop (FAO-56, else ECOCROP)
     type_share_lookup: dict[str, dict[str, float]]  # A5 shares as plain dicts
 
@@ -141,11 +143,21 @@ def _indexed(path: Path, lgas: list[str]) -> pd.DataFrame:
 
 # Tables the engine needs, as written to the serving bundle. Indexed ones keep their index.
 INDEXED_TABLES = ("land", "confidence", "lga", "type_share", "heat_share", "prices")
-FLAT_TABLES = ("water", "risk_lines", "suitability", "season_fit")
+FLAT_TABLES = ("water", "risk_lines", "suitability", "season_fit", "trends")
 
 
-def lga_table(isda: pd.DataFrame, land: pd.DataFrame, year: pd.DataFrame) -> pd.DataFrame:
-    """Per-LGA inputs the engine reads: Striga soil base, dry-spell share, rain start, need."""
+def cropland_means(grid: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
+    """Per LGA: each column averaged over the 1 km iSDA cells, weighted by their cropland share."""
+    weight = grid["cropland_fraction"]
+    total = grid[columns].mul(weight, axis=0).groupby(grid["lga"]).sum()
+    return total.div(weight.groupby(grid["lga"]).sum(), axis=0)
+
+
+def lga_table(
+    isda: pd.DataFrame, land: pd.DataFrame, year: pd.DataFrame, soil: pd.DataFrame
+) -> pd.DataFrame:
+    """Per-LGA inputs the engine reads: Striga soil base, dry-spell share, rain start, need, and
+    cropland phosphorus and sulphur (iSDA) for the soil-test risk line."""
     spells = (year["a2_dry_spells_10plus"] > 0).groupby(year["lga"]).mean()
     striga = striga_soil_base(isda)
     need = lga_need(isda, land, spells, striga).add_prefix("need_")
@@ -153,6 +165,8 @@ def lga_table(isda: pd.DataFrame, land: pd.DataFrame, year: pd.DataFrame) -> pd.
         striga_soil=striga,
         dry_spell_share=spells,
         onset_doy=year.groupby("lga")["a2_onset_doy"].median(),
+        phosphorus_ppm=soil["phosphorus_ppm_0_20cm"],
+        sulphur_ppm=soil["sulphur_ppm_0_20cm"],
     ).rename_axis("lga")
 
 
@@ -173,17 +187,24 @@ def pipeline_tables(cfg: ModelConfig) -> dict[str, pd.DataFrame]:
         if c not in set(water["crop"])
     }
     types = _indexed(out / "a5" / "a5_lga_year_types.csv", lgas)
+    grid = pd.read_parquet(cfg.paths.isda_grid)
+    grid = grid.assign(lga=canonical_lga(grid["lga"], lgas))
+    soil = cropland_means(grid, ["phosphorus_ppm_0_20cm", "sulphur_ppm_0_20cm"])
+    trends = _indexed(out / "a7" / "a7_lga_trends.csv", lgas)
     return {
         "water": water,
         "land": land,
         "confidence": _indexed(out / "a12" / "a12_lga_confidence.csv", lgas).set_index("lga"),
-        "lga": lga_table(isda, land, year),
+        "lga": lga_table(isda, land, year, soil),
         "type_share": _indexed(out / "a5" / "a5_lga_type_share.csv", lgas).set_index("lga"),
         "heat_share": a3.pivot(index="lga", columns="month", values="heat_share_years"),
         "prices": kdbs.pivot(index="lga", columns="crop", values="price_ngn"),
         "risk_lines": pd.read_csv(cfg.paths.risk_lines),
         "suitability": suit,
         "season_fit": season_fit_table(types, unbalanced),
+        "trends": trends.loc[
+            trends["on_card"], ["lga", "series", "sen_slope_per_decade", "significant"]
+        ],
     }
 
 
@@ -220,6 +241,8 @@ def assemble(cfg: ModelConfig, t: dict[str, pd.DataFrame]) -> EngineData:
         suitability=suit.set_index(["lga", "crop"]).sort_index(),
         suit_lookup={(r["lga"], r["crop"]): r for r in suit.to_dict("records")},
         season_days=crop_season_days(suit, crops),
+        trends=t["trends"].set_index(["lga", "series"]).sort_index(),
+        phosphorus_ppm=lga["phosphorus_ppm"],
     )
 
 

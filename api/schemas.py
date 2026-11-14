@@ -23,6 +23,29 @@ class Study(BaseModel):
     zones: list[str]
 
 
+class CropFact(BaseModel):
+    """One crop on a card: its water need under the chosen season type and N fixing (R4)."""
+
+    crop: str
+    fixes_nitrogen: bool
+    water_need_mm: float | None
+    short_share: float | None
+
+
+class Risk(BaseModel):
+    """A risk line and who to check it with (R12)."""
+
+    text: str
+    check_with: str
+
+
+class Opportunity(BaseModel):
+    """One of the four opportunities (R19) and the row reason behind it."""
+
+    name: str
+    reason: str
+
+
 class Confidence(BaseModel):
     level: Level
     reason: str
@@ -38,14 +61,19 @@ class Card(BaseModel):
     rows: dict[str, Row]
     total: float | None
     rows_scored: int
+    crops: list[CropFact]
+    water_line: str
+    why: str
+    benefits: list[str]
     studies: list[Study]
     source: Literal["current", "data"]
     confidence: Confidence
-    risks: list[str]
+    risks: list[Risk]
     labour: str
     gaps: list[str]
+    trend_line: str
     check_first: bool
-    opportunities: list[str] = []
+    opportunities: list[Opportunity] = []
 
 
 class StrigaRisk(BaseModel):
@@ -65,3 +93,4 @@ class ScoreResponse(BaseModel):
     close_call: bool
     dropped: dict[str, str]
     low_cropland: bool
+    notice: str | None = None

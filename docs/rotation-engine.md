@@ -76,6 +76,26 @@ One request takes about 0.1 s.
 
 Weights and cut-offs marked "design" in `config/models.yaml` are our choices.
 
+## What each card carries (PRD section 9)
+
+Every card, Current included, has the same fields in the same order. All text is built from the engine's own reasons and the data; nothing is written by hand per farmer.
+
+| Field | Rule | Row |
+|---|---|---|
+| `crops` | Per crop: water need (A9, chosen season type), share of seasons short, and whether it fixes nitrogen | R4 |
+| `water_line` | "Maize needs about 420 mm and ran short in 0 of 10 typical seasons" | R4, R13 |
+| `why` | The two reasons carrying the most weight, preferring rows that beat Current | R8 |
+| `benefits` | One line per chosen priority the card improves on Current; Current lists what it already does best | R10 |
+| `gaps` | Row gaps plus standing ones (soil is a satellite estimate; greenness could not predict stress), so never empty | R11 |
+| `risks` | Each line with `check_with`, from `engine.check_with` in `config/models.yaml` | R12 |
+| `opportunities` | Which of the four apply, each with the row reason behind it | R19 |
+| `trend_line` | A7 rain start and heat trends, the rotation's fit in late-start years, and its heat margin (A15) | R32 |
+| `check_first` | True when confidence is Low | R22 |
+
+The response also carries `notice` when no priority is chosen. The PRD asks for equal weights then; the engine instead weights rows by what the LGA's data says matters most (step 4), and the notice says so.
+
+**Soil risk lines.** A rotation with a legume carries the PRD's phosphorus and sulphur line (Franke et al. 2008: Zaria soils need P and S, not N alone), with the LGA's iSDA cropland phosphorus. No threshold is invented: sulphur barely varies across Kaduna (5.6 to 7.2 ppm), and no verified critical level is in the repo. The PRD's hand-tool warning for stony soil is not built: iSDA stone content is 2 to 5% in every LGA's cropland, so no LGA is stony at this scale.
+
 ## How the studies check it (notebook a13)
 
 The engine ranked every candidate (now drawn from 14 crops, filtered by A15 suitability and the A9 water rules) for every LGA, all four season types and two typical farms (continuous maize, continuous sorghum). Studies played no part in this ranking. All study statuses were checked against their papers on 14 Nov 2026 (`config/rotations.yaml` names each paper).
