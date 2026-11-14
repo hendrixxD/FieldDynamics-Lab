@@ -173,6 +173,14 @@ class Paths(BaseModel):
     monthly_features: Path
     static_features: Path
     ndvi_composites: Path
+    contract: Path
+    dry_spells: Path
+
+
+class ContractConfig(BaseModel):
+    version: int
+    years: Years
+    dry_spell_min_share: float = Field(ge=0, le=1)
 
 
 class EngineWater(BaseModel):
@@ -267,6 +275,7 @@ class ModelConfig(BaseModel):
     suitability: SuitabilityConfig
     risk_lines: RiskLineConfig
     engine: EngineConfig
+    contract: ContractConfig
 
     @property
     def lga_zone(self) -> dict[str, str]:

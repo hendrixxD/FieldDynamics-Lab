@@ -3,7 +3,8 @@
 Training lives in the notebooks (AGENTS.md, Modeling). This command runs them in the order set
 in config/models.yaml, top to bottom in a fresh kernel, and saves each executed notebook in
 place, so the outputs in data/processed/models/ and the notebook cells always come from the same
-run. Formulas live in model/ as tested functions that the notebooks import.
+run. It ends by writing the app's engine bundle and data contract files. Formulas live in model/
+as tested functions that the notebooks import.
 
     python -m model.build                 # every notebook in order
     python -m model.build --only a9_water_balance
@@ -17,6 +18,7 @@ from pathlib import Path
 import nbformat
 from nbclient import NotebookClient
 
+from model.contract import write_contract
 from model.engine_data import export_bundle
 from model.settings import load_model_config
 
@@ -55,6 +57,7 @@ def main() -> None:
         seconds = run_notebook(cfg.paths.notebooks / f"{name}.ipynb", cfg.build.timeout_s)
         log.info("  done in %.0f s", seconds)
     log.info("Engine bundle for the app written to %s", export_bundle(cfg))
+    log.info("Contract files for the app written to %s", write_contract(cfg))
 
 
 if __name__ == "__main__":

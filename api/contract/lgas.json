@@ -1,0 +1,144 @@
+{
+ "contract_version": 1,
+ "source": "model",
+ "lgas": [
+  {
+   "lga": "Birnin Gwari",
+   "zone": "Central",
+   "cropland_share": 0.3,
+   "low_cropland": false
+  },
+  {
+   "lga": "Chikun",
+   "zone": "Central",
+   "cropland_share": 0.222,
+   "low_cropland": false
+  },
+  {
+   "lga": "Giwa",
+   "zone": "Central",
+   "cropland_share": 0.608,
+   "low_cropland": false
+  },
+  {
+   "lga": "Igabi",
+   "zone": "Central",
+   "cropland_share": 0.549,
+   "low_cropland": false
+  },
+  {
+   "lga": "Ikara",
+   "zone": "North",
+   "cropland_share": 0.813,
+   "low_cropland": false
+  },
+  {
+   "lga": "Jaba",
+   "zone": "South",
+   "cropland_share": 0.277,
+   "low_cropland": false
+  },
+  {
+   "lga": "Jema'a",
+   "zone": "South",
+   "cropland_share": 0.413,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kachia",
+   "zone": "South",
+   "cropland_share": 0.144,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kaduna North",
+   "zone": "Central",
+   "cropland_share": 0.112,
+   "low_cropland": true
+  },
+  {
+   "lga": "Kaduna South",
+   "zone": "Central",
+   "cropland_share": 0.065,
+   "low_cropland": true
+  },
+  {
+   "lga": "Kagarko",
+   "zone": "South",
+   "cropland_share": 0.33,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kajuru",
+   "zone": "Central",
+   "cropland_share": 0.276,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kaura",
+   "zone": "South",
+   "cropland_share": 0.508,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kauru",
+   "zone": "South",
+   "cropland_share": 0.642,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kubau",
+   "zone": "North",
+   "cropland_share": 0.792,
+   "low_cropland": false
+  },
+  {
+   "lga": "Kudan",
+   "zone": "North",
+   "cropland_share": 0.927,
+   "low_cropland": false
+  },
+  {
+   "lga": "Lere",
+   "zone": "North",
+   "cropland_share": 0.741,
+   "low_cropland": false
+  },
+  {
+   "lga": "Makarfi",
+   "zone": "North",
+   "cropland_share": 0.866,
+   "low_cropland": false
+  },
+  {
+   "lga": "Sabon Gari",
+   "zone": "North",
+   "cropland_share": 0.659,
+   "low_cropland": false
+  },
+  {
+   "lga": "Sanga",
+   "zone": "South",
+   "cropland_share": 0.358,
+   "low_cropland": false
+  },
+  {
+   "lga": "Soba",
+   "zone": "North",
+   "cropland_share": 0.853,
+   "low_cropland": false
+  },
+  {
+   "lga": "Zangon Kataf",
+   "zone": "South",
+   "cropland_share": 0.323,
+   "low_cropland": false
+  },
+  {
+   "lga": "Zaria",
+   "zone": "North",
+   "cropland_share": 0.746,
+   "low_cropland": false
+  }
+ ]
+}

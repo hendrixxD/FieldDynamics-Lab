@@ -235,6 +235,8 @@ paths:
   rain_daily: data/processed/chirps/chirps_lga_daily.csv
   power_daily: data/processed/power/power_lga_daily.parquet
   onset: data/processed/a2/a2_lga_year.csv
+  # Every mid-season dry spell of 7+ days (python -m data.onset_a2): the season strip's window.
+  dry_spells: data/processed/a2/a2_dry_spells.csv
   # A9 reads the soil water chosen by A8.
   soil: data/processed/models/a8/a8_lga_soil_water.csv
   isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
@@ -247,6 +249,9 @@ paths:
   # Small CSV copy of the engine's tables for the deployed app (python -m model.engine_data).
   # Outside data/ because .vercelignore drops data/.
   engine_bundle: api/engine_inputs
+  # The data contract files the app reads (PRD section 11): lgas.json and season/{lga}.json,
+  # written by python -m model.contract. Outside data/ for the same reason as the bundle.
+  contract: api/contract
   # Reference for A8: 33 and 1500 kPa from Zenodo, all land per LGA (python -m data.openlandmap_zenodo)
   openlandmap: data/processed/extras/openlandmap/openlandmap_lga_water_zenodo.csv
   # 33 kPa over cropland only, from Earth Engine (python -m data.gee_extras openlandmap): mask check
@@ -335,3 +340,12 @@ engine:
     fall_armyworm_host: "Check maize and sorghum for fall armyworm 2 to 6 weeks after planting"
     cowpea_flowering_pests: "Check cowpea for thrips and pod borers at flowering"
     ginger_blight: "Ginger blight spreads in wet, poorly drained fields: rotate and drain"
+
+# Data contract (PRD section 11, R36). Bump version when a field is renamed or removed.
+contract:
+  version: 1
+  # Climate record behind the season strip: CHIRPS and POWER both start in 1981; 2026 is partial.
+  years: {start: 1981, end: 2025}
+  # Design: a month is the usual dry-spell month only if 7+ day spells start in it in at least 1
+  # year in 10. Below that the strip shows no window and says why (model-results.md, A2 fix).
+  dry_spell_min_share: 0.1

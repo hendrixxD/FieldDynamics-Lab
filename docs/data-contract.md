@@ -120,6 +120,29 @@ Built by `python -m model.build` into `data/processed/models/`. All are LGA-leve
 - Crops: `maize`, `sorghum`, `millet`, `soybean`, `cowpea`, `groundnut`, `sesame`.
 - LGA names follow the feature tables (`Jema'a`).
 
+## Contract files the app reads
+
+Built by `python -m model.contract`, which `python -m model.build` also runs at its end. Written to `api/contract/` (outside `data/`, which Vercel skips). Every file carries `contract_version` (now 1, set in `config/models.yaml`) and `source` (`model`). A test fails if the committed files differ from a fresh build.
+
+| File | Contents |
+| --- | --- |
+| `lgas.json` | Every LGA with its zone, cropland share and low-cropland flag (I1) |
+| `season/{lga}.json` | The season strip, trends and flags for one LGA (below) |
+
+`season/{lga}.json` fields:
+
+| Field | Contents | Source |
+| --- | --- | --- |
+| `months` | Twelve values each: `rain_mm`, `et0_mm`, `water_balance_mm`, `tmax_c`, `heat_days`, `heat_share_years`, `frost_share_years`, `very_heavy_rain_share_years`, `extreme_rain_share_years`, `soil_moisture_anomaly_z`, `dry_soil_share_years`, `ndvi_cropland`, `bare_probability`, `dry_spell_start_share` | A3, A4, A2, MODIS NDVI |
+| `onset_doy`, `cessation_doy`, `length_days` | `median`, `p10`, `p90` (8 years in 10 fall between) and `years` | A2, 1981 to 2025 |
+| `dry_spell` | `usual_month` (null when no month has 7+ day spells in 1 year in 10, with a `note`), `share_years`, `share_years_10plus`, `longest_median_days` | A2 |
+| `season_types` | Per A5 type: `name`, `share_years`, `years`, `profile_source`, and a monthly profile (`rain_mm`, `ndvi_cropland`, `tmax_c`, `heat_days`, `water_balance_mm`) | A5 |
+| `trends` | A7 rows allowed on cards (`trends.card_series`): `series`, `card_line`, `sen_slope_per_decade`, `significant`, `first_year`, `last_year` | A7 |
+| `erosion_band`, `confidence` | Low, Medium or High band; level and reason | A10, A12 |
+| `flags` | `low_cropland`, `urban_lga`, `imerg_suspect`, `cropland_share`, `ndvi_filled_share`, `smap_years`, `et0_solar_filled_years` | Feature tables, A12 |
+
+Values are rounded to 3 places; a missing value is `null`, never a guess.
+
 ## Map outputs
 
 All are built by `python -m model.build` and stored as static files, except where noted.
