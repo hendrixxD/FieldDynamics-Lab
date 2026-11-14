@@ -8,7 +8,7 @@ Every dataset we use is logged here. Fill in each row when the data is pulled, u
 | --- | --- | --- | --- | --- | --- |
 | GPM | | | | | |
 | MODIS | | | | | |
-| SMAP | | | | | |
+| SMAP | SPL4SMGP V008, Earth Engine `NASA/SMAP/SPL4SMGP/008`, 13:30 UTC step daily: `sm_rootzone`, `sm_surface`, `sm_rootzone_wetness` | 9 km native, held by Earth Engine on a ~0.095° lat/lon grid; mean of cell centres per LGA | 2015-03-31 to 2026-11-10 | 2026-11-14 | [Catalog](https://developers.google.com/earth-engine/datasets/catalog/NASA_SMAP_SPL4SMGP_008), [NSIDC](https://nsidc.org/data/spl4smgp/versions/8) |
 | Landsat | | | | | |
 | SRTM | | | | | |
 | GRACE-FO | | | | | |
@@ -16,6 +16,8 @@ Every dataset we use is logged here. Fill in each row when the data is pulled, u
 | NASA POWER | | | | | |
 | GEDI | | | | | |
 | NASA GIBS | | | | | |
+
+SMAP check against the native files: on 51 days (every 5th day of April to October 2024, and 8 days of July 2023), per-LGA daily means from Earth Engine were compared with the same days read from the native EASE-Grid HDF5 files via Earthdata (`python -m data.smap_kaduna --source earthdata`). Across all 23 LGAs, `sm_rootzone` differs by 0.0032 m³/m³ on average (bias +0.0002, native mean 0.209, correlation 0.996). Kauru differs most, by 0.019 on average and 0.025 at most. `sm_rootzone_wetness` differs by 0.0065 on average (correlation 0.997).
 
 ## Partner and other datasets
 
