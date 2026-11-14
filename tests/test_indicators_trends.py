@@ -61,6 +61,9 @@ def test_card_line_wording() -> None:
     line = tr.card_line("Rain start", 4.2, "days", True, "later", "earlier")
     assert line == "Rain start: 4 days later per decade (clear trend)"
     assert "could be chance" in tr.card_line("Rain", -3.0, "mm", False)
+    assert tr.card_line("Dry spells", 0.0, "spells", False, "more", "fewer") == (
+        "Dry spells: no change per decade (no clear trend, could be chance)"
+    )
 
 
 # ------------------------------------------------------------------ A4
@@ -136,3 +139,33 @@ def test_soil_relative_width() -> None:
         }
     )
     assert cf.soil_relative_width(isda, ["sand_content"], "0_20").iloc[0] == pytest.approx(0.2)
+
+
+def test_trend_table_controls_false_discoveries_within_each_series() -> None:
+    """A strongly trending series must not loosen the test on another series."""
+    rng = np.random.default_rng(0)
+    years = np.arange(1981, 2026)
+    rows = []
+    for i in range(5):
+        noise = rng.normal(size=years.size)
+        rows.append(
+            pd.DataFrame(
+                {"lga": f"L{i}", "year": years, "steep": years * 1.0 + noise, "flat": noise}
+            )
+        )
+    table = tr.trend_table(pd.concat(rows), ["steep", "flat"], 0.05)
+    flat = table[table["series"] == "flat"]
+    alone = tr.trend_table(pd.concat(rows), ["flat"], 0.05)
+    assert flat["p_adjusted"].tolist() == alone["p_adjusted"].tolist()
+    assert table.loc[table["series"] == "steep", "significant"].all()
+
+
+def test_flat_sen_slope_is_never_significant() -> None:
+    years = np.arange(1981, 2026)
+    spells = np.zeros(years.size)
+    spells[-6:] = 1  # sparse counts: Mann-Kendall may reject, Sen's slope stays 0
+    table = tr.trend_table(
+        pd.DataFrame({"lga": "A", "year": years, "spells": spells}), ["spells"], 0.05
+    )
+    assert table["sen_slope_per_year"].iloc[0] == 0
+    assert not table["significant"].iloc[0]

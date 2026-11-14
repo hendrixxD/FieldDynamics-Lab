@@ -2,8 +2,8 @@
 
 Mann-Kendall (pymannkendall) tests for a monotonic trend without assuming normal errors; Sen's
 slope is the median of pairwise slopes, robust to outlier years. Hamed and Rao (1998) widen the
-test's variance when the series is autocorrelated. Testing 23 LGAs x 4 series at once would give
-about 5 false "significant" trends by chance at 5 %, so Benjamini and Hochberg (1995) false
+test's variance when the series is autocorrelated. Testing every LGA and series at once would give
+many false "significant" trends by chance at 5 %, so Benjamini and Hochberg (1995) false
 discovery control decides the significance flag shown on cards.
 """
 
@@ -64,8 +64,12 @@ def benjamini_hochberg(p_values: pd.Series) -> pd.Series:
 def trend_table(annual: pd.DataFrame, series: list[str], alpha: float) -> pd.DataFrame:
     """One row per LGA and series: slopes per decade, p-values and the significance flag.
 
-    annual has lga, year and one column per series. A trend counts as significant when its
-    trend_p, adjusted for false discoveries across the whole table, is below alpha.
+    annual has lga, year and one column per series. False discoveries are controlled within
+    each series (its 23 LGAs form one family), so adding an unrelated series with strong
+    p-values cannot loosen the test on the others. A trend counts as significant when its
+    adjusted trend_p is below alpha and its Sen slope is not zero: on sparse counts (0 to 2 long
+    dry spells a year) Mann-Kendall can reject while the robust slope is flat, and a trend with
+    no size is not one to report.
     """
     rows = []
     for (lga, name), group in annual.melt(["lga", "year"], series, "series").groupby(
@@ -82,8 +86,8 @@ def trend_table(annual: pd.DataFrame, series: list[str], alpha: float) -> pd.Dat
     table = pd.DataFrame(rows)
     table["sen_slope_per_decade"] = table["sen_slope_per_year"] * 10
     table["ols_slope_per_decade"] = table["ols_slope_per_year"] * 10
-    table["p_adjusted"] = benjamini_hochberg(table["trend_p"])
-    table["significant"] = table["p_adjusted"] < alpha
+    table["p_adjusted"] = table.groupby("series")["trend_p"].transform(benjamini_hochberg)
+    table["significant"] = (table["p_adjusted"] < alpha) & (table["sen_slope_per_year"] != 0)
     table["direction"] = np.sign(table["sen_slope_per_year"]).map(
         {1.0: "up", -1.0: "down", 0.0: "flat"}
     )
@@ -98,7 +102,12 @@ def card_line(
     up_word: str = "more",
     down_word: str = "less",
 ) -> str:
-    """Plain trend sentence for a card, e.g. 'Rain start: 4 days later per decade (clear trend)'."""
-    word = up_word if slope_per_decade > 0 else down_word
+    """Plain trend sentence for a card, e.g. 'Rain start: 4 days later per decade (clear trend)'.
+
+    A slope that rounds to zero reads 'no change', never '0 fewer'.
+    """
     verdict = "clear trend" if significant else "no clear trend, could be chance"
+    if round(abs(slope_per_decade)) == 0:
+        return f"{label}: no change per decade ({verdict})"
+    word = up_word if slope_per_decade > 0 else down_word
     return f"{label}: {abs(slope_per_decade):.0f} {unit} {word} per decade ({verdict})"

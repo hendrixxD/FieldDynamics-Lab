@@ -112,9 +112,20 @@ class BareFieldConfig(BaseModel):
     years: Years
 
 
+class TrendWords(BaseModel):
+    """How a series reads on a card: 'Rain start: 3 days later per decade'."""
+
+    label: str
+    unit: str
+    up: str
+    down: str
+
+
 class TrendConfig(BaseModel):
     years: Years
     series: dict[str, str]
+    words: dict[str, TrendWords]
+    card_series: list[str]
     alpha: float = Field(gt=0, lt=1)
 
 

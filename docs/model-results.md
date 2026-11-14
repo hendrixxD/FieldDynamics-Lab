@@ -216,18 +216,28 @@ Outputs: `a4/a4_bare_probability.csv` (share of years each LGA's cropland is bar
 
 ## A7. Long-term trends
 
-Notebook `notebooks/a7_trends.ipynb`, formulas `model/trends.py`. Mann-Kendall with Sen's slope per LGA and series, 1981 to 2025, against an OLS baseline. The Hamed-Rao autocorrelation correction is used only when it makes the test stricter (`trend_p` is the larger of the two p values), and Benjamini-Hochberg controls false discoveries across all 92 tests (23 LGAs x 4 series).
+Notebook `notebooks/a7_trends.ipynb`, formulas `model/trends.py`. Mann-Kendall with Sen's slope per LGA and series, 1981 to 2025 (GLDAS from 2000), against an OLS baseline. The Hamed-Rao autocorrelation correction is used only when it makes the test stricter (`trend_p` is the larger of the two p values). Benjamini-Hochberg controls false discoveries within each series (23 LGAs per family), so a strongly trending series cannot loosen the test on another. A trend counts only if its Sen slope is not zero.
 
 | Series | Median per decade | LGAs significant after FDR |
 |---|---|---|
-| Heat days (POWER, Tmax at or above 35 C) | +11.7 days (range 9.2 to 17.5) | 5: Jaba, Jema'a, Kudan, Makarfi, Sanga |
+| Heat days (POWER, Tmax at or above 35 C) | +11.7 days (range 9.2 to 17.5) | 16 |
 | Rain start day (A2) | +2.9 days later | 0 (later in 20 of 23 LGAs, none distinguishable from chance) |
 | April to October rain (CHIRPS) | +2.9 mm | 0 |
+| Season water balance (rain minus FAO-56 ET0) | +2.2 mm | 0 |
 | 10+ day dry spells (A2) | 0 | 0 |
+| Longest in-season dry spell (A2) | 0 days | 0 |
+| Root-zone soil water, 0 to 100 cm (GLDAS-2.1, 2000 on) | -12 mm | 20, not trusted (below) |
 
-Check: POWER Tmax warms +0.50 C per decade against ERA5-Land +0.22 C per decade (medians). The direction of the heat-day trend is solid; its size is probably overstated by POWER, so the card says "more heat days" without a number. For rain start the card says "no clear trend", not a shift.
+Two cross-checks:
 
-Outputs: `a7/a7_lga_trends.csv` (with `card_line`), `a7/a7_tmax_power_vs_era5.csv`.
+- **Heat.** POWER Tmax warms +0.50 C per decade against ERA5-Land +0.22 C per decade (medians). The direction of the heat-day trend is solid; its size is probably overstated by POWER, so the card says "more heat days" without a number.
+- **Soil water.** GLDAS dries mostly in one step after 2015. ERA5-Land soil water (7 to 28 cm) shows no significant trend in any LGA, the two correlate at r = 0.03 from year to year, and rain has no trend. The drying is not confirmed and not explained, so it stays off the cards (`trends.card_series`) and is shown on Learn as an unconfirmed model signal.
+
+Long-term water trends therefore come from rain, the water balance and dry spells (no change), not from a water-storage product. GRACE-FO is not used: its footprint covers Kaduna in a handful of pixels (PRD section 4).
+
+Changes on 14 Nov 2026: false discovery control moved from one 92-test family to one family per series (heat days went from 5 to 16 LGAs significant); the zero-slope rule removed a "significant" dry-spell trend with a flat slope; a zero slope now reads "no change" on the card, not "0 fewer".
+
+Outputs: `a7/a7_lga_trends.csv` (with `card_line` and `on_card`), `a7/a7_tmax_power_vs_era5.csv`, `a7/a7_soil_water_gldas_vs_era5.csv`.
 
 ## A10. Erosion risk and infiltration
 
