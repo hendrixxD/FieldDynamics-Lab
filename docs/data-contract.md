@@ -102,6 +102,24 @@ Soil values can be null where iSDA has no data, such as water and some built-up 
 
 iSDA is modelled at 30 m from sparse soil samples. Averaging to 1 km does not add detail, and the map legend should say so.
 
+## Model outputs (LGA level)
+
+Built by `python -m model.build` into `data/processed/models/`. All are LGA-level: one row per LGA (or LGA and season type, or LGA and crop), not per grid cell. Method and results: [model results](model-results.md).
+
+| Output | Path | Grain | Columns the app reads |
+| --- | --- | --- | --- |
+| Season types per year | `a5/a5_lga_year_types.csv` | LGA, year (2000 to 2024) | `season_type`, `p_<type>` membership probabilities |
+| Season type shares | `a5/a5_lga_type_share.csv` | LGA | Share of years in each type |
+| Season strip profiles | `a5/a5_monthly_profiles.csv` | LGA, season type, month | `rain_mm`, `ndvi_crop_sg`, `power_tmax_mean_c`, `power_heat_days`, `water_balance_mm`, `n_years`, `source` |
+| Stress by season type | `a6/a6_lga_season_type_stress.csv` | LGA, season type | `observed_share_stressed`, `observed_years`, `card_source` (`weather_risk_a2_a9` while A6 has no skill) |
+| Stress drivers | `a6/a6_lga_drivers.csv` | LGA | `driver_1` to `driver_3` with shares (Learn only while A6 has no skill) |
+| Crop water by LGA | `a9/a9_lga_crop_summary.csv` | LGA, crop | `water_need_mm`, `short_share`, `fits_season_share`, `riskiest_stage_label`, `et0_filled_share` |
+| Crop water by season type | `a9/a9_lga_crop_season_type.csv` | LGA, crop, season type | As above, plus `years` (years of that type behind each share) |
+
+- Season type names: `Typical`, `Dry spell`, `Late start`, `Short and dry`.
+- Crops: `maize`, `sorghum`, `millet`, `soybean`, `cowpea`, `groundnut`, `sesame`.
+- LGA names follow the feature tables (`Jema'a`).
+
 ## Map outputs
 
 All are built by `python -m model.build` and stored as static files, except where noted.

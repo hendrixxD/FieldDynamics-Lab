@@ -1,0 +1,7 @@
+scheme,interval,coverage,mean_width
+leave_one_year_out,lgbm_quantile,0.6952,2.2158
+leave_one_year_out,ridge_bootstrap,0.7181,2.3478
+leave_one_year_out,ridge_loyo_residual,0.7981,2.6758
+senatorial_zone,lgbm_quantile,0.6571,1.8779
+senatorial_zone,ridge_bootstrap,0.7219,2.2912
+senatorial_zone,ridge_loyo_residual,0.8019,2.6758

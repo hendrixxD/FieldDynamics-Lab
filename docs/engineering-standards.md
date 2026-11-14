@@ -141,14 +141,14 @@ Rules that apply to every model:
 
 ## 5. Data pipeline and reproducibility
 
-- One command rebuilds everything. `python -m data.build` produces the feature table; `python -m model.build` produces model outputs, map PNGs and GeoJSON. If a result cannot be rebuilt from scratch, it does not exist.
+- One command rebuilds everything. `python -m data.build` produces the feature table; `python -m model.build` runs the training notebooks top to bottom in a fresh kernel, and they write the model outputs, map PNGs and GeoJSON. If a result cannot be rebuilt from scratch, it does not exist.
 - Raw data is never edited. Raw pulls go to `data/raw/` (git-ignored); every transformation writes a new file to `data/processed/`.
 - Every dataset is logged in `docs/sources.md`: name, product version, resolution, date range, access date, and link.
 - One coordinate system. Store everything in EPSG:4326 for the app; do area and distance maths in a projected CRS (UTM zone 32N for Kaduna), then convert back.
 - Validate data on load with pandera or explicit checks: no unexpected nulls, values in physical ranges (soil moisture between 0 and 0.6, NDVI between -1 and 1, rainfall not negative).
 - Handle gaps explicitly. Document how cloud gaps in NDVI and missing SMAP days are filled, and flag filled values so they lower confidence on the strategy cards.
 - Schema changes are versioned. A changed feature table gets a new name (`features_v2.parquet`) and the data contract is updated in the same pull request.
-- No notebook in the production path. Notebooks explore and evaluate; anything the app uses is a tested `.py` module.
+- Models are trained in notebooks, run in order by `python -m model.build`, so training is readable and reproducible. A notebook must run top to bottom in a fresh kernel and must not depend on hidden state. Formulas, validation and metrics are tested `.py` functions in `model/` that the notebooks import; the app imports only `.py` modules and reads saved outputs, never a notebook.
 
 ## 6. API, frontend and testing
 

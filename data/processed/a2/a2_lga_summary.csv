@@ -1,0 +1,24 @@
+lga,years,onset_median,onset_p20_early,onset_p80_late,onset_normal_1991_2020,onset_normal_doy,cessation_median,cessation_normal_doy,length_median_days,longest_dry_spell_median_days,share_years_dry_spell_10plus,onset_trend_days_per_decade,onset_trend_p
+Birnin Gwari,45,26 May,10 May,09 Jun,25 May,145.0,27 Oct,303.5,156,8,0.64,2.0,0.323
+Chikun,45,28 May,10 May,08 Jun,25 May,145.0,01 Nov,306.0,159,8,0.71,1.2,0.57
+Giwa,45,31 May,12 May,15 Jun,27 May,147.0,21 Oct,295.0,147,6,0.49,1.4,0.584
+Igabi,45,27 May,12 May,22 Jun,28 May,148.0,23 Oct,296.0,151,6,0.44,3.0,0.171
+Ikara,45,14 Jun,25 May,05 Jul,23 Jun,173.5,15 Oct,288.0,121,6,0.42,2.0,0.406
+Jaba,45,10 May,25 Apr,29 May,12 May,131.5,09 Nov,315.0,182,10,0.76,4.3,0.047
+Jema'A,45,14 May,05 May,01 Jun,12 May,131.5,08 Nov,313.0,175,8,0.62,3.1,0.109
+Kachia,45,13 May,05 May,27 May,12 May,132.0,08 Nov,312.5,179,10,0.91,4.7,0.013
+Kaduna North,45,29 May,14 May,11 Jun,30 May,150.5,24 Oct,298.0,152,7,0.51,3.8,0.072
+Kaduna South,45,27 May,11 May,10 Jun,26 May,145.5,26 Oct,299.5,153,7,0.6,3.4,0.129
+Kagarko,45,09 May,03 May,28 May,12 May,131.5,10 Nov,316.0,185,9,0.87,2.8,0.107
+Kajuru,45,17 May,05 May,03 Jun,16 May,136.0,31 Oct,305.5,166,8,0.67,3.1,0.203
+Kaura,45,07 May,27 Apr,28 May,08 May,128.5,03 Nov,307.0,177,7,0.51,5.6,0.005
+Kauru,45,26 May,05 May,05 Jun,26 May,146.0,25 Oct,298.0,153,6,0.33,3.4,0.07
+Kubau,45,31 May,21 May,09 Jun,01 Jun,152.5,19 Oct,292.0,140,5,0.36,0.0,0.93
+Kudan,45,04 Jun,20 May,04 Jul,03 Jun,154.5,15 Oct,289.5,131,6,0.4,0.3,0.899
+Lere,45,15 May,06 May,01 Jun,18 May,138.5,22 Oct,294.5,155,5,0.31,3.1,0.132
+Makarfi,45,08 Jun,22 May,03 Jul,03 Jun,154.5,15 Oct,289.0,128,6,0.38,0.0,0.969
+Sabon Gari,45,28 May,10 May,30 Jun,25 May,145.0,16 Oct,289.5,138,6,0.27,-2.1,0.389
+Sanga,45,13 May,05 May,02 Jun,13 May,133.0,06 Nov,311.0,175,8,0.67,2.9,0.162
+Soba,45,27 May,12 May,20 Jun,26 May,146.0,19 Oct,292.0,143,6,0.42,2.3,0.333
+Zangon Kataf,45,20 May,05 May,05 Jun,19 May,139.0,04 Nov,309.5,163,8,0.71,4.6,0.054
+Zaria,45,26 May,08 May,22 Jun,26 May,145.5,18 Oct,292.0,144,6,0.4,0.9,0.674

@@ -28,6 +28,8 @@ lightgbm
 optuna
 # pandera validates processed data on load.
 pandera
+# rosetta-soil runs the USDA Rosetta3 neural-network pedotransfer function (A8 soil water).
+rosetta-soil
 # pymannkendall provides the Mann-Kendall test with Sen's slope for the GRACE-FO trend.
 pymannkendall
 salib

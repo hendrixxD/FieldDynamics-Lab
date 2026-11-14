@@ -38,7 +38,8 @@ All Python code runs on Python 3.12.
 | Sensitivity analysis | SALib, or a simple loop in Python |
 | Water balance | Plain Python implementing FAO-56 |
 | Crop knowledge base | FAO ECOCROP plus a hand-built YAML or JSON rules file |
-| Notebooks (also proof for judges) | Jupyter |
+| Model training notebooks (run by `python -m model.build`; also proof for judges) | Jupyter, nbclient |
+| Soil water pedotransfer function (A8) | rosetta-soil (USDA Rosetta3) |
 | Notebook charts | matplotlib |
 
 ## 4. Backend

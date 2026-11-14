@@ -1,0 +1,14 @@
+feature,label,r_pooled,r_between_years,r_within_year,loyo_skill
+a2_onset_doy,rain start date,0.0432,0.0529,0.0384,-0.0179
+a2_cessation_doy,rain end date,0.1368,0.303,0.0089,-0.014
+a2_longest_dry_spell_days,longest dry spell,-0.0833,-0.1172,-0.0736,-0.0147
+a2_dry_spells_10plus,10+ day dry spells,-0.1414,-0.3336,-0.0761,-0.0063
+rain_early_mm,May-June rain,-0.0071,-0.0417,0.0191,-0.0179
+rain_mid_mm,July-August rain,0.1357,0.3326,-0.0271,-0.0123
+rain_late_mm,September-October rain,0.0796,0.2575,-0.1118,-0.0213
+season_power_heat_days,heat days,0.0545,0.072,0.0558,-0.0215
+tmax_mid_c,July-August daytime heat,0.2079,0.4131,-0.0685,0.0053
+season_chirps_heavy_days_50mm,very heavy rain days,-0.1209,-0.3892,-0.0332,-0.0101
+season_imerg_extreme_days_p95,extreme rain days,-0.0335,0.0608,-0.0953,-0.016
+water_balance_mid_mm,July-August water balance,0.0794,0.2129,-0.0205,-0.0209
+season_smap_anomaly_z,"soil moisture (SMAP, 2015 on)",-0.0996,-0.219,0.004,-0.0176

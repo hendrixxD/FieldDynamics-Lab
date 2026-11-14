@@ -44,6 +44,7 @@ Treat "you may" and "consider" as expected deliverables, not optional extras. Do
 | [Model evaluation](docs/model-evaluation.md) | How each model is tested |
 | [Map architecture](docs/map-architecture.md) | Map layers, formats, and endpoints |
 | [Experiment log](docs/experiments.csv) | Every model run and its held-out results |
+| [Model results](docs/model-results.md) | What each model found, and what ships |
 
 ## Repository structure
 
@@ -54,7 +55,7 @@ FieldDynamics-Lab/
 ├── api/           # FastAPI app, routes, schemas
 ├── web/           # Jinja templates, Alpine snippets, Tailwind source
 ├── static/        # precomputed PNGs, GeoJSON, built CSS
-├── notebooks/     # exploration and evaluation only
+├── notebooks/     # model training (run by model.build), plus exploration
 ├── tests/
 ├── docs/          # data contract, decisions, judge-facing notes
 └── config/        # colour scales, crop rules, settings
@@ -201,7 +202,7 @@ If a scan flags something you did not expect, stop and tell Hendrixx. Do not edi
 ## Data pipeline
 
 - `python -m data.build` produces the feature table.
-- `python -m model.build` produces model outputs, map PNGs, and GeoJSON.
+- `python -m model.build` runs the training notebooks in order (`config/models.yaml`, `build.notebooks`), each in a fresh kernel, and saves them executed. Each notebook writes its model outputs to `data/processed/models/` and logs its run.
 - If a result cannot be rebuilt from scratch, it does not exist.
 - Raw pulls go to `data/raw/`, which is git-ignored, and are never edited. Transformations write new files to `data/processed/`.
 - Log every dataset in `docs/sources.md`.
@@ -209,7 +210,7 @@ If a scan flags something you did not expect, stop and tell Hendrixx. Do not edi
 - Validate data on load: soil moisture 0 to 0.6, NDVI -1 to 1, rainfall not negative, and no unexpected nulls.
 - Flag gap-filled values so they lower confidence on the strategy cards.
 - A changed feature table gets a new name, such as `features_v2.parquet`, and the data contract changes in the same PR.
-- Notebooks explore and evaluate. Anything the app uses is a tested `.py` module.
+- Models are trained in notebooks, so every step can be read and rerun. Formulas the notebooks call (pedotransfer functions, FAO-56, validation splits, metrics) and anything the app imports are tested `.py` modules in `model/`. A notebook imports them; it never redefines them.
 
 ## Modeling
 
