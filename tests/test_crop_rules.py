@@ -22,7 +22,7 @@ def test_gaps_match_the_fields_that_have_no_value() -> None:
 def test_only_legumes_fix_nitrogen() -> None:
     legumes = {k for k, r in CFG.rules().items() if r.family == "Fabaceae"}
     fixers = {k for k in CFG.rules() if cr.fixes_nitrogen(k, CFG)}
-    assert fixers == legumes == {"soybean", "cowpea", "groundnut"}
+    assert fixers == legumes == {"soybean", "cowpea", "groundnut", "lablab", "stylosanthes"}
 
 
 def test_kdbs_commodities_are_crops_in_scope() -> None:

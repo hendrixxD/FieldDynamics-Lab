@@ -28,6 +28,7 @@ LIBRARY_MODULES = [
     "pydantic",
     "pydantic_settings",
     "pymannkendall",
+    "rdata",
     "requests",
     "rioxarray",
     "rosetta",

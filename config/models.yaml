@@ -201,7 +201,7 @@ confidence:
 build:
   notebooks: [a3_climate_indicators, a4_bare_fields, a5_season_types, a6_stress_model,
               a7_trends, a8_soil_water, a9_water_balance, a10_land_risk, a12_confidence,
-              a14_risk_lines]
+              a14_risk_lines, a15_crop_suitability]
   timeout_s: 1800
 
 # Where the models read from and write to, relative to the repo root.
@@ -218,6 +218,7 @@ paths:
   # KDBS retail prices per LGA (python -m data.kdbs_prices)
   kdbs_prices: data/processed/extras/kdbs/kdbs_lga_prices.csv
   risk_lines: data/processed/models/a14/a14_lga_crop_risk_lines.csv
+  suitability: data/processed/models/a15/a15_lga_crop_suitability.csv
   # Reference for A8: 33 and 1500 kPa from Zenodo, all land per LGA (python -m data.openlandmap_zenodo)
   openlandmap: data/processed/extras/openlandmap/openlandmap_lga_water_zenodo.csv
   # 33 kPa over cropland only, from Earth Engine (python -m data.gee_extras openlandmap): mask check
@@ -228,6 +229,36 @@ paths:
   static_features: data/processed/features/lga_static.parquet
   ndvi_composites: data/processed/ndvi/ndvi_lga_composites.csv
   smap_daily: data/processed/smap/lga_daily.csv
+
+suitability:
+  # Crop suitability per LGA (notebooks/a15_crop_suitability.ipynb): FAO ECOCROP crop ranges
+  # (data/raw/ecocrop) scored against our climate and soil data with the EcoCrop model.
+  ecocrop: data/raw/ecocrop/ecocrop_kaduna_crops.csv
+  # Where python -m data.ecocrop reads ECOCROP: the Recocrop 0.4-2 R package (Hijmans, GPL-3)
+  # on GitHub's CRAN mirror, with the file's SHA-256 so a changed copy is refused.
+  ecocrop_source: https://raw.githubusercontent.com/cran/Recocrop/0.4-2/inst/parameters/ecocrop.rds
+  ecocrop_sha256: 6d2d128032fb73f0a32c93cc7b9290bbca877481045653318827d881bb4e42b2
+  # Our crop key -> the ECOCROP NAME row used for it.
+  ecocrop_names:
+    maize: Maize
+    sorghum: Sorghum (med. altitude)
+    millet: Pearl millet
+    soybean: Soyabean
+    cowpea: Cowpea
+    groundnut: Groundnut
+    sesame: Sesame seed
+    cassava: Cassava
+    tomato: Tomato
+    rice: Rice upland (Indica)
+    ginger: Ginger
+    yam: White yam
+    lablab: Hyacinth bean
+    stylosanthes: Carribean stylo
+  years: {start: 1981, end: 2025}
+  suitable_score: 0.5       # design: a season scoring 0.5 or more counts as suitable
+  drop_mean_score: 0.5      # design: the engine drops a crop below this mean score in an LGA
+  risk_mean_score: 0.8      # design: below this it stays with a risk line
+  risk_share: 0.3           # design: heat or rain lines show in 3 or more of 10 years
 
 risk_lines:
   # docs/pest-risk.md, feature 2. Computed in notebooks/a14_risk_lines.ipynb; shown on cards,
