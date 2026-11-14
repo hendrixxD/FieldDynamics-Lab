@@ -259,6 +259,7 @@ class Crop(BaseModel):
     height_m: float = Field(gt=0)
     root_depth_max_m: float = Field(gt=0)
     depletion_fraction_p: float = Field(gt=0, lt=1)
+    must_fit_season: bool = True
     rules: CropRules
 
 

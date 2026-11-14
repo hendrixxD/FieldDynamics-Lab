@@ -31,8 +31,9 @@
 #
 # Crops in PRD scope left out for now, with the reason:
 #   rice: Table 12 values assume a flooded paddy, which a free-draining bucket cannot represent.
-#   cassava, yam, ginger: no Table 11 stage lengths for a rainfed West African crop, and
-#   cassava and yam stay in the ground through the dry season.
+#   yam, ginger: not in FAO-56 Tables 11 and 12.
+# Cassava (year 1) and tomato use FAO-56 rows not specific to West Africa; cassava is not
+# required to finish inside the rainy season (must_fit_season: false).
 
 crops:
   maize:
@@ -154,6 +155,31 @@ crops:
       nitrogen: {fixes: false, source: botany}
       gaps: [pest_groups, forage, market.role, market.price, labour]
 
+  cassava:
+    label: Cassava
+    stages_days: {init: 20, dev: 40, mid: 90, late: 60}  # Table 11, "Cassava: year 1", rainy season, tropical regions
+    kc: {ini: 0.30, mid: 0.80, end: 0.30}  # Table 12, Cassava year 1
+    height_m: 1.0
+    root_depth_max_m: 0.8
+    depletion_fraction_p: 0.35
+    must_fit_season: false  # stays in the ground into the dry season by design
+    rules:
+      family: Euphorbiaceae
+      nitrogen: {fixes: false, source: botany}
+      gaps: [pest_groups, forage, market.role, market.price, labour]
+  tomato:
+    label: Tomato
+    stages_days: {init: 30, dev: 40, mid: 45, late: 30}  # Table 11, "Mediterranean", April/May (no tropical row)
+    kc: {ini: 0.60, mid: 1.15, end: 0.80}  # Table 12, Tomato; Kc ini is the Solanum group value; Kc end 0.70-0.90: midpoint
+    height_m: 0.6
+    root_depth_max_m: 1.5
+    depletion_fraction_p: 0.40
+    rules:
+      family: Solanaceae
+      pest_groups: [tuta_absoluta_host]
+      nitrogen: {fixes: false, source: botany}
+      gaps: [forage, market.role, market.price, labour]
+
 # Crops with rotation rules but no water balance. Reasons are in each entry.
 other_crops:
   rice:
@@ -173,26 +199,11 @@ other_crops:
       nitrogen: {fixes: false, source: botany}
       market: {role: cash, role_source: foli_2012}
       gaps: [forage, market.price, labour]
-  tomato:
-    label: Tomato or other vegetables
-    why_no_water_balance: "Mostly dry-season irrigated in Kaduna; the rain-fed bucket does not apply"
-    rules:
-      family: Solanaceae
-      pest_groups: [tuta_absoluta_host]
-      nitrogen: {fixes: false, source: botany}
-      gaps: [forage, market.role, market.price, labour]
   yam:
     label: Yam
     why_no_water_balance: "No FAO-56 stage lengths; tubers stay in the ground through the dry season"
     rules:
       family: Dioscoreaceae
-      nitrogen: {fixes: false, source: botany}
-      gaps: [pest_groups, forage, market.role, market.price, labour]
-  cassava:
-    label: Cassava
-    why_no_water_balance: "No FAO-56 stage lengths for a rainfed West African crop; stays in the ground for over a year"
-    rules:
-      family: Euphorbiaceae
       nitrogen: {fixes: false, source: botany}
       gaps: [pest_groups, forage, market.role, market.price, labour]
 

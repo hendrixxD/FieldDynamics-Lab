@@ -1,36 +1,48 @@
 {
   "lga_years_per_crop": {
+    "cassava": 1035,
     "cowpea": 1035,
     "groundnut": 1035,
     "maize": 1035,
     "millet": 1035,
     "sesame": 1035,
     "sorghum": 1035,
-    "soybean": 1035
+    "soybean": 1035,
+    "tomato": 1035
   },
   "years": [
     1981,
     2025
   ],
   "short_share_by_crop": {
+    "cassava": 0.621,
     "cowpea": 0.0,
     "groundnut": 0.054,
     "maize": 0.003,
     "millet": 0.0,
     "sesame": 0.0,
     "sorghum": 0.002,
-    "soybean": 0.003
+    "soybean": 0.003,
+    "tomato": 0.106
   },
   "short_share_by_crop_hargreaves": {
+    "cassava": 0.565,
     "cowpea": 0.0,
     "groundnut": 0.051,
     "maize": 0.003,
     "millet": 0.0,
     "sesame": 0.0,
     "sorghum": 0.001,
-    "soybean": 0.001
+    "soybean": 0.001,
+    "tomato": 0.086
   },
   "short_share_by_crop_and_type": {
+    "cassava": {
+      "Dry spell": 0.451,
+      "Late start": 0.917,
+      "Short and dry": 0.917,
+      "Typical": 0.441
+    },
     "cowpea": {
       "Dry spell": 0.0,
       "Late start": 0.0,
@@ -72,34 +84,46 @@
       "Late start": 0.0,
       "Short and dry": 0.0,
       "Typical": 0.016
+    },
+    "tomato": {
+      "Dry spell": 0.022,
+      "Late start": 0.325,
+      "Short and dry": 0.256,
+      "Typical": 0.0
     }
   },
   "median_water_need_mm": {
+    "cassava": 515.0,
     "cowpea": 284.0,
     "groundnut": 412.0,
     "maize": 374.0,
     "millet": 282.0,
     "sesame": 318.0,
     "sorghum": 343.0,
-    "soybean": 288.0
+    "soybean": 288.0,
+    "tomato": 505.0
   },
   "riskiest_stage_statewide": {
+    "cassava": "late",
     "cowpea": "none",
     "groundnut": "late",
     "maize": "none",
     "millet": "none",
     "sesame": "none",
     "sorghum": "none",
-    "soybean": "none"
+    "soybean": "none",
+    "tomato": "late"
   },
   "fits_season_share_by_crop": {
+    "cassava": 0.024,
     "cowpea": 0.975,
     "groundnut": 0.826,
     "maize": 0.856,
     "millet": 0.952,
     "sesame": 0.929,
     "sorghum": 0.856,
-    "soybean": 0.996
+    "soybean": 0.996,
+    "tomato": 0.67
   },
   "smap_pearson_median": 0.114,
   "smap_pearson_range": [
