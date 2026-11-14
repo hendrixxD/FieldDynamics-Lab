@@ -43,3 +43,8 @@ tailwindcss-*
 
 # Vercel CLI for the Deploy workflow
 node_modules/
+
+# Data: pipeline caches rebuild from the scripts, so only final tables are committed
+data/processed/**/gee_cache/
+data/processed/power/cache/
+data/processed/smap_test/
