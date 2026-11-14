@@ -162,6 +162,32 @@ class Paths(BaseModel):
     ndvi_composites: Path
 
 
+class EngineWater(BaseModel):
+    max_short_share: float
+    min_fit_share: float
+    risk_fit_share: float
+    irrigation_relief: float
+
+
+class EngineNitrogen(BaseModel):
+    base_credit: float
+    full_credit_kg_ha: float
+
+
+class EngineStriga(BaseModel):
+    sorghum_season_weight: float
+    high_seasons: float
+    medium_seasons: float
+    high_soil_base: int
+    pests_weight_bonus: float
+
+
+class EngineSensitivity(BaseModel):
+    runs: PositiveInt
+    max_nudge: float
+    swap_share: float
+
+
 class HumidLine(BaseModel):
     crops: list[str]
     rh_quantile: float = Field(gt=0, lt=1)
@@ -194,6 +220,21 @@ class RiskLineConfig(BaseModel):
     min_share: float
 
 
+class EngineConfig(BaseModel):
+    priority_weight: float
+    max_priorities: PositiveInt
+    water: EngineWater
+    nitrogen: EngineNitrogen
+    organic_matter: dict[str, float]
+    erosion: dict[str, float]
+    pests: dict[str, float]
+    market: dict[str, float | dict[str, float]]
+    striga: EngineStriga
+    levels: dict[str, float]
+    sensitivity: EngineSensitivity
+    scouting: dict[str, str]
+
+
 class ModelConfig(BaseModel):
     years: Years
     stressed_ndvi_z: float
@@ -212,6 +253,7 @@ class ModelConfig(BaseModel):
     paths: Paths
     suitability: SuitabilityConfig
     risk_lines: RiskLineConfig
+    engine: EngineConfig
 
     @property
     def lga_zone(self) -> dict[str, str]:
