@@ -1,0 +1,31 @@
+{
+  "maize_fit_with_type": {
+    "lga_years": 575,
+    "bad_years": 97,
+    "hit_rate": 0.845360824742268,
+    "false_alarm_rate": 0.100418410041841,
+    "bad_share_if_warned": 0.6307692307692307,
+    "bad_share_if_not_warned": 0.033707865168539325,
+    "lift": 18.712820512820514
+  },
+  "maize_fit_without_type": {
+    "lga_years": 575,
+    "bad_years": 97,
+    "hit_rate": 0.8144329896907216,
+    "false_alarm_rate": 0.29497907949790797,
+    "bad_share_if_warned": 0.35909090909090907,
+    "bad_share_if_not_warned": 0.05070422535211268,
+    "lift": 7.082070707070707
+  },
+  "maize_stress_with_type": {
+    "lga_years": 525,
+    "bad_years": 152,
+    "hit_rate": 0.21710526315789475,
+    "false_alarm_rate": 0.23324396782841822,
+    "bad_share_if_warned": 0.275,
+    "bad_share_if_not_warned": 0.2938271604938272,
+    "lift": 0.9359243697478992
+  },
+  "bad_years_passed": 1,
+  "bad_years_tested": 4
+}

@@ -1,0 +1,81 @@
+# Published rotation studies (PRD section 7). These are CHECKS, not gates: the engine builds
+# its candidates from data (every two-season sequence of crops with a water balance) and ranks
+# them from data. A candidate that matches a sequence below carries the study on its card, and
+# notebooks/a13_engine_validation.ipynb tests whether the data ranks these sequences high.
+#
+# status: "confirmed" (checked against the paper), "to_verify" (paper not yet checked),
+# "current_only" (a baseline, never offered). best_fit: zones the study's sites represent.
+# seasons: one entry per rainy season; two crops in a season is an intercrop.
+
+templates:
+  RT01:
+    name: Continuous maize
+    seasons: [[maize]]
+    evidence: "Usman 2017 (ABU Zaria thesis): low soil quality baseline"
+    status: current_only
+    best_fit: [North, Central, South]
+  RT02:
+    name: Maize then soybean
+    seasons: [[maize], [soybean]]
+    evidence: "Franke et al. 2008 (Zaria): maize after dual-purpose soybean gave the highest maize yields; Usman 2017; CIAT savanna study"
+    status: confirmed
+    best_fit: [Central]
+  RT03:
+    name: Maize then cowpea
+    seasons: [[maize], [cowpea]]
+    evidence: "Usman 2017 (ABU Zaria thesis); CIAT savanna study"
+    status: confirmed
+    best_fit: [Central, North]
+  RT04:
+    name: Maize then groundnut
+    seasons: [[maize], [groundnut]]
+    evidence: "Checked 14 Nov 2026. Kermah et al. 2018, Expl. Agric. 55(5):673-691 (doi 10.1017/S0014479718000273), Guinea savanna, N Ghana: groundnut and soybean gave 0.38-1.01 t/ha more maize than continuous maize. 11-year N Ghana trial (J. Agron. 2006, scialert ja.2006.232.238): maize-groundnut the best combination, maize above 3 t/ha. Same zone as Kaduna, different country."
+    status: confirmed
+    best_fit: [Central, North]
+  RT05:
+    name: Sorghum then cowpea
+    seasons: [[sorghum], [cowpea]]
+    evidence: "Checked 14 Nov 2026. Shuaibu, Garba and Voncir 2015, AJFAND 15(3):10060-10076 (Bauchi and Bulkachuwa, Nigeria): sorghum (KSV 8) after cowpea or soybean beat sorghum after fallow. Bado, Bationo and Cescas 2006 (Guinean savanna, Burkina Faso): cowpea-sorghum raised sorghum yield 290%. Kaduna Weather Guide advice not yet located."
+    status: confirmed
+    best_fit: [North]
+  RT06a:
+    name: Sorghum then groundnut
+    seasons: [[sorghum], [groundnut]]
+    evidence: "Checked 14 Nov 2026. Bado, Bationo and Cescas 2006 (Guinean savanna, Burkina Faso): groundnut-sorghum raised sorghum yield 310%. Bagayoko et al. 2000, Plant and Soil 218:103-116 (doi 10.1023/A:1014957605852): rotation sorghum had more soil mineral N and fewer nematodes. No Nigerian trial found yet."
+    status: confirmed
+    best_fit: [North]
+  RT06b:
+    name: Millet then groundnut
+    seasons: [[millet], [groundnut]]
+    evidence: "Checked 14 Nov 2026. Bationo and Ntare 2000, J. Agric. Sci. 134:277-284 (Niger, 1988-1992): legume-millet rotations beat continuous millet across N levels; groundnut also yielded more in rotation. Sahelian sites, drier than Kaduna North."
+    status: confirmed
+    best_fit: [North]
+  RT07:
+    name: Maize with cowpea, then soybean
+    seasons: [[maize, cowpea], [soybean]]
+    evidence: "Checked 14 Nov 2026. Kureh, Kamara and Tarfa (JARTS, jarts.info article 100), on-farm 2001-2003, northern Guinea savanna, Nigeria: maize+cowpea intercrop cut Striga vs sole maize; legume rotation cut Striga 35% after one year and 76% after two; soybean beat cowpea for Striga and maize yield. Franke et al. 2008, Nutr. Cycl. Agroecosyst. 82:117-135 (Zaria and Ibadan) for the soybean-maize leg."
+    status: confirmed
+    best_fit: [Central]
+  RT08:
+    name: Forage legume then maize
+    seasons: [[lablab], [maize]]
+    evidence: "Franke et al. 2008 (forage legume plus manure); Ebireri 2013 (legume cover raised organic carbon)"
+    status: confirmed
+    best_fit: [North, Central, South]
+  RT09:
+    name: Cassava then maize
+    seasons: [[cassava], [maize]]
+    evidence: "Checked 14 Nov 2026. 11-year N Ghana Guinea savanna trial (J. Agron. 2006): maize yield fell only gradually after cassava, as after groundnut and soybean, and cassava-maize gave the highest energy yield. IITA southern Nigeria cassava rotation trial 1985-1989 (Cornell eCommons) as context. Not a legume rotation; no Kaduna site."
+    status: confirmed
+    best_fit: [South]
+  # Southern Kaduna context, not a sequence: Franke et al. farm characterisation (WUR edepot 217095)
+  # reports ginger and yam fields are rotated in Kachia, without naming the following crop. A yam
+  # or ginger sequence stays out until a trial names one.
+
+# Crops each senatorial zone grows, from the 2025 zone study (American Journal of Biological and
+# Environmental Statistics) as recalled in the 9 Nov 2026 planning chat. NOT VERIFIED: the paper
+# is not in the repo. Not used by the engine; kept for the per-LGA crop baseline (R37) to come.
+zone_crops:
+  North: [millet, sorghum, groundnut, cowpea, sesame]
+  Central: [maize, soybean, rice, tomato, cotton]
+  South: [ginger, yam, cassava, plantain]

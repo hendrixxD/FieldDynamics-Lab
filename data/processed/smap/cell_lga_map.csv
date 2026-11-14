@@ -1,0 +1,415 @@
+i,j,lga,nearest_fallback
+2,21,Ikara,False
+2,22,Ikara,False
+3,9,Birnin Gwari,False
+3,10,Birnin Gwari,False
+3,15,Giwa,False
+3,16,Giwa,False
+3,19,Kudan,False
+3,20,Makarfi,False
+3,21,Ikara,False
+3,22,Ikara,False
+3,23,Ikara,False
+4,8,Birnin Gwari,False
+4,9,Birnin Gwari,False
+4,10,Birnin Gwari,False
+4,13,Giwa,False
+4,14,Giwa,False
+4,15,Giwa,False
+4,16,Giwa,False
+4,17,Giwa,False
+4,18,Kudan,False
+4,19,Kudan,False
+4,20,Makarfi,False
+4,21,Makarfi,False
+4,22,Ikara,False
+4,23,Ikara,False
+4,24,Ikara,False
+5,8,Birnin Gwari,False
+5,9,Birnin Gwari,False
+5,10,Birnin Gwari,False
+5,11,Birnin Gwari,False
+5,13,Giwa,False
+5,14,Giwa,False
+5,15,Giwa,False
+5,16,Giwa,False
+5,17,Giwa,False
+5,18,Sabon Gari,False
+5,19,Sabon Gari,False
+5,20,Soba,False
+5,21,Soba,False
+5,22,Soba,False
+5,23,Ikara,False
+5,24,Ikara,False
+5,25,Kubau,False
+5,26,Ikara,False
+6,8,Birnin Gwari,False
+6,9,Birnin Gwari,False
+6,10,Birnin Gwari,False
+6,11,Birnin Gwari,False
+6,12,Birnin Gwari,False
+6,13,Giwa,False
+6,14,Giwa,False
+6,15,Giwa,False
+6,16,Zaria,False
+6,17,Zaria,False
+6,18,Zaria,False
+6,19,Zaria,False
+6,20,Soba,False
+6,21,Soba,False
+6,22,Soba,False
+6,23,Soba,False
+6,24,Kubau,False
+6,25,Kubau,False
+6,26,Kubau,False
+6,27,Kubau,False
+7,3,Birnin Gwari,False
+7,4,Birnin Gwari,False
+7,5,Birnin Gwari,False
+7,6,Birnin Gwari,False
+7,7,Birnin Gwari,False
+7,8,Birnin Gwari,False
+7,9,Birnin Gwari,False
+7,10,Birnin Gwari,False
+7,11,Birnin Gwari,False
+7,12,Giwa,False
+7,13,Giwa,False
+7,14,Igabi,False
+7,15,Igabi,False
+7,16,Igabi,False
+7,17,Igabi,False
+7,18,Igabi,False
+7,19,Zaria,False
+7,20,Soba,False
+7,21,Soba,False
+7,22,Soba,False
+7,23,Soba,False
+7,24,Kubau,False
+7,25,Kubau,False
+7,26,Kubau,False
+7,27,Kubau,False
+8,2,Birnin Gwari,False
+8,3,Birnin Gwari,False
+8,4,Birnin Gwari,False
+8,5,Birnin Gwari,False
+8,6,Birnin Gwari,False
+8,7,Birnin Gwari,False
+8,8,Birnin Gwari,False
+8,9,Birnin Gwari,False
+8,10,Birnin Gwari,False
+8,11,Giwa,False
+8,12,Giwa,False
+8,13,Igabi,False
+8,14,Igabi,False
+8,15,Igabi,False
+8,16,Igabi,False
+8,17,Igabi,False
+8,18,Igabi,False
+8,19,Igabi,False
+8,20,Soba,False
+8,21,Soba,False
+8,22,Soba,False
+8,23,Kubau,False
+8,24,Kubau,False
+8,25,Kubau,False
+8,26,Kubau,False
+8,27,Kubau,False
+9,2,Birnin Gwari,False
+9,3,Birnin Gwari,False
+9,4,Birnin Gwari,False
+9,5,Birnin Gwari,False
+9,6,Birnin Gwari,False
+9,7,Birnin Gwari,False
+9,8,Birnin Gwari,False
+9,9,Chikun,False
+9,10,Birnin Gwari,False
+9,11,Giwa,False
+9,12,Giwa,False
+9,13,Igabi,False
+9,14,Igabi,False
+9,15,Igabi,False
+9,16,Igabi,False
+9,17,Igabi,False
+9,18,Igabi,False
+9,19,Igabi,False
+9,20,Soba,False
+9,21,Soba,False
+9,22,Kubau,False
+9,23,Kubau,False
+9,24,Kubau,False
+9,25,Kubau,False
+9,26,Kubau,False
+9,27,Kubau,False
+10,2,Birnin Gwari,False
+10,3,Birnin Gwari,False
+10,4,Birnin Gwari,False
+10,5,Birnin Gwari,False
+10,6,Birnin Gwari,False
+10,7,Birnin Gwari,False
+10,8,Chikun,False
+10,9,Chikun,False
+10,10,Chikun,False
+10,11,Birnin Gwari,False
+10,12,Chikun,False
+10,13,Chikun,False
+10,14,Igabi,False
+10,15,Igabi,False
+10,16,Igabi,False
+10,17,Igabi,False
+10,18,Igabi,False
+10,19,Igabi,False
+10,20,Kauru,False
+10,21,Kauru,False
+10,22,Kauru,False
+10,23,Kauru,False
+10,24,Kubau,False
+10,25,Lere,False
+10,26,Lere,False
+11,2,Birnin Gwari,False
+11,3,Birnin Gwari,False
+11,4,Birnin Gwari,False
+11,6,Birnin Gwari,False
+11,9,Chikun,False
+11,10,Chikun,False
+11,11,Birnin Gwari,False
+11,12,Chikun,False
+11,13,Chikun,False
+11,14,Igabi,False
+11,15,Kaduna North,False
+11,16,Igabi,False
+11,17,Igabi,False
+11,18,Igabi,False
+11,19,Igabi,False
+11,20,Kauru,False
+11,21,Kauru,False
+11,22,Kauru,False
+11,23,Kauru,False
+11,24,Kauru,False
+11,25,Lere,False
+11,26,Lere,False
+11,27,Lere,False
+11,28,Lere,False
+12,2,Birnin Gwari,False
+12,3,Birnin Gwari,False
+12,11,Chikun,False
+12,12,Chikun,False
+12,13,Chikun,False
+12,14,Chikun,False
+12,15,Kaduna South,False
+12,16,Chikun,False
+12,17,Chikun,False
+12,18,Chikun,False
+12,19,Kajuru,False
+12,20,Kajuru,False
+12,21,Kauru,False
+12,22,Kauru,False
+12,23,Kauru,False
+12,24,Kauru,False
+12,25,Kubau,False
+12,26,Lere,False
+12,27,Lere,False
+12,28,Lere,False
+12,29,Lere,False
+13,2,Birnin Gwari,False
+13,10,Chikun,False
+13,11,Chikun,False
+13,12,Chikun,False
+13,13,Chikun,False
+13,14,Chikun,False
+13,15,Chikun,False
+13,16,Chikun,False
+13,17,Kajuru,False
+13,18,Kajuru,False
+13,19,Kajuru,False
+13,20,Kajuru,False
+13,21,Kajuru,False
+13,22,Kauru,False
+13,23,Kauru,False
+13,24,Kauru,False
+13,25,Lere,False
+13,26,Lere,False
+13,27,Lere,False
+13,28,Lere,False
+13,29,Lere,False
+14,12,Chikun,False
+14,13,Chikun,False
+14,14,Chikun,False
+14,15,Chikun,False
+14,16,Chikun,False
+14,17,Kajuru,False
+14,18,Kajuru,False
+14,19,Kajuru,False
+14,20,Kajuru,False
+14,21,Kajuru,False
+14,22,Kajuru,False
+14,23,Kauru,False
+14,24,Kauru,False
+14,25,Lere,False
+14,26,Lere,False
+14,27,Lere,False
+14,28,Lere,False
+14,29,Lere,False
+15,11,Chikun,False
+15,12,Chikun,False
+15,13,Chikun,False
+15,14,Chikun,False
+15,15,Chikun,False
+15,16,Kajuru,False
+15,17,Kajuru,False
+15,18,Kajuru,False
+15,19,Kajuru,False
+15,20,Kajuru,False
+15,21,Kajuru,False
+15,22,Zangon Kataf,False
+15,23,Kauru,False
+15,24,Kauru,False
+15,25,Kauru,False
+15,26,Lere,False
+15,27,Lere,False
+15,28,Lere,False
+16,10,Chikun,False
+16,11,Chikun,False
+16,12,Chikun,False
+16,13,Chikun,False
+16,14,Chikun,False
+16,15,Kachia,False
+16,16,Kachia,False
+16,17,Kajuru,False
+16,18,Kajuru,False
+16,19,Kajuru,False
+16,20,Kajuru,False
+16,21,Kachia,False
+16,22,Zangon Kataf,False
+16,23,Zangon Kataf,False
+16,24,Kauru,False
+16,25,Kauru,False
+16,26,Kauru,False
+16,27,Lere,False
+16,28,Lere,False
+17,14,Kachia,False
+17,15,Kachia,False
+17,16,Kachia,False
+17,17,Kachia,False
+17,18,Kachia,False
+17,19,Kajuru,False
+17,20,Kachia,False
+17,21,Kachia,False
+17,22,Zangon Kataf,False
+17,23,Zangon Kataf,False
+17,24,Zangon Kataf,False
+17,25,Zangon Kataf,False
+17,26,Lere,False
+17,27,Kauru,False
+17,28,Kauru,False
+18,14,Kachia,False
+18,15,Kachia,False
+18,16,Kachia,False
+18,17,Kachia,False
+18,18,Kachia,False
+18,19,Kachia,False
+18,20,Kachia,False
+18,21,Kachia,False
+18,22,Zangon Kataf,False
+18,23,Zangon Kataf,False
+18,24,Zangon Kataf,False
+18,25,Zangon Kataf,False
+18,26,Kauru,False
+18,27,Kauru,False
+19,14,Kachia,False
+19,15,Kachia,False
+19,16,Kachia,False
+19,17,Kachia,False
+19,18,Kachia,False
+19,19,Kachia,False
+19,20,Kachia,False
+19,21,Kachia,False
+19,22,Zangon Kataf,False
+19,23,Zangon Kataf,False
+19,24,Zangon Kataf,False
+19,25,Zangon Kataf,False
+19,26,Zangon Kataf,False
+19,27,Kauru,False
+20,14,Kachia,False
+20,15,Kachia,False
+20,16,Kachia,False
+20,17,Kachia,False
+20,18,Kachia,False
+20,19,Kachia,False
+20,20,Kachia,False
+20,21,Kachia,False
+20,22,Zangon Kataf,False
+20,23,Zangon Kataf,False
+20,24,Zangon Kataf,False
+20,25,Zangon Kataf,False
+20,26,Zangon Kataf,False
+20,27,Kaura,False
+21,14,Kachia,False
+21,15,Kachia,False
+21,16,Kachia,False
+21,17,Kachia,False
+21,18,Kachia,False
+21,19,Kagarko,False
+21,20,Kagarko,False
+21,21,Kachia,False
+21,22,Kachia,False
+21,23,Zangon Kataf,False
+21,24,Zangon Kataf,False
+21,25,Kaura,False
+21,26,Kaura,False
+21,27,Kaura,False
+22,14,Kagarko,False
+22,15,Kagarko,False
+22,16,Kagarko,False
+22,17,Kagarko,False
+22,18,Kagarko,False
+22,19,Kagarko,False
+22,20,Kagarko,False
+22,21,Jaba,False
+22,22,Jaba,False
+22,23,Zangon Kataf,False
+22,24,Jema'A,False
+22,25,Jema'A,False
+22,26,Jema'A,False
+23,13,Kagarko,False
+23,14,Kagarko,False
+23,15,Kagarko,False
+23,16,Kagarko,False
+23,17,Kagarko,False
+23,18,Kagarko,False
+23,19,Kagarko,False
+23,20,Kagarko,False
+23,21,Jaba,False
+23,22,Jaba,False
+23,23,Jema'A,False
+23,24,Jema'A,False
+23,25,Jema'A,False
+23,26,Sanga,False
+23,27,Sanga,False
+24,13,Kagarko,False
+24,14,Kagarko,False
+24,15,Kagarko,False
+24,18,Kagarko,False
+24,19,Kagarko,False
+24,20,Kagarko,False
+24,21,Jaba,False
+24,22,Jema'A,False
+24,23,Jema'A,False
+24,24,Jema'A,False
+24,25,Sanga,False
+24,26,Sanga,False
+24,27,Sanga,False
+24,28,Sanga,False
+25,22,Jema'A,False
+25,23,Jema'A,False
+25,24,Sanga,False
+25,25,Sanga,False
+25,26,Sanga,False
+25,27,Sanga,False
+25,28,Sanga,False
+26,22,Sanga,False
+26,23,Sanga,False
+26,26,Sanga,False
+26,27,Sanga,False
+27,22,Sanga,False
+27,23,Sanga,False
+27,27,Sanga,False

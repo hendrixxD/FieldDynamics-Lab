@@ -1,0 +1,9 @@
+scheme,model,n,rmse,mae,skill_vs_climatology,corr
+leave_one_year_out,climatology,525,0.9798,0.7774,0.0,
+leave_one_year_out,ridge,525,1.0193,0.8185,-0.0403,-0.0162
+leave_one_year_out,lgbm,525,1.0421,0.842,-0.0636,-0.046
+leave_one_year_out,lgbm_tuned,525,0.9883,0.7853,-0.0086,-0.0933
+senatorial_zone,climatology,525,0.9798,0.7774,0.0,
+senatorial_zone,ridge,525,1.0324,0.8252,-0.0537,0.0249
+senatorial_zone,lgbm,525,1.004,0.8066,-0.0247,0.1585
+senatorial_zone,lgbm_tuned,525,0.976,0.7745,0.0039,0.0925

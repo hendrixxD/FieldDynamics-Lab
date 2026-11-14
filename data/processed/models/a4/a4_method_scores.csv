@@ -1,0 +1,5 @@
+method,flips_per_year_mean,flips_per_year_median,dry_season_agreement
+"raw, per-LGA threshold",2.0174,2.0,0.857
+"smoothed, per-LGA threshold",1.9896,2.0,0.8586
+"raw, fixed 0.25",1.2435,1.0,0.6199
+"smoothed, fixed 0.25",1.08,1.0,0.6202

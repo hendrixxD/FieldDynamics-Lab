@@ -1,0 +1,139 @@
+lga,fc,wp,awc,awc_mm_per_m,method,layer
+Ikara,0.2291,0.1189,0.1102,110.1614,saxton_rawls,0_20
+Makarfi,0.2316,0.1173,0.1143,114.2994,saxton_rawls,0_20
+Kudan,0.2306,0.1149,0.1156,115.6473,saxton_rawls,0_20
+Kubau,0.2513,0.1328,0.1185,118.4562,saxton_rawls,0_20
+Chikun,0.2285,0.1206,0.1078,107.8487,saxton_rawls,0_20
+Kajuru,0.2446,0.1326,0.1119,111.9147,saxton_rawls,0_20
+Kachia,0.247,0.1335,0.1135,113.4961,saxton_rawls,0_20
+Jema'a,0.256,0.1386,0.1174,117.4192,saxton_rawls,0_20
+Sanga,0.2585,0.1408,0.1176,117.6402,saxton_rawls,0_20
+Kagarko,0.2466,0.1336,0.1131,113.0726,saxton_rawls,0_20
+Giwa,0.229,0.1147,0.1143,114.2636,saxton_rawls,0_20
+Birnin Gwari,0.2173,0.112,0.1053,105.2657,saxton_rawls,0_20
+Sabon Gari,0.2336,0.117,0.1166,116.5694,saxton_rawls,0_20
+Soba,0.2364,0.1204,0.116,116.0195,saxton_rawls,0_20
+Zaria,0.2299,0.1163,0.1136,113.6389,saxton_rawls,0_20
+Igabi,0.2253,0.1161,0.1092,109.2271,saxton_rawls,0_20
+Kauru,0.2571,0.1398,0.1173,117.2758,saxton_rawls,0_20
+Lere,0.2514,0.1357,0.1157,115.6717,saxton_rawls,0_20
+Kaduna North,0.2134,0.1092,0.1041,104.1193,saxton_rawls,0_20
+Kaduna South,0.2144,0.1126,0.1018,101.8286,saxton_rawls,0_20
+Zangon Kataf,0.2663,0.1479,0.1184,118.3828,saxton_rawls,0_20
+Kaura,0.2935,0.1652,0.1283,128.3088,saxton_rawls,0_20
+Jaba,0.2391,0.1291,0.11,110.0122,saxton_rawls,0_20
+Ikara,0.2479,0.1568,0.0911,91.0824,hodnett_tomasella,0_20
+Makarfi,0.2554,0.1602,0.0952,95.1581,hodnett_tomasella,0_20
+Kudan,0.2578,0.1604,0.0974,97.4147,hodnett_tomasella,0_20
+Kubau,0.2659,0.1713,0.0946,94.5925,hodnett_tomasella,0_20
+Chikun,0.2413,0.1521,0.0892,89.1639,hodnett_tomasella,0_20
+Kajuru,0.2504,0.1611,0.0893,89.2967,hodnett_tomasella,0_20
+Kachia,0.2538,0.1632,0.0905,90.5478,hodnett_tomasella,0_20
+Jema'a,0.2639,0.1709,0.093,92.9939,hodnett_tomasella,0_20
+Sanga,0.2646,0.1722,0.0924,92.3819,hodnett_tomasella,0_20
+Kagarko,0.2525,0.1626,0.0899,89.8823,hodnett_tomasella,0_20
+Giwa,0.2549,0.158,0.097,96.9508,hodnett_tomasella,0_20
+Birnin Gwari,0.2349,0.1451,0.0898,89.7676,hodnett_tomasella,0_20
+Sabon Gari,0.2601,0.1631,0.097,97.0041,hodnett_tomasella,0_20
+Soba,0.2587,0.1621,0.0967,96.6511,hodnett_tomasella,0_20
+Zaria,0.2544,0.159,0.0954,95.3567,hodnett_tomasella,0_20
+Igabi,0.244,0.1516,0.0925,92.47,hodnett_tomasella,0_20
+Kauru,0.2641,0.1725,0.0916,91.5632,hodnett_tomasella,0_20
+Lere,0.2618,0.1719,0.0899,89.8892,hodnett_tomasella,0_20
+Kaduna North,0.2333,0.1442,0.0891,89.1444,hodnett_tomasella,0_20
+Kaduna South,0.2285,0.1431,0.0854,85.4067,hodnett_tomasella,0_20
+Zangon Kataf,0.2658,0.1754,0.0904,90.3984,hodnett_tomasella,0_20
+Kaura,0.2906,0.196,0.0946,94.6048,hodnett_tomasella,0_20
+Jaba,0.2469,0.1592,0.0876,87.6454,hodnett_tomasella,0_20
+Ikara,0.255,0.1207,0.1344,134.3729,rosetta3,0_20
+Makarfi,0.2587,0.1208,0.138,137.9576,rosetta3,0_20
+Kudan,0.2598,0.1199,0.1399,139.8997,rosetta3,0_20
+Kubau,0.275,0.1307,0.1443,144.2601,rosetta3,0_20
+Chikun,0.2573,0.1203,0.137,136.9759,rosetta3,0_20
+Kajuru,0.2689,0.1282,0.1407,140.7469,rosetta3,0_20
+Kachia,0.2733,0.1292,0.1441,144.1193,rosetta3,0_20
+Jema'a,0.2812,0.1335,0.1477,147.7336,rosetta3,0_20
+Sanga,0.2826,0.1347,0.1479,147.8793,rosetta3,0_20
+Kagarko,0.2733,0.1292,0.1441,144.0784,rosetta3,0_20
+Giwa,0.2598,0.1195,0.1402,140.213,rosetta3,0_20
+Birnin Gwari,0.249,0.1147,0.1343,134.3128,rosetta3,0_20
+Sabon Gari,0.2623,0.1213,0.141,141.0049,rosetta3,0_20
+Soba,0.2648,0.1231,0.1417,141.6593,rosetta3,0_20
+Zaria,0.2591,0.1202,0.1389,138.8657,rosetta3,0_20
+Igabi,0.2555,0.1185,0.137,137.0069,rosetta3,0_20
+Kauru,0.2787,0.1339,0.1448,144.7953,rosetta3,0_20
+Lere,0.274,0.1314,0.1426,142.5751,rosetta3,0_20
+Kaduna North,0.2447,0.1127,0.1321,132.0643,rosetta3,0_20
+Kaduna South,0.2438,0.1134,0.1305,130.4528,rosetta3,0_20
+Zangon Kataf,0.2865,0.1385,0.1481,148.071,rosetta3,0_20
+Kaura,0.3068,0.1503,0.1565,156.4885,rosetta3,0_20
+Jaba,0.266,0.1256,0.1404,140.425,rosetta3,0_20
+Ikara,0.2702,0.1532,0.117,116.9941,saxton_rawls,20_50
+Makarfi,0.2762,0.1547,0.1215,121.4689,saxton_rawls,20_50
+Kudan,0.2739,0.1505,0.1235,123.457,saxton_rawls,20_50
+Kubau,0.2895,0.1648,0.1248,124.7786,saxton_rawls,20_50
+Chikun,0.2642,0.1488,0.1155,115.4656,saxton_rawls,20_50
+Kajuru,0.2811,0.1619,0.1192,119.1758,saxton_rawls,20_50
+Kachia,0.2855,0.1648,0.1207,120.6956,saxton_rawls,20_50
+Jema'a,0.2883,0.1654,0.1228,122.8225,saxton_rawls,20_50
+Sanga,0.2869,0.1646,0.1223,122.3171,saxton_rawls,20_50
+Kagarko,0.2808,0.1611,0.1197,119.6778,saxton_rawls,20_50
+Giwa,0.2717,0.1493,0.1224,122.4006,saxton_rawls,20_50
+Birnin Gwari,0.2583,0.1436,0.1147,114.697,saxton_rawls,20_50
+Sabon Gari,0.2734,0.1495,0.1239,123.8723,saxton_rawls,20_50
+Soba,0.2788,0.1551,0.1237,123.6805,saxton_rawls,20_50
+Zaria,0.2695,0.1484,0.1211,121.1068,saxton_rawls,20_50
+Igabi,0.2619,0.1449,0.117,117.005,saxton_rawls,20_50
+Kauru,0.2903,0.167,0.1232,123.2059,saxton_rawls,20_50
+Lere,0.2835,0.1622,0.1213,121.2884,saxton_rawls,20_50
+Kaduna North,0.2474,0.136,0.1114,111.3937,saxton_rawls,20_50
+Kaduna South,0.2457,0.137,0.1087,108.6716,saxton_rawls,20_50
+Zangon Kataf,0.3021,0.1778,0.1243,124.3112,saxton_rawls,20_50
+Kaura,0.3238,0.1923,0.1315,131.5457,saxton_rawls,20_50
+Jaba,0.2755,0.1582,0.1172,117.2336,saxton_rawls,20_50
+Ikara,0.2653,0.1792,0.0862,86.1532,hodnett_tomasella,20_50
+Makarfi,0.274,0.1844,0.0895,89.5424,hodnett_tomasella,20_50
+Kudan,0.2773,0.1847,0.0927,92.6631,hodnett_tomasella,20_50
+Kubau,0.2828,0.1926,0.0902,90.2189,hodnett_tomasella,20_50
+Chikun,0.2602,0.1738,0.0864,86.4348,hodnett_tomasella,20_50
+Kajuru,0.2692,0.1831,0.0861,86.1286,hodnett_tomasella,20_50
+Kachia,0.2726,0.1858,0.0867,86.7306,hodnett_tomasella,20_50
+Jema'a,0.2792,0.1908,0.0884,88.4404,hodnett_tomasella,20_50
+Sanga,0.2784,0.1904,0.088,88.0123,hodnett_tomasella,20_50
+Kagarko,0.2698,0.1834,0.0864,86.3688,hodnett_tomasella,20_50
+Giwa,0.2752,0.1828,0.0924,92.4398,hodnett_tomasella,20_50
+Birnin Gwari,0.2578,0.1701,0.0877,87.7333,hodnett_tomasella,20_50
+Sabon Gari,0.2784,0.1859,0.0925,92.4947,hodnett_tomasella,20_50
+Soba,0.2782,0.1862,0.092,91.9884,hodnett_tomasella,20_50
+Zaria,0.2732,0.1823,0.0909,90.8703,hodnett_tomasella,20_50
+Igabi,0.2631,0.1738,0.0894,89.3678,hodnett_tomasella,20_50
+Kauru,0.2801,0.1921,0.088,88.0261,hodnett_tomasella,20_50
+Lere,0.2767,0.1903,0.0864,86.4381,hodnett_tomasella,20_50
+Kaduna North,0.251,0.1649,0.0861,86.0902,hodnett_tomasella,20_50
+Kaduna South,0.2452,0.1621,0.083,83.0175,hodnett_tomasella,20_50
+Zangon Kataf,0.2825,0.1964,0.0861,86.129,hodnett_tomasella,20_50
+Kaura,0.3024,0.2128,0.0896,89.5775,hodnett_tomasella,20_50
+Jaba,0.2653,0.1809,0.0844,84.4067,hodnett_tomasella,20_50
+Ikara,0.2808,0.1421,0.1386,138.641,rosetta3,20_50
+Makarfi,0.2863,0.1436,0.1427,142.7041,rosetta3,20_50
+Kudan,0.2874,0.1418,0.1456,145.5756,rosetta3,20_50
+Kubau,0.2981,0.1499,0.1482,148.1884,rosetta3,20_50
+Chikun,0.2813,0.1391,0.1421,142.1143,rosetta3,20_50
+Kajuru,0.292,0.1469,0.1451,145.1286,rosetta3,20_50
+Kachia,0.2975,0.1492,0.1483,148.313,rosetta3,20_50
+Jema'a,0.3009,0.1504,0.1505,150.5213,rosetta3,20_50
+Sanga,0.2996,0.1497,0.1499,149.8762,rosetta3,20_50
+Kagarko,0.2953,0.1473,0.148,148.0495,rosetta3,20_50
+Giwa,0.2871,0.1412,0.1459,145.932,rosetta3,20_50
+Birnin Gwari,0.277,0.1361,0.1409,140.8955,rosetta3,20_50
+Sabon Gari,0.2876,0.1414,0.1461,146.137,rosetta3,20_50
+Soba,0.2914,0.1445,0.1469,146.8635,rosetta3,20_50
+Zaria,0.2843,0.1404,0.1439,143.9195,rosetta3,20_50
+Igabi,0.28,0.1376,0.1424,142.4448,rosetta3,20_50
+Kauru,0.299,0.1507,0.1483,148.2673,rosetta3,20_50
+Lere,0.2939,0.1478,0.1461,146.1168,rosetta3,20_50
+Kaduna North,0.2681,0.1308,0.1373,137.2602,rosetta3,20_50
+Kaduna South,0.2655,0.1303,0.1352,135.1805,rosetta3,20_50
+Zangon Kataf,0.3076,0.1566,0.1509,150.9434,rosetta3,20_50
+Kaura,0.3224,0.1652,0.1572,157.223,rosetta3,20_50
+Jaba,0.2895,0.1447,0.1448,144.8124,rosetta3,20_50

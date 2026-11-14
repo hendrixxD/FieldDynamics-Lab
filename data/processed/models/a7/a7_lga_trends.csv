@@ -1,0 +1,162 @@
+lga,series,n_years,first_year,last_year,sen_slope_per_year,mk_p,mk_hamed_rao_p,autocorrelation_corrected,trend_p,ols_slope_per_year,ols_p,mean,sen_slope_per_decade,ols_slope_per_decade,p_adjusted,significant,direction,card_line,on_card
+Birnin Gwari,dry_spells_10plus,45,1981,2025,0.0,0.0978,0.0978,True,0.0978,0.0029,0.0904,0.0222,0.0,0.029,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Birnin Gwari,heat_days,45,1981,2025,1.2,0.0027,0.0496,True,0.0496,1.1358,0.0024,61.0444,12.0,11.3584,0.0634,False,up,"Heat days: 12 days more per decade (no clear trend, could be chance)",True
+Birnin Gwari,longest_dry_spell_days,45,1981,2025,0.0,0.3558,0.3558,True,0.3558,0.0045,0.8454,4.7556,0.0,0.0448,0.9092,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Birnin Gwari,onset_doy,45,1981,2025,0.2029,0.3229,0.3229,True,0.3229,0.274,0.1717,145.4667,2.0294,2.7404,0.5098,False,up,"Rain start: 2 days later per decade (no clear trend, could be chance)",True
+Birnin Gwari,season_gldas_rootzone_mm,26,2000,2025,-1.6178,0.002,0.0002,True,0.002,-1.6706,0.0035,255.9012,-16.1781,-16.7056,0.0039,True,down,Root-zone soil water: 16 mm drier per decade (clear trend),False
+Birnin Gwari,season_rain_mm,45,1981,2025,0.2618,0.8526,0.8526,True,0.8526,0.5676,0.6253,1160.1528,2.6179,5.6757,0.9766,False,up,"Season rain: 3 mm more per decade (no clear trend, could be chance)",True
+Birnin Gwari,season_water_balance_mm,45,1981,2025,0.2182,0.8988,0.8988,True,0.8988,0.4315,0.7633,187.8346,2.1823,4.3145,0.9844,False,up,"Season water balance: 2 mm wetter per decade (no clear trend, could be chance)",True
+Chikun,dry_spells_10plus,45,1981,2025,0.0,0.1042,0.2292,True,0.2292,-0.004,0.0989,0.0444,0.0,-0.0395,0.4792,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Chikun,heat_days,45,1981,2025,1.0446,0.0073,0.0678,True,0.0678,0.9949,0.0044,41.7556,10.4464,9.9486,0.078,False,up,"Heat days: 10 days more per decade (no clear trend, could be chance)",True
+Chikun,longest_dry_spell_days,45,1981,2025,-0.0274,0.1647,0.1647,True,0.1647,-0.0418,0.1067,5.4222,-0.2744,-0.4177,0.9092,False,down,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Chikun,onset_doy,45,1981,2025,0.1188,0.5702,0.5702,True,0.5702,0.2078,0.3036,147.4222,1.1882,2.0777,0.7064,False,up,"Rain start: 1 days later per decade (no clear trend, could be chance)",True
+Chikun,season_gldas_rootzone_mm,26,2000,2025,-1.4201,0.0003,0.0003,True,0.0003,-1.48,0.0019,247.2869,-14.2013,-14.8,0.001,True,down,Root-zone soil water: 14 mm drier per decade (clear trend),False
+Chikun,season_rain_mm,45,1981,2025,0.259,0.8679,0.8603,True,0.8679,0.2244,0.8649,1256.2442,2.59,2.2443,0.9766,False,up,"Season rain: 3 mm more per decade (no clear trend, could be chance)",True
+Chikun,season_water_balance_mm,45,1981,2025,0.1351,0.961,0.961,True,0.961,0.4747,0.7544,345.2183,1.3513,4.7475,0.9922,False,up,"Season water balance: 1 mm wetter per decade (no clear trend, could be chance)",True
+Giwa,dry_spells_10plus,45,1981,2025,0.0,1.0,1.0,True,1.0,0.0,,0.0,0.0,0.0,1.0,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Giwa,heat_days,45,1981,2025,1.2265,0.0041,0.0469,True,0.0469,1.0403,0.0016,49.9556,12.265,10.4032,0.0634,False,up,"Heat days: 12 days more per decade (no clear trend, could be chance)",True
+Giwa,longest_dry_spell_days,45,1981,2025,0.0,0.9919,0.9919,True,0.9919,0.0079,0.6949,4.5111,0.0,0.0791,1.0,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Giwa,onset_doy,45,1981,2025,0.1372,0.5836,0.5836,True,0.5836,0.214,0.37,152.0222,1.3722,2.1397,0.7064,False,up,"Rain start: 1 days later per decade (no clear trend, could be chance)",True
+Giwa,season_gldas_rootzone_mm,26,2000,2025,-1.7117,0.0003,0.0003,True,0.0003,-1.9488,0.0015,239.5698,-17.1166,-19.4883,0.001,True,down,Root-zone soil water: 17 mm drier per decade (clear trend),False
+Giwa,season_rain_mm,45,1981,2025,-0.1003,0.961,0.961,True,0.961,-0.031,0.9773,1074.8699,-1.0025,-0.3102,0.9766,False,down,"Season rain: 1 mm less per decade (no clear trend, could be chance)",True
+Giwa,season_water_balance_mm,45,1981,2025,-0.6827,0.7174,0.7174,True,0.7174,-0.6196,0.6615,55.9237,-6.8273,-6.1958,0.9844,False,down,"Season water balance: 7 mm drier per decade (no clear trend, could be chance)",True
+Igabi,dry_spells_10plus,45,1981,2025,0.0,0.1332,0.1332,True,0.1332,0.0026,0.1249,0.0222,0.0,0.0264,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Igabi,heat_days,45,1981,2025,1.0742,0.0087,0.0639,True,0.0639,0.9555,0.0031,44.1111,10.7418,9.5547,0.0773,False,up,"Heat days: 11 days more per decade (no clear trend, could be chance)",True
+Igabi,longest_dry_spell_days,45,1981,2025,0.0,0.8314,0.8314,True,0.8314,0.0129,0.5744,4.5333,0.0,0.1291,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Igabi,onset_doy,45,1981,2025,0.3,0.1704,0.0096,True,0.1704,0.3682,0.1145,150.0667,3.0,3.6825,0.3265,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Igabi,season_gldas_rootzone_mm,26,2000,2025,-1.3074,0.0017,0.0,True,0.0017,-1.5678,0.0069,249.3606,-13.0739,-15.6785,0.0037,True,down,Root-zone soil water: 13 mm drier per decade (clear trend),False
+Igabi,season_rain_mm,45,1981,2025,0.2945,0.8679,0.8679,True,0.8679,0.3037,0.7959,1174.1853,2.9447,3.0368,0.9766,False,up,"Season rain: 3 mm more per decade (no clear trend, could be chance)",True
+Igabi,season_water_balance_mm,45,1981,2025,0.2795,0.8988,0.8988,True,0.8988,0.125,0.9323,196.9285,2.7952,1.2499,0.9844,False,up,"Season water balance: 3 mm wetter per decade (no clear trend, could be chance)",True
+Ikara,dry_spells_10plus,45,1981,2025,0.0,0.2828,0.3177,True,0.3177,0.0026,0.2756,0.0444,0.0,0.0264,0.522,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Ikara,heat_days,45,1981,2025,1.5542,0.0002,0.0043,True,0.0043,1.4017,0.0001,67.5111,15.5419,14.0171,0.0136,True,up,Heat days: 16 days more per decade (clear trend),True
+Ikara,longest_dry_spell_days,45,1981,2025,-0.029,0.0366,0.0366,True,0.0366,-0.0244,0.2355,5.1111,-0.2899,-0.2437,0.8419,False,down,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Ikara,onset_doy,45,1981,2025,0.2,0.4053,0.0657,True,0.4053,0.2713,0.2843,163.3111,2.0,2.7128,0.5483,False,up,"Rain start: 2 days later per decade (no clear trend, could be chance)",True
+Ikara,season_gldas_rootzone_mm,26,2000,2025,-2.4813,0.0004,0.0004,True,0.0004,-2.8645,0.0018,227.2964,-24.8129,-28.6451,0.0012,True,down,Root-zone soil water: 25 mm drier per decade (clear trend),False
+Ikara,season_rain_mm,45,1981,2025,2.8719,0.0165,0.0165,True,0.0165,3.1173,0.0063,959.0936,28.7193,31.1725,0.2741,False,up,"Season rain: 29 mm more per decade (no clear trend, could be chance)",True
+Ikara,season_water_balance_mm,45,1981,2025,1.0736,0.4396,0.4396,True,0.4396,1.7015,0.2561,-150.4098,10.7359,17.0149,0.9844,False,up,"Season water balance: 11 mm wetter per decade (no clear trend, could be chance)",True
+Jaba,dry_spells_10plus,45,1981,2025,0.0,0.7954,0.7954,True,0.7954,0.0009,0.7837,0.0889,0.0,0.0092,0.9148,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Jaba,heat_days,45,1981,2025,1.5385,0.0,0.0018,True,0.0018,1.5046,0.0,71.5333,15.3846,15.0461,0.0085,True,up,Heat days: 15 days more per decade (clear trend),True
+Jaba,longest_dry_spell_days,45,1981,2025,0.0,0.3259,0.3259,True,0.3259,-0.0161,0.5399,5.2667,0.0,-0.1607,0.9092,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Jaba,onset_doy,45,1981,2025,0.4333,0.0468,0.0468,True,0.0468,0.4632,0.0265,131.6444,4.333,4.6324,0.2744,False,up,"Rain start: 4 days later per decade (no clear trend, could be chance)",True
+Jaba,season_gldas_rootzone_mm,26,2000,2025,-0.4635,0.0383,0.0383,True,0.0383,-0.6234,0.0179,313.3185,-4.6349,-6.2344,0.044,True,down,Root-zone soil water: 5 mm drier per decade (clear trend),False
+Jaba,season_rain_mm,45,1981,2025,-0.1239,0.9766,0.974,True,0.9766,0.2155,0.8751,1488.2427,-1.2387,2.1546,0.9766,False,down,"Season rain: 1 mm less per decade (no clear trend, could be chance)",True
+Jaba,season_water_balance_mm,45,1981,2025,-0.5247,0.7767,0.8218,True,0.8218,0.046,0.9764,635.5053,-5.2468,0.4598,0.9844,False,down,"Season water balance: 5 mm drier per decade (no clear trend, could be chance)",True
+Jema'a,dry_spells_10plus,45,1981,2025,0.0,0.3762,0.3762,True,0.3762,0.0033,0.3726,0.1111,0.0,0.0329,0.5769,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Jema'a,heat_days,45,1981,2025,1.5,0.0,0.0012,True,0.0012,1.4299,0.0,67.4,15.0,14.2991,0.0085,True,up,Heat days: 15 days more per decade (clear trend),True
+Jema'a,longest_dry_spell_days,45,1981,2025,0.0,0.905,0.905,True,0.905,0.013,0.6767,5.3556,0.0,0.1304,0.9912,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Jema'a,onset_doy,45,1981,2025,0.3066,0.1083,0.1083,True,0.1083,0.3535,0.1024,135.2667,3.0662,3.5349,0.3023,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Jema'a,season_gldas_rootzone_mm,26,2000,2025,-0.6726,0.0343,0.0343,True,0.0343,-0.8735,0.0077,268.0376,-6.7263,-8.7354,0.0416,True,down,Root-zone soil water: 7 mm drier per decade (clear trend),False
+Jema'a,season_rain_mm,45,1981,2025,-0.6167,0.7028,0.6635,True,0.7028,-0.2487,0.8337,1438.654,-6.1667,-2.4872,0.9766,False,down,"Season rain: 6 mm less per decade (no clear trend, could be chance)",True
+Jema'a,season_water_balance_mm,45,1981,2025,-1.101,0.4631,0.4631,True,0.4631,-0.4549,0.7442,585.6575,-11.0098,-4.549,0.9844,False,down,"Season water balance: 11 mm drier per decade (no clear trend, could be chance)",True
+Kachia,dry_spells_10plus,45,1981,2025,0.0,0.5837,0.5837,True,0.5837,-0.0024,0.5789,0.1556,0.0,-0.0237,0.7749,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kachia,heat_days,45,1981,2025,1.053,0.002,0.0099,True,0.0099,1.0501,0.002,50.4444,10.5299,10.5007,0.0208,True,up,Heat days: 11 days more per decade (clear trend),True
+Kachia,longest_dry_spell_days,45,1981,2025,0.0,0.2937,0.2937,True,0.2937,-0.029,0.392,5.5556,0.0,-0.2899,0.9092,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kachia,onset_doy,45,1981,2025,0.4667,0.0132,0.0132,True,0.0132,0.537,0.0073,134.0889,4.6667,5.3702,0.1523,False,up,"Rain start: 5 days later per decade (no clear trend, could be chance)",True
+Kachia,season_gldas_rootzone_mm,26,2000,2025,-0.6827,0.0055,0.0055,True,0.0055,-0.7341,0.0235,287.6111,-6.8269,-7.3413,0.0079,True,down,Root-zone soil water: 7 mm drier per decade (clear trend),False
+Kachia,season_rain_mm,45,1981,2025,0.1122,0.8679,0.8679,True,0.8679,0.2868,0.8438,1454.8846,1.1222,2.8679,0.9766,False,up,"Season rain: 1 mm more per decade (no clear trend, could be chance)",True
+Kachia,season_water_balance_mm,45,1981,2025,0.3951,0.7174,0.7367,True,0.7367,0.3952,0.8071,564.2198,3.9507,3.9525,0.9844,False,up,"Season water balance: 4 mm wetter per decade (no clear trend, could be chance)",True
+Kaduna North,dry_spells_10plus,45,1981,2025,0.0,1.0,1.0,True,1.0,0.0,,0.0,0.0,0.0,1.0,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kaduna North,heat_days,45,1981,2025,0.9183,0.0133,0.0876,True,0.0876,0.8983,0.0048,41.8667,9.1833,8.9829,0.0876,False,up,"Heat days: 9 days more per decade (no clear trend, could be chance)",True
+Kaduna North,longest_dry_spell_days,45,1981,2025,0.0,0.6465,0.6465,True,0.6465,0.0011,0.9596,4.9111,0.0,0.0105,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kaduna North,onset_doy,45,1981,2025,0.375,0.0716,0.0286,True,0.0716,0.4108,0.0313,148.6889,3.75,4.108,0.2744,False,up,"Rain start: 4 days later per decade (no clear trend, could be chance)",True
+Kaduna North,season_gldas_rootzone_mm,26,2000,2025,-1.1435,0.0011,0.0,True,0.0011,-1.3528,0.0029,188.0299,-11.4346,-13.5282,0.0025,True,down,Root-zone soil water: 11 mm drier per decade (clear trend),False
+Kaduna North,season_rain_mm,45,1981,2025,0.3694,0.7468,0.7468,True,0.7468,0.4545,0.7025,1157.7205,3.6943,4.5449,0.9766,False,up,"Season rain: 4 mm more per decade (no clear trend, could be chance)",True
+Kaduna North,season_water_balance_mm,45,1981,2025,0.4045,0.6179,0.6179,True,0.6179,0.6481,0.6493,226.202,4.045,6.4806,0.9844,False,up,"Season water balance: 4 mm wetter per decade (no clear trend, could be chance)",True
+Kaduna South,dry_spells_10plus,45,1981,2025,0.0,0.2986,0.2986,True,0.2986,-0.0018,0.2862,0.0222,0.0,-0.0184,0.522,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kaduna South,heat_days,45,1981,2025,0.9183,0.0133,0.0876,True,0.0876,0.8983,0.0048,41.8667,9.1833,8.9829,0.0876,False,up,"Heat days: 9 days more per decade (no clear trend, could be chance)",True
+Kaduna South,longest_dry_spell_days,45,1981,2025,0.0,1.0,1.0,True,1.0,0.0029,0.8933,5.1778,0.0,0.029,1.0,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kaduna South,onset_doy,45,1981,2025,0.3425,0.1292,0.0006,True,0.1292,0.4063,0.0602,147.8222,3.4248,4.0632,0.3023,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Kaduna South,season_gldas_rootzone_mm,26,2000,2025,-1.2065,0.0004,0.0004,True,0.0004,-1.3027,0.0014,207.7281,-12.0646,-13.027,0.0012,True,down,Root-zone soil water: 12 mm drier per decade (clear trend),False
+Kaduna South,season_rain_mm,45,1981,2025,-0.0715,0.9766,0.9754,True,0.9766,-0.1769,0.8938,1175.1301,-0.7151,-1.7693,0.9766,False,down,"Season rain: 1 mm less per decade (no clear trend, could be chance)",True
+Kaduna South,season_water_balance_mm,45,1981,2025,-0.1805,0.8679,0.8679,True,0.8679,0.0166,0.9914,243.6116,-1.8052,0.1664,0.9844,False,down,"Season water balance: 2 mm drier per decade (no clear trend, could be chance)",True
+Kagarko,dry_spells_10plus,45,1981,2025,0.0,0.9523,0.9523,True,0.9523,-0.0003,0.9375,0.0889,0.0,-0.0026,1.0,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kagarko,heat_days,45,1981,2025,1.375,0.0001,0.0047,True,0.0047,1.3742,0.0002,52.0,13.75,13.7418,0.0136,True,up,Heat days: 14 days more per decade (clear trend),True
+Kagarko,longest_dry_spell_days,45,1981,2025,0.0,0.7577,0.719,True,0.7577,-0.0051,0.8478,5.2889,0.0,-0.0514,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kagarko,onset_doy,45,1981,2025,0.2753,0.1061,0.1061,True,0.1061,0.2792,0.1518,133.6222,2.7525,2.7918,0.3023,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Kagarko,season_gldas_rootzone_mm,26,2000,2025,-0.623,0.0048,0.0048,True,0.0048,-0.6753,0.0129,312.2919,-6.2299,-6.7528,0.0073,True,down,Root-zone soil water: 6 mm drier per decade (clear trend),False
+Kagarko,season_rain_mm,45,1981,2025,1.2777,0.3947,0.2911,True,0.3947,1.1709,0.3829,1440.5589,12.7769,11.7092,0.9766,False,up,"Season rain: 13 mm more per decade (no clear trend, could be chance)",True
+Kagarko,season_water_balance_mm,45,1981,2025,1.6693,0.3328,0.3573,True,0.3573,1.0941,0.4701,599.0329,16.6928,10.941,0.9844,False,up,"Season water balance: 17 mm wetter per decade (no clear trend, could be chance)",True
+Kajuru,dry_spells_10plus,45,1981,2025,0.0,0.3635,0.4112,True,0.4112,-0.0022,0.355,0.0444,0.0,-0.0224,0.5911,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kajuru,heat_days,45,1981,2025,0.9844,0.0103,0.0844,True,0.0844,0.9261,0.0046,50.6444,9.8438,9.2609,0.0876,False,up,"Heat days: 10 days more per decade (no clear trend, could be chance)",True
+Kajuru,longest_dry_spell_days,45,1981,2025,-0.0233,0.177,0.2381,True,0.2381,-0.0358,0.1612,4.6667,-0.2326,-0.3584,0.9092,False,down,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kajuru,onset_doy,45,1981,2025,0.3067,0.2031,0.2031,True,0.2031,0.2534,0.2074,139.6,3.0669,2.5336,0.3593,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Kajuru,season_gldas_rootzone_mm,26,2000,2025,-1.1428,0.0036,0.0036,True,0.0036,-1.08,0.0035,272.491,-11.4283,-10.7997,0.0064,True,down,Root-zone soil water: 11 mm drier per decade (clear trend),False
+Kajuru,season_rain_mm,45,1981,2025,-0.6451,0.6884,0.6725,True,0.6884,-0.1369,0.9183,1337.1643,-6.4513,-1.3693,0.9766,False,down,"Season rain: 6 mm less per decade (no clear trend, could be chance)",True
+Kajuru,season_water_balance_mm,45,1981,2025,-0.4422,0.7321,0.7321,True,0.7321,-0.0191,0.99,399.5503,-4.4219,-0.1906,0.9844,False,down,"Season water balance: 4 mm drier per decade (no clear trend, could be chance)",True
+Kaura,dry_spells_10plus,45,1981,2025,0.0,0.093,0.2063,True,0.2063,-0.0041,0.0878,0.0444,0.0,-0.0408,0.4792,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kaura,heat_days,45,1981,2025,0.9565,0.0016,0.0116,True,0.0116,0.9,0.0003,45.5333,9.5652,9.0,0.0223,True,up,Heat days: 10 days more per decade (clear trend),True
+Kaura,longest_dry_spell_days,45,1981,2025,0.0,0.5244,0.5244,True,0.5244,-0.024,0.3109,4.9333,0.0,-0.2398,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kaura,onset_doy,45,1981,2025,0.5639,0.0054,0.0054,True,0.0054,0.527,0.007,130.2444,5.6386,5.2701,0.1243,False,up,"Rain start: 6 days later per decade (no clear trend, could be chance)",True
+Kaura,season_gldas_rootzone_mm,26,2000,2025,-0.2709,0.5666,0.4603,True,0.5666,-0.3916,0.1669,271.1498,-2.7088,-3.9163,0.5666,False,down,"Root-zone soil water: 3 mm drier per decade (no clear trend, could be chance)",False
+Kaura,season_rain_mm,45,1981,2025,-2.2017,0.0799,0.0469,True,0.0799,-1.9807,0.0642,1373.0092,-22.0171,-19.8068,0.5513,False,down,"Season rain: 22 mm less per decade (no clear trend, could be chance)",True
+Kaura,season_water_balance_mm,45,1981,2025,-2.4717,0.1108,0.048,True,0.1108,-2.2711,0.0829,519.6023,-24.7169,-22.7108,0.9844,False,down,"Season water balance: 25 mm drier per decade (no clear trend, could be chance)",True
+Kauru,dry_spells_10plus,45,1981,2025,0.0,0.2986,0.2986,True,0.2986,-0.0018,0.2862,0.0222,0.0,-0.0184,0.522,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kauru,heat_days,45,1981,2025,1.0889,0.0056,0.0243,True,0.0243,0.8817,0.006,57.0667,10.8893,8.8169,0.0355,True,up,Heat days: 11 days more per decade (clear trend),True
+Kauru,longest_dry_spell_days,45,1981,2025,0.0,0.2867,0.3405,True,0.3405,-0.0291,0.1916,4.3111,0.0,-0.2912,0.9092,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kauru,onset_doy,45,1981,2025,0.3374,0.0702,0.0702,True,0.0702,0.3465,0.1091,143.0,3.374,3.4651,0.2744,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Kauru,season_gldas_rootzone_mm,26,2000,2025,-1.0718,0.0173,0.0173,True,0.0173,-1.1616,0.0104,273.5227,-10.7184,-11.6162,0.0234,True,down,Root-zone soil water: 11 mm drier per decade (clear trend),False
+Kauru,season_rain_mm,45,1981,2025,0.5028,0.7028,0.7028,True,0.7028,0.6795,0.5166,1279.8973,5.0275,6.7951,0.9766,False,up,"Season rain: 5 mm more per decade (no clear trend, could be chance)",True
+Kauru,season_water_balance_mm,45,1981,2025,0.1396,0.8833,0.8833,True,0.8833,0.6549,0.6201,311.1551,1.396,6.549,0.9844,False,up,"Season water balance: 1 mm wetter per decade (no clear trend, could be chance)",True
+Kubau,dry_spells_10plus,45,1981,2025,0.0,0.0968,0.2171,True,0.2171,0.0049,0.0925,0.0667,0.0,0.0487,0.4792,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kubau,heat_days,45,1981,2025,1.3798,0.0014,0.0089,True,0.0089,1.1277,0.0008,63.2667,13.7981,11.2767,0.0208,True,up,Heat days: 14 days more per decade (clear trend),True
+Kubau,longest_dry_spell_days,45,1981,2025,0.0,0.8266,0.8187,True,0.8266,0.0145,0.5787,4.8222,0.0,0.1449,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kubau,onset_doy,45,1981,2025,0.0,0.9298,0.9298,True,0.9298,0.0522,0.7605,149.7556,0.0,0.5217,0.9688,False,flat,"Rain start: no change per decade (no clear trend, could be chance)",True
+Kubau,season_gldas_rootzone_mm,26,2000,2025,-1.5471,0.0042,0.0042,True,0.0042,-1.8839,0.012,284.4883,-15.4713,-18.839,0.0068,True,down,Root-zone soil water: 15 mm drier per decade (clear trend),False
+Kubau,season_rain_mm,45,1981,2025,1.7616,0.1199,0.1199,True,0.1199,2.346,0.0423,1189.0944,17.6155,23.4597,0.5513,False,up,"Season rain: 18 mm more per decade (no clear trend, could be chance)",True
+Kubau,season_water_balance_mm,45,1981,2025,0.9936,0.6179,0.6179,True,0.6179,1.4516,0.347,123.1102,9.9362,14.516,0.9844,False,up,"Season water balance: 10 mm wetter per decade (no clear trend, could be chance)",True
+Kudan,dry_spells_10plus,45,1981,2025,0.0,0.0574,0.1437,True,0.1437,0.0046,0.0528,0.0444,0.0,0.0461,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Kudan,heat_days,45,1981,2025,1.4086,0.0003,0.0019,True,0.0019,1.2382,0.0002,57.5556,14.0859,12.3821,0.0085,True,up,Heat days: 14 days more per decade (clear trend),True
+Kudan,longest_dry_spell_days,45,1981,2025,0.0,0.4227,0.4227,True,0.4227,0.0111,0.6691,5.4,0.0,0.1107,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Kudan,onset_doy,45,1981,2025,0.0349,0.8987,0.7607,True,0.8987,0.0253,0.9291,159.8,0.3486,0.253,0.9688,False,up,"Rain start: no change per decade (no clear trend, could be chance)",True
+Kudan,season_gldas_rootzone_mm,26,2000,2025,-1.9373,0.0003,0.0003,True,0.0003,-2.254,0.0012,226.4155,-19.3733,-22.5404,0.001,True,down,Root-zone soil water: 19 mm drier per decade (clear trend),False
+Kudan,season_rain_mm,45,1981,2025,1.4474,0.2141,0.2141,True,0.2141,1.6996,0.104,943.8909,14.4739,16.9956,0.8207,False,up,"Season rain: 14 mm more per decade (no clear trend, could be chance)",True
+Kudan,season_water_balance_mm,45,1981,2025,0.4387,0.822,0.7666,True,0.822,0.5554,0.6849,-126.661,4.387,5.5535,0.9844,False,up,"Season water balance: 4 mm wetter per decade (no clear trend, could be chance)",True
+Lere,dry_spells_10plus,45,1981,2025,0.0,0.7875,0.7875,True,0.7875,0.0005,0.762,0.0222,0.0,0.0053,0.9148,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Lere,heat_days,45,1981,2025,1.1667,0.002,0.0092,True,0.0092,0.898,0.0023,55.8889,11.6667,8.9802,0.0208,True,up,Heat days: 12 days more per decade (clear trend),True
+Lere,longest_dry_spell_days,45,1981,2025,0.0,0.1621,0.0861,True,0.1621,-0.0274,0.1921,4.5111,0.0,-0.274,0.9092,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Lere,onset_doy,45,1981,2025,0.3114,0.1314,,False,0.1314,0.331,0.1067,137.5333,3.1142,3.3096,0.3023,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Lere,season_gldas_rootzone_mm,26,2000,2025,-0.9419,0.0195,0.0012,True,0.0195,-1.0977,0.0158,283.0969,-9.419,-10.9771,0.0249,True,down,Root-zone soil water: 9 mm drier per decade (clear trend),False
+Lere,season_rain_mm,45,1981,2025,2.1196,0.0238,0.0238,True,0.0238,2.0048,0.0196,1268.3445,21.1961,20.0485,0.2741,False,up,"Season rain: 21 mm more per decade (no clear trend, could be chance)",True
+Lere,season_water_balance_mm,45,1981,2025,1.7413,0.2952,0.2952,True,0.2952,1.8224,0.1397,263.9396,17.4125,18.2239,0.9844,False,up,"Season water balance: 17 mm wetter per decade (no clear trend, could be chance)",True
+Makarfi,dry_spells_10plus,45,1981,2025,0.0,0.0574,0.1437,True,0.1437,0.0046,0.0528,0.0444,0.0,0.0461,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Makarfi,heat_days,45,1981,2025,1.75,0.0001,0.0009,True,0.0009,1.5843,0.0,71.6444,17.5,15.8432,0.0085,True,up,Heat days: 18 days more per decade (clear trend),True
+Makarfi,longest_dry_spell_days,45,1981,2025,0.0,0.6288,0.6288,True,0.6288,0.0061,0.7788,5.2444,0.0,0.0606,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Makarfi,onset_doy,45,1981,2025,0.0,0.9688,0.9524,True,0.9688,0.0464,0.8649,161.4222,0.0,0.4638,0.9688,False,flat,"Rain start: no change per decade (no clear trend, could be chance)",True
+Makarfi,season_gldas_rootzone_mm,26,2000,2025,-1.9492,0.0001,0.0001,True,0.0001,-2.3939,0.0017,224.056,-19.4924,-23.9395,0.001,True,down,Root-zone soil water: 19 mm drier per decade (clear trend),False
+Makarfi,season_rain_mm,45,1981,2025,2.0421,0.1108,0.1108,True,0.1108,2.2094,0.0384,930.6457,20.4214,22.0939,0.5513,False,up,"Season rain: 20 mm more per decade (no clear trend, could be chance)",True
+Makarfi,season_water_balance_mm,45,1981,2025,0.2742,0.8679,0.8679,True,0.8679,0.5935,0.6743,-195.1828,2.7419,5.9347,0.9844,False,up,"Season water balance: 3 mm wetter per decade (no clear trend, could be chance)",True
+Sabon Gari,dry_spells_10plus,45,1981,2025,0.0,0.0574,0.1437,True,0.1437,0.0046,0.0528,0.0444,0.0,0.0461,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Sabon Gari,heat_days,45,1981,2025,1.1333,0.0048,0.0247,True,0.0247,0.9937,0.0023,46.0,11.3333,9.9368,0.0355,True,up,Heat days: 11 days more per decade (clear trend),True
+Sabon Gari,longest_dry_spell_days,45,1981,2025,0.0,0.7866,0.808,True,0.808,0.0119,0.6317,5.1556,0.0,0.1186,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Sabon Gari,onset_doy,45,1981,2025,-0.2132,0.3889,0.3889,True,0.3889,-0.2943,0.2751,153.9111,-2.132,-2.9433,0.5483,False,down,"Rain start: 2 days earlier per decade (no clear trend, could be chance)",True
+Sabon Gari,season_gldas_rootzone_mm,26,2000,2025,-2.0694,0.0,0.0,True,0.0,-2.1362,0.0,226.673,-20.694,-21.3622,0.0006,True,down,Root-zone soil water: 21 mm drier per decade (clear trend),False
+Sabon Gari,season_rain_mm,45,1981,2025,0.9025,0.4631,0.4631,True,0.4631,0.9419,0.3601,958.2204,9.0246,9.4194,0.9766,False,up,"Season rain: 9 mm more per decade (no clear trend, could be chance)",True
+Sabon Gari,season_water_balance_mm,45,1981,2025,0.4928,0.7617,0.6891,True,0.7617,0.4435,0.7425,-56.6284,4.9279,4.4347,0.9844,False,up,"Season water balance: 5 mm wetter per decade (no clear trend, could be chance)",True
+Sanga,dry_spells_10plus,45,1981,2025,0.0,0.6048,0.6064,True,0.6064,-0.0021,0.5989,0.1333,0.0,-0.0211,0.7749,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Sanga,heat_days,45,1981,2025,1.5324,0.0,0.0,True,0.0,1.5539,0.0,58.4889,15.3239,15.5389,0.0001,True,up,Heat days: 15 days more per decade (clear trend),True
+Sanga,longest_dry_spell_days,45,1981,2025,0.0,0.6704,0.6704,True,0.6704,-0.0269,0.4186,5.4222,0.0,-0.2688,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Sanga,onset_doy,45,1981,2025,0.2857,0.1616,0.1616,True,0.1616,0.3548,0.1143,136.3111,2.8571,3.5481,0.3265,False,up,"Rain start: 3 days later per decade (no clear trend, could be chance)",True
+Sanga,season_gldas_rootzone_mm,26,2000,2025,-0.4604,0.0641,0.0641,True,0.0641,-0.6107,0.0169,271.3491,-4.604,-6.1069,0.067,False,down,"Root-zone soil water: 5 mm drier per decade (no clear trend, could be chance)",False
+Sanga,season_rain_mm,45,1981,2025,-0.8099,0.5122,0.5739,True,0.5739,-0.5869,0.5921,1374.7905,-8.0995,-5.8687,0.9766,False,down,"Season rain: 8 mm less per decade (no clear trend, could be chance)",True
+Sanga,season_water_balance_mm,45,1981,2025,-1.4912,0.4396,0.4396,True,0.4396,-1.1204,0.3843,518.4119,-14.9123,-11.2045,0.9844,False,down,"Season water balance: 15 mm drier per decade (no clear trend, could be chance)",True
+Soba,dry_spells_10plus,45,1981,2025,0.0,0.1332,0.1332,True,0.1332,0.0026,0.1249,0.0222,0.0,0.0264,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Soba,heat_days,45,1981,2025,1.3652,0.0011,0.0047,True,0.0047,1.1014,0.001,57.7111,13.6515,11.0145,0.0136,True,up,Heat days: 14 days more per decade (clear trend),True
+Soba,longest_dry_spell_days,45,1981,2025,0.0,0.641,0.6526,True,0.6526,-0.0016,0.9476,5.1778,0.0,-0.0158,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Soba,onset_doy,45,1981,2025,0.2343,0.3324,0.2076,True,0.3324,0.261,0.285,151.2,2.3431,2.61,0.5098,False,up,"Rain start: 2 days later per decade (no clear trend, could be chance)",True
+Soba,season_gldas_rootzone_mm,26,2000,2025,-1.6982,0.0006,0.0006,True,0.0006,-2.0363,0.0057,251.1859,-16.9816,-20.3633,0.0015,True,down,Root-zone soil water: 17 mm drier per decade (clear trend),False
+Soba,season_rain_mm,45,1981,2025,0.5399,0.7174,0.7174,True,0.7174,0.7224,0.5425,1111.6295,5.399,7.2243,0.9766,False,up,"Season rain: 5 mm more per decade (no clear trend, could be chance)",True
+Soba,season_water_balance_mm,45,1981,2025,0.0589,0.9922,0.9922,True,0.9922,-0.1621,0.9178,49.3003,0.5886,-1.621,0.9922,False,up,"Season water balance: 1 mm wetter per decade (no clear trend, could be chance)",True
+Zangon Kataf,dry_spells_10plus,45,1981,2025,0.0,0.093,0.2063,True,0.2063,-0.0041,0.0878,0.0444,0.0,-0.0408,0.4792,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Zangon Kataf,heat_days,45,1981,2025,1.0779,0.0044,0.0183,True,0.0183,0.9804,0.0031,64.4,10.7794,9.8037,0.0323,True,up,Heat days: 11 days more per decade (clear trend),True
+Zangon Kataf,longest_dry_spell_days,45,1981,2025,-0.0417,0.0855,0.0348,True,0.0855,-0.0494,0.0531,4.6667,-0.4167,-0.4941,0.9092,False,down,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Zangon Kataf,onset_doy,45,1981,2025,0.4564,0.0537,0.0627,True,0.0627,0.4441,0.048,138.9111,4.5644,4.4414,0.2744,False,up,"Rain start: 5 days later per decade (no clear trend, could be chance)",True
+Zangon Kataf,season_gldas_rootzone_mm,26,2000,2025,-0.7026,0.0641,0.0641,True,0.0641,-0.7097,0.0214,297.0825,-7.0259,-7.0967,0.067,False,down,"Root-zone soil water: 7 mm drier per decade (no clear trend, could be chance)",False
+Zangon Kataf,season_rain_mm,45,1981,2025,-1.359,0.3044,0.3044,True,0.3044,-1.2097,0.3144,1377.9203,-13.5902,-12.097,0.9766,False,down,"Season rain: 14 mm less per decade (no clear trend, could be chance)",True
+Zangon Kataf,season_water_balance_mm,45,1981,2025,-1.4272,0.4057,0.4057,True,0.4057,-1.1938,0.3827,457.7097,-14.2724,-11.9385,0.9844,False,down,"Season water balance: 14 mm drier per decade (no clear trend, could be chance)",True
+Zaria,dry_spells_10plus,45,1981,2025,0.0,0.1332,0.1332,True,0.1332,0.0026,0.1249,0.0222,0.0,0.0264,0.4723,False,flat,"Long dry spells: no change per decade (no clear trend, could be chance)",True
+Zaria,heat_days,45,1981,2025,1.1333,0.0048,0.0247,True,0.0247,0.9937,0.0023,46.0,11.3333,9.9368,0.0355,True,up,Heat days: 11 days more per decade (clear trend),True
+Zaria,longest_dry_spell_days,45,1981,2025,0.0,0.6132,0.4501,True,0.6132,0.0128,0.5723,4.9556,0.0,0.1278,0.9561,False,flat,"Longest dry spell: no change per decade (no clear trend, could be chance)",True
+Zaria,onset_doy,45,1981,2025,0.0855,0.6737,0.6737,True,0.6737,0.139,0.5878,149.6889,0.8545,1.39,0.7747,False,up,"Rain start: 1 days later per decade (no clear trend, could be chance)",True
+Zaria,season_gldas_rootzone_mm,26,2000,2025,-1.8895,0.0001,0.0001,True,0.0001,-2.0663,0.0002,233.0811,-18.8947,-20.6627,0.001,True,down,Root-zone soil water: 19 mm drier per decade (clear trend),False
+Zaria,season_rain_mm,45,1981,2025,0.5478,0.7028,0.7028,True,0.7028,0.5122,0.644,1034.607,5.4782,5.1223,0.9766,False,up,"Season rain: 5 mm more per decade (no clear trend, could be chance)",True
+Zaria,season_water_balance_mm,45,1981,2025,0.2743,0.8679,0.827,True,0.8679,0.0111,0.9938,19.4424,2.7433,0.1112,0.9844,False,up,"Season water balance: 3 mm wetter per decade (no clear trend, could be chance)",True

@@ -1,0 +1,25 @@
+{
+  "rows_fit": 525,
+  "rows_assigned": 575,
+  "k": 4,
+  "k_best_silhouette": 2,
+  "silhouette": 0.214,
+  "davies_bouldin": 1.461,
+  "seed_ari_min": 0.909,
+  "gmm_k_best_bic": 4,
+  "gmm_agreement": 0.64,
+  "types": {
+    "Wet": 154,
+    "Late start": 130,
+    "Typical": 128,
+    "Dry spell": 113
+  },
+  "stressed_share_by_type": {
+    "Dry spell": 0.327,
+    "Late start": 0.3,
+    "Typical": 0.336,
+    "Wet": 0.214
+  },
+  "stressed_share_gap": 0.122,
+  "stressed_gap_p_year_block": 0.695
+}

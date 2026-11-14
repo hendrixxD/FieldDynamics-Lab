@@ -1,6 +1,6 @@
 name: Security gate
 
-# pull_request_target runs this file and the scanner as they are on the target branch, so a PR
+# pull_request_target runs this file and the scanner as they are on the default branch, main, so a PR
 # cannot weaken its own scan. That trigger is only safe because the PR's code is never checked
 # out or run: it is fetched as git objects and read. Never add a step that executes it.
 on:

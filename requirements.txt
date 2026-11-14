@@ -835,6 +835,10 @@ eerepr==0.1.3 \
     --hash=sha256:6b686643e3050cbc1892e0063dc6e238402397685123e09768be16e1f1fb7a94 \
     --hash=sha256:caa0849742c9a8b480eade330d8bb2c0bb4d26697444df9c6c127dc9d52fc16b
     # via geemap
+et-xmlfile==2.0.0 \
+    --hash=sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa \
+    --hash=sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54
+    # via openpyxl
 executing==2.3.0 \
     --hash=sha256:15919cb5d667e5cb4e099511971d00d659573fff2dd5c4e6cd8b71636c7858d2 \
     --hash=sha256:736e859c9f8701f11fcf516856f26f562e04776387824b43a35a1dfe21c84122
@@ -2174,13 +2178,19 @@ numpy==2.4.6 \
     #   pymannkendall
     #   pyogrio
     #   rasterio
+    #   rdata
     #   rioxarray
+    #   rosetta-soil
     #   salib
     #   scikit-learn
     #   scipy
     #   shap
     #   shapely
     #   xarray
+openpyxl==3.1.5 \
+    --hash=sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2 \
+    --hash=sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050
+    # via -r requirements.in
 opentelemetry-api==1.45.2 \
     --hash=sha256:2cbd737377e710ee740d261c94e93fa0f08e6d037c18f17513cc0a2d94479a34 \
     --hash=sha256:d7b0008e21e5fd61cbe7a7f34ca3b6905a78ab677d9bc395e299359c75cda6b4
@@ -2275,6 +2285,7 @@ pandas==3.1.0 \
     #   bqplot
     #   geemap
     #   geopandas
+    #   rdata
     #   salib
     #   shap
     #   xarray
@@ -3217,6 +3228,10 @@ ratelim==0.1.6 \
     --hash=sha256:826d32177e11f9a12831901c9fda6679fd5bbea3605910820167088f5acbb11d \
     --hash=sha256:e1a7dd39e6b552b7cc7f52169cd66cdb826a1a30198e355d7016012987c9ad08
     # via geocoder
+rdata==1.1.0 \
+    --hash=sha256:12efb7597725d6db6cc78d84eb522a9634008f8fce1c2733b7fd42b9013bc41f \
+    --hash=sha256:37c8b19e8be82d7d7acb36c6623bfeb7ab1d95d9380ec00a6c063f88b1f50e3a
+    # via -r requirements.in
 referencing==0.37.0 \
     --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231 \
     --hash=sha256:44aefc3142c5b842538163acb373e24cce6632bd54bdb01b21ad5863489f50d8
@@ -3257,6 +3272,10 @@ rfc3987-syntax==1.1.0 \
 rioxarray==0.19.0 \
     --hash=sha256:494ee4fff1781072d55ee5276f5d07b63d93b05093cb33b926a12186ba5bb8ef \
     --hash=sha256:7819a0036fd874c8c8e280447cbbe43d8dc72fc4a14ac7852a665b1bdb7d4b04
+    # via -r requirements.in
+rosetta-soil==0.3.2 \
+    --hash=sha256:aa2b61f9ed51ecce9c1962c9172f4a55bdf8e598eeaa1e185046e73591141af2 \
+    --hash=sha256:d3490ca70f8bbaa235902d5adf53b7db559a71514c10ae8d5e58969f855c2d28
     # via -r requirements.in
 rpds-py==2026.9.1 \
     --hash=sha256:00ba2d8c7dd4ee537978ddf4b3fbd712bef2d8751603f7f3146b3f4287768e25 \
@@ -3861,6 +3880,7 @@ typing-extensions==4.16.0 \
     #   pydantic-core
     #   pydantic-settings
     #   python-cmr
+    #   rdata
     #   referencing
     #   shap
     #   sqlalchemy
@@ -4058,6 +4078,7 @@ xarray==2026.9.0 \
     --hash=sha256:fe349fa871628b1a0a5217af3fe1283a2862d5485156e6eda354fffb81c3bb7c
     # via
     #   -r requirements.in
+    #   rdata
     #   rioxarray
 xyzservices==2026.9.1 \
     --hash=sha256:8d1a39bf6b192940cc5db5264eeefc1b20dd184f8b83b1303b078743744f5943 \

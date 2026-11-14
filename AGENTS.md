@@ -13,6 +13,7 @@ The tool supports farmer judgment and local expertise. It never replaces them, a
 ## Rules that always apply
 
 - **Attribution:** never add a `Co-Authored-By: Claude` trailer, a "Generated with" line, or any other AI attribution to commits, PRs, or repo content.
+- **Commit authors:** every commit's author and committer must be a human team member. Never commit as `Claude <noreply@anthropic.com>` or any AI identity, even when a tool or environment presets it. Check `git config user.name` and `git config user.email` before the first commit, and `git log --format='%an <%ae>'` before every push. See [Check before you commit](#check-before-you-commit).
 - **Branches:** anyone on the team may push directly to `main` or `staging`, and anyone may merge a PR into either. A short-lived branch and a PR is still the default for work worth a review. See [Git workflow](#git-workflow).
 - **Data:** never use placeholder or made-up data. Leave a value blank until it comes from a real source.
 - **Secrets:** keep secrets in `.env` only. Never commit them.
@@ -44,6 +45,8 @@ Treat "you may" and "consider" as expected deliverables, not optional extras. Do
 | [Model evaluation](docs/model-evaluation.md) | How each model is tested |
 | [Map architecture](docs/map-architecture.md) | Map layers, formats, and endpoints |
 | [Experiment log](docs/experiments.csv) | Every model run and its held-out results |
+| [Model results](docs/model-results.md) | What each model found, and what ships |
+| [Rotation engine](docs/rotation-engine.md) | How the engine decides, what each card carries, and its study check |
 
 ## Repository structure
 
@@ -54,7 +57,7 @@ FieldDynamics-Lab/
 ├── api/           # FastAPI app, routes, schemas
 ├── web/           # Jinja templates, Alpine snippets, Tailwind source
 ├── static/        # precomputed PNGs, GeoJSON, built CSS
-├── notebooks/     # exploration and evaluation only
+├── notebooks/     # model training (run by model.build), plus exploration
 ├── tests/
 ├── docs/          # data contract, decisions, judge-facing notes
 └── config/        # colour scales, crop rules, settings
@@ -98,6 +101,13 @@ git log --all --oneline -- .env
 
 # Whether a file is really ignored, and by which rule
 git check-ignore -v .env
+```
+
+Then check who the commits are by. Every name must be a human team member, never an AI identity:
+
+```bash
+git config user.name && git config user.email
+git log --format='%an <%ae> | %cn <%ce>' origin/staging..HEAD
 ```
 
 Run them for `.env` and for any file that could hold secrets or raw data. Only say a file is not committed after these checks confirm it.
@@ -186,7 +196,7 @@ If Ruff changes version, update its `rev` in `.pre-commit-config.yaml` in the sa
 
 Treat every PR as hostile, including its workflow files. A compromised package runs with whatever is in its environment, so the aim is that it never installs, and that it can reach nothing if it does.
 
-- **Security gate** runs from the target branch through `pull_request_target`, so a PR cannot weaken its own scan. It reads the PR as git objects. Never add a step to it that checks out or runs PR code.
+- **Security gate** runs through `pull_request_target`, which takes the workflow and the scanner from the default branch, `main`, so a PR cannot weaken its own scan. A scanner change only reaches the gate once it is merged to `main`. It reads the PR as git objects. Never add a step to it that checks out or runs PR code.
 - `.github/scripts/security_scan.py` uses only the standard library, so it runs before anything is installed. It stops env dumping, credential file reads, exfiltration hosts, hidden code, `.pth` files, install-time files, unpinned actions, new privileged triggers, and any package source outside PyPI. It checks every pin against OSV, and each new pin against PyPI for its hashes, yanked status, and age.
 - Packages install from hashes and wheels only, so no `setup.py` runs.
 - PR jobs hold no secrets, and their token is read-only.
@@ -200,8 +210,8 @@ If a scan flags something you did not expect, stop and tell Hendrixx. Do not edi
 
 ## Data pipeline
 
-- `python -m data.build` produces the feature table.
-- `python -m model.build` produces model outputs, map PNGs, and GeoJSON.
+- `python -m data.build` rebuilds A2 and the feature tables from the processed source tables. The pulls that fill `data/processed/` need network access and credentials and run on their own (`docs/sources.md`).
+- `python -m model.build` runs the training notebooks in order (`config/models.yaml`, `build.notebooks`), each in a fresh kernel, and saves them executed. Each notebook writes its model outputs to `data/processed/models/` and logs its run.
 - If a result cannot be rebuilt from scratch, it does not exist.
 - Raw pulls go to `data/raw/`, which is git-ignored, and are never edited. Transformations write new files to `data/processed/`.
 - Log every dataset in `docs/sources.md`.
@@ -209,7 +219,7 @@ If a scan flags something you did not expect, stop and tell Hendrixx. Do not edi
 - Validate data on load: soil moisture 0 to 0.6, NDVI -1 to 1, rainfall not negative, and no unexpected nulls.
 - Flag gap-filled values so they lower confidence on the strategy cards.
 - A changed feature table gets a new name, such as `features_v2.parquet`, and the data contract changes in the same PR.
-- Notebooks explore and evaluate. Anything the app uses is a tested `.py` module.
+- Models are trained in notebooks, so every step can be read and rerun. Formulas the notebooks call (pedotransfer functions, FAO-56, validation splits, metrics) and anything the app imports are tested `.py` modules in `model/`. A notebook imports them; it never redefines them.
 
 ## Modeling
 
@@ -282,3 +292,7 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 - The data contract is a draft. Confirm it against real data at first pull.
 - Decide whether `data/processed/` stays in git if the files get large.
 - Check the Resources tab of the challenge page, which the first principle validative measure does not cover.
+- A8, A12 and A15 read files in `data/raw/` that are git-ignored and not in the repo (`isda/isda_lga_stats_cropland.csv`, `ecocrop/ecocrop_kaduna_crops.csv`), so they cannot be rebuilt from a clean clone. Commit their processed inputs, or document the pull that recreates them.
+- Mid-season dry spells (NiMet's July window) need dry spells counted per CHIRPS pixel in Earth Engine; LGA-average rain hides them (docs/model-results.md, A2 fix).
+- A bad season from official records for the backtest (A16 uses the worst MODIS greenness years).
+- The crop baseline per LGA (R37): `zone_crops` in `config/rotations.yaml` is unverified and unused until a source is in the repo.

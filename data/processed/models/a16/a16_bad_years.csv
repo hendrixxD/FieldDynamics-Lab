@@ -1,0 +1,5 @@
+year,main_type,lgas,card_warned_share,maize_failed_share,greenness_stressed_share,passes
+2007,Typical,21,0.0476,0.0476,0.7143,False
+2008,Typical,21,0.0476,0.0476,0.7143,False
+2014,Typical,21,0.0952,0.0952,0.7619,False
+2017,Late start,21,0.5238,0.381,0.619,True

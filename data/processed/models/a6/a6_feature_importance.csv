@@ -1,0 +1,17 @@
+feature,label,ridge_shap_share,lgbm_shap_share,shipped_permutation_share
+tmax_mid_c,July-August daytime heat,0.2452,0.2509,0.4037
+a2_cessation_doy,rain end date,0.1442,0.081,0.1562
+rain_mid_mm,July-August rain,0.1265,0.0694,0.129
+a2_onset_doy,rain start date,0.0734,0.0743,0.03
+season_power_heat_days,heat days,0.0724,0.2299,0.0413
+season_smap_anomaly_z,"soil moisture (SMAP, 2015 on)",0.0714,0.0374,0.06
+season_chirps_heavy_days_50mm,very heavy rain days,0.0619,0.0131,0.0721
+season_imerg_extreme_days_p95,extreme rain days,0.0595,0.0402,0.0329
+water_balance_mid_mm,July-August water balance,0.0463,0.0409,0.0109
+a2_dry_spells_10plus,10+ day dry spells,0.0383,0.0043,0.0456
+rain_early_mm,May-June rain,0.0355,0.034,0.0158
+rain_late_mm,September-October rain,0.0137,0.0705,0.001
+a2_longest_dry_spell_days,longest dry spell,0.0104,0.021,0.0015
+soil_awc_0_50cm_mm,soil water holding,0.0011,0.0114,0.0001
+soil_ksat_min_mm_h,soil infiltration,0.0003,0.0034,0.0
+cropland_share,cropland share,0.0,0.0184,0.0
