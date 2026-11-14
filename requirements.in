@@ -6,6 +6,8 @@
 earthaccess
 earthengine-api
 geemap
+# rdata reads the ECOCROP .rds file from the Recocrop R package (A15 crop ranges).
+rdata
 requests
 
 # Data processing and harmonization

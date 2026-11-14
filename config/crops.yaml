@@ -176,7 +176,7 @@ crops:
 other_crops:
   rice:
     label: Rice
-    why_no_water_balance: "FAO-56 Table 12 assumes a flooded paddy; a free-draining bucket cannot represent it"
+    why_no_water_balance: "FAO-56 Table 12 assumes a flooded paddy; a free-draining bucket cannot represent it. Rain fit from ECOCROP upland rice (A15)"
     rules:
       family: Poaceae
       pest_groups: [striga_aspera_host]
@@ -184,7 +184,7 @@ other_crops:
       gaps: [forage, market.role, labour]
   ginger:
     label: Ginger
-    why_no_water_balance: "No FAO-56 Table 11 stage lengths for rainfed West African ginger"
+    why_no_water_balance: "Not in FAO-56 Tables 11 and 12; rain fit from ECOCROP (A15)"
     rules:
       family: Zingiberaceae
       pest_groups: [ginger_blight]
@@ -193,11 +193,27 @@ other_crops:
       gaps: [forage, market.price, labour]
   yam:
     label: Yam
-    why_no_water_balance: "No FAO-56 stage lengths; tubers stay in the ground through the dry season"
+    why_no_water_balance: "Not in FAO-56 Tables 11 and 12; rain fit from ECOCROP white yam (A15)"
     rules:
       family: Dioscoreaceae
       nitrogen: {fixes: false, source: botany}
       gaps: [pest_groups, forage, market.role, market.price, labour]
+  lablab:
+    label: Lablab
+    why_no_water_balance: "Not in FAO-56 Tables 11 and 12; rain fit from ECOCROP (A15)"
+    rules:
+      family: Fabaceae
+      nitrogen: {fixes: true, source: botany}
+      forage: {residue: whole plant, value_class: high, source: lablab_forage}
+      gaps: [pest_groups, market.role, market.price, labour]
+  stylosanthes:
+    label: Stylosanthes
+    why_no_water_balance: "Not in FAO-56 Tables 11 and 12; rain fit from ECOCROP (A15)"
+    rules:
+      family: Fabaceae
+      nitrogen: {fixes: true, source: botany}
+      forage: {residue: whole plant, value_class: high, source: stylo_forage}
+      gaps: [pest_groups, market.role, market.price, labour]
 
 # Pest groups named in rules, with the evidence (docs/pest-risk.md has the full review).
 pest_groups:
@@ -231,6 +247,8 @@ sources:
   cowpea_n_balance: "Cowpea N balance -18.9 to 9.4 kg N/ha, northern Guinea savanna (Genotype effects of cowpea and soybean on nodulation, N2 fixation and N balance in the northern Guinea savanna of Nigeria, J. Agronomy 2008; https://scialert.net/fulltext/?doi=ja.2008.258.264)"
   groundnut_n_balance: "Groundnut genotypes at IAR Samaru (northern Guinea savanna): mean N balance 4.3 kg N/ha (Genotypic effect of groundnut on nodulation, N fixation and N balance in the two savannahs of Nigeria; https://www.researchgate.net/publication/342522892). The genotype range is not clear from the abstract: read the full paper before adding it"
   residue_feeding: "Share of offered residue eaten by rams: millet 46%, maize 50%, sorghum 53%, cowpea 86%, groundnut 94% (crop residue feeding trial, West Africa; https://core.ac.uk/download/132635919.pdf)"
+  lablab_forage: "Lablab accessions at Samaru, Zaria (northern Guinea savanna), 2000-2002: shoot crude protein up to 1152 kg/ha, about 184 kg N/ha (Potential of Lablab purpureus accessions for crop-livestock production in the West African savanna; https://www.researchgate.net/publication/231845666). Maize after lablab yielded 71% more than after natural fallow, northern Guinea savanna of Nigeria (Potential contribution of lablab residues to maize production in moist savanna of West Africa; https://www.academia.edu/22155172). value_class high: whole-plant forage, protein-rich, not a residue"
+  stylo_forage: "Stylosanthes hay 14-16% crude protein; tested at Shika, northern Guinea savanna of Nigeria (ACIAR monograph 111, Anthracnose resistant Stylosanthes for agricultural systems, ch. 22-27; https://www.aciar.gov.au/sites/default/files/legacy/node/568/mn111-chapters22-27.pdf). Stylo fodder banks kept 3 years gave 1.7 t/ha maize vs 0.8 t/ha after natural fallow (Tarawali 1991, cited in the lablab residues paper above). value_class high: whole-plant forage"
   kdbs_2026: "Kaduna State Bureau of Statistics, retail market prices for 24 commodities in all 23 LGAs, exported from https://kdbs-server.azurewebsites.net/api/v1/market-prices on 14 Nov 2026 (no collection date in the API). Raw file: data/raw/kdbs/kdbs_retail_prices_2026-11-14.xlsx"
   dailytrust_2024: "Daily Trust, 'Food prices stabilise in Kano, Kaduna, Katsina', 19 Aug 2024, Anchau weekly market prices of 6 and 13 Aug 2024 (https://dailytrust.com/food-prices-stabilise-in-kano-kaduna-katsina/). Prices moved sharply since (maize fell in 2025): replace with a newer Kaduna market series"
   foli_2012: "Foli (2012), Farm characterisations in the southern and northern Guinea savannah zones of Nigeria, MSc thesis, Wageningen: in Kachia ginger is the main cash crop and groundnut and soybean are grown for sale; in Bunkure cowpea is food (https://edepot.wur.nl/217095)"

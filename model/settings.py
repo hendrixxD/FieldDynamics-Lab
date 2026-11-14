@@ -154,6 +154,7 @@ class Paths(BaseModel):
     openlandmap_cropland_fc: Path
     kdbs_prices: Path
     risk_lines: Path
+    suitability: Path
     notebooks: Path
     annual_features: Path
     monthly_features: Path
@@ -173,6 +174,18 @@ class LateDryLine(BaseModel):
     weeks_before_harvest: PositiveInt
     dry_day_mm: float
     min_days: PositiveInt
+
+
+class SuitabilityConfig(BaseModel):
+    ecocrop: Path
+    ecocrop_source: str
+    ecocrop_sha256: str
+    ecocrop_names: dict[str, str]
+    years: Years
+    suitable_score: float
+    drop_mean_score: float
+    risk_mean_score: float
+    risk_share: float
 
 
 class RiskLineConfig(BaseModel):
@@ -197,6 +210,7 @@ class ModelConfig(BaseModel):
     confidence: ConfidenceConfig
     build: BuildConfig
     paths: Paths
+    suitability: SuitabilityConfig
     risk_lines: RiskLineConfig
 
     @property
