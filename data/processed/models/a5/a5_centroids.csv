@@ -1,0 +1,5 @@
+cluster,a2_onset_doy,a2_cessation_doy,a2_length_days,season_rain_mm,a2_longest_dry_spell_days,a2_dry_spells_10plus,season_power_heat_days,season_type,share_of_years,ndvi_z_mean,share_stressed,a2_onset_doy_value,a2_cessation_doy_value,a2_length_days_value,season_rain_mm_value,a2_longest_dry_spell_days_value,a2_dry_spells_10plus_value,season_power_heat_days_value
+0,-0.57,0.504,0.7,0.348,1.048,0.873,0.024,Dry spell,0.284,-0.045,0.295,135.081,305.738,170.658,1275.203,10.685,1.054,26.463
+1,-0.677,0.085,0.656,0.375,-0.723,-0.718,-0.127,Typical,0.29,0.093,0.243,133.829,300.882,167.053,1244.963,5.461,0.197,26.105
+2,0.677,-0.897,-0.914,-0.828,-0.018,0.173,-0.598,Short and dry,0.244,-0.221,0.383,161.039,295.836,134.797,1154.514,7.656,0.688,18.727
+3,1.053,0.279,-0.907,-0.029,-0.458,-0.45,0.96,Late start,0.183,0.216,0.229,171.938,301.562,129.625,1187.47,6.281,0.344,42.417

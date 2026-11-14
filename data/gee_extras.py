@@ -27,10 +27,17 @@ Datasets (python -m data.gee_extras --list)
   hls         NASA HLS v2 (Landsat 8/9 + Sentinel-2) NDVI at 30 m: median of
               cloud-free scenes in the dry season (Jan-Mar) and peak season
               (Aug-Sep) per year, all land and cropland, 2013 on.
+  openlandmap OpenLandMap soil water content at 33 kPa (field capacity),
+              250 m, at 0, 10, 30, 60, 100 and 200 cm. Earth Engine has no
+              1500 kPa (wilting point) layer, so only field capacity is checked
+              (Hengl and Gupta 2019): mapped from measured soil profiles with no
+              pedotransfer functions. Cropland mean per LGA. Static. The
+              independent reference for choosing the A8 soil water model.
 
 Run (from the repo root)
   python -m data.gee_extras --list
   python -m data.gee_extras srtm
+  python -m data.gee_extras openlandmap
   python -m data.gee_extras lst --start 2024-01-01 --end 2024-12-31 --out data/processed/extras_test
   python -m data.gee_extras all          # every dataset in turn
 """
@@ -273,7 +280,7 @@ SERIES = {
         rate_bands={"precip_mm": "mm"},
     ),
 }
-STATIC = ("srtm", "hls")
+STATIC = ("srtm", "hls", "openlandmap")
 
 
 # --------------------------------------------------------------------------- #
@@ -454,6 +461,38 @@ def run_srtm(project, lgas, out, scale):
 
 
 # --------------------------------------------------------------------------- #
+# OpenLandMap soil water content (reference for A8)
+# --------------------------------------------------------------------------- #
+OPENLANDMAP = {
+    "fc_33kpa": "OpenLandMap/SOL/SOL_WATERCONTENT-33KPA_USDA-4B1C_M/v01",
+}
+OPENLANDMAP_DEPTHS_CM = (0, 10, 30, 60, 100, 200)
+
+
+def run_openlandmap(project, lgas, out, scale):
+    """Cropland mean per LGA of volumetric water content (%) at each depth and suction."""
+    import ee
+
+    ee.Initialize(project=project)
+    fc = to_ee_features(lgas)
+    crop = ee.ImageCollection(WORLDCOVER).first().select("Map").eq(CROPLAND_CLASS)
+    bands = [f"b{d}" for d in OPENLANDMAP_DEPTHS_CM]
+    img = None
+    for name, asset in OPENLANDMAP.items():
+        renamed = [f"{name}_{d}cm_pct" for d in OPENLANDMAP_DEPTHS_CM]
+        layer = ee.Image(asset).select(bands, renamed).updateMask(crop)
+        img = layer if img is None else img.addBands(layer)
+    log.info(f"  reducing OpenLandMap water content at {scale} m")
+    reduced = img.reduceRegions(collection=fc, reducer=ee.Reducer.mean(), scale=scale, tileScale=16)
+    df = computed(reduced)
+    keep = ["lga"] + sorted(c for c in df.columns if c.startswith("fc_33kpa"))
+    df = df[keep]
+    df.to_csv(out / "openlandmap_lga_water.csv", index=False)
+    log.info(df.round(1).to_string(index=False))
+    log.info(f"  wrote {out / 'openlandmap_lga_water.csv'}")
+
+
+# --------------------------------------------------------------------------- #
 # HLS seasonal NDVI (Landsat 8/9 + Sentinel-2, 30 m)
 # --------------------------------------------------------------------------- #
 HLS_SEASONS = {"dry": (1, 3), "peak": (8, 9)}
@@ -546,6 +585,7 @@ def run_hls(project, lgas, start, end, out, scale, workers):
 # --------------------------------------------------------------------------- #
 def describe():
     log.info("srtm        static   NASA SRTM 30 m elevation and slope, cropland slope shares")
+    log.info("openlandmap static   OpenLandMap 250 m water content at 33 kPa, 6 depths")
     log.info(
         "hls         2013-    HLS v2 30 m NDVI, dry (Jan-Mar) and peak (Aug-Sep) medians per year"
     )
@@ -598,6 +638,8 @@ def main():
         log.info(f"== {name}")
         if name == "srtm":
             run_srtm(project, lgas, out, args.scale or 30)
+        elif name == "openlandmap":
+            run_openlandmap(project, lgas, out, args.scale or 250)
         elif name == "hls":
             run_hls(project, lgas, start, end, out, args.scale or 60, args.workers)
         else:

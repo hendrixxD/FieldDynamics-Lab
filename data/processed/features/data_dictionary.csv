@@ -1,0 +1,158 @@
+table,column,dtype,non_null_share,source,unit,meaning
+lga_month_features,lga,str,1.0,geoBoundaries ADM2,,LGA display name
+lga_month_features,lga_key,str,1.0,derived,,normalised LGA key used for joins
+lga_month_features,year,int64,1.0,,,time key
+lga_month_features,month,int64,1.0,,,time key
+lga_month_features,date,datetime64[us],1.0,,,time key
+lga_month_features,urban_lga,bool,1.0,PRD decision,bool,"Kaduna North / Kaduna South (urban, little cropland)"
+lga_month_features,rain_mm,float64,0.996,CHIRPS v2.0,mm/month,rainfall used everywhere in the app (complete months only)
+lga_month_features,rain_source,str,0.996,,,source of rain_mm
+lga_month_features,water_balance_mm,float64,0.996,CHIRPS - POWER,mm/month,rain minus FAO-56 reference ET0
+lga_month_features,chirps_rain_mm,float64,0.996,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_month_features,chirps_rain_days,float64,0.996,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_month_features,chirps_heavy_days_50mm,float64,0.996,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_month_features,chirps_max_daily_rain_mm,float64,0.996,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_month_features,chirps_complete_month,object,0.996,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_month_features,power_tmax_mean_c,float64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_tmin_mean_c,float64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_heat_days,int64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_cold_days,int64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_rh_mean_pct,float64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_et0_pm_mm,float64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_et0_hg_mm,float64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_rs_filled_days,int64,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,power_complete_month,bool,1.0,"NASA POWER (MERRA-2/CERES, AG)","C, %, mm, days","temperature, humidity, ET0; rainfall excluded"
+lga_month_features,imerg_rain_mm,float64,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_rain_days,float64,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_heavy_days_50mm,float64,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_extreme_days_p95,float64,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_max_daily_rain_mm,float64,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_peak_rate_mmhr,float64,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_trmm_era,object,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_complete_month,object,0.63,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_month_features,imerg_suspect,bool,1.0,review,bool,IMERG unreliable here (urban single-pixel inflation)
+lga_month_features,smap_sm_rootzone,float64,0.256,SMAP L4 SPL4SMGP V008,"m3/m3, z",surface and root-zone soil moisture
+lga_month_features,smap_sm_surface,float64,0.256,SMAP L4 SPL4SMGP V008,"m3/m3, z",surface and root-zone soil moisture
+lga_month_features,smap_sm_rootzone_wetness,float64,0.256,SMAP L4 SPL4SMGP V008,"m3/m3, z",surface and root-zone soil moisture
+lga_month_features,smap_anomaly_z,float64,0.256,SMAP L4 SPL4SMGP V008,"m3/m3, z",surface and root-zone soil moisture
+lga_month_features,smap_days,float64,0.256,SMAP L4 SPL4SMGP V008,"m3/m3, z",surface and root-zone soil moisture
+lga_month_features,smap_model_only_days,float64,0.256,SMAP L4 outage dates,days,land-model-only SMAP days in the month
+lga_month_features,ndvi_crop_sg,float64,0.583,MODIS MOD13Q1 V6.1 + WorldCover,"NDVI, share, bool","cropland NDVI (Savitzky-Golay), bare-month flag (A4)"
+lga_month_features,ndvi_all,float64,0.582,MODIS MOD13Q1 V6.1 + WorldCover,"NDVI, share, bool","cropland NDVI (Savitzky-Golay), bare-month flag (A4)"
+lga_month_features,ndvi_interpolated_share,float64,0.583,MODIS MOD13Q1 V6.1 + WorldCover,"NDVI, share, bool","cropland NDVI (Savitzky-Golay), bare-month flag (A4)"
+lga_month_features,bare_threshold,float64,0.583,MODIS MOD13Q1 V6.1 + WorldCover,"NDVI, share, bool","cropland NDVI (Savitzky-Golay), bare-month flag (A4)"
+lga_month_features,bare,object,0.583,MODIS MOD13Q1 V6.1 + WorldCover,"NDVI, share, bool","cropland NDVI (Savitzky-Golay), bare-month flag (A4)"
+lga_month_features,viirs_ndvi,float64,0.323,VIIRS VNP13A1 V2,NDVI,NDVI cross-check for MODIS
+lga_month_features,viirs_ndvi_crop,float64,0.323,VIIRS VNP13A1 V2,NDVI,NDVI cross-check for MODIS
+lga_month_features,gldas_rootzone_mm,float64,0.584,GLDAS-2.1 Noah,"mm, m3/m3",modelled soil moisture 2000 on (pre-SMAP)
+lga_month_features,gldas_sm_0_10cm,float64,0.584,GLDAS-2.1 Noah,"mm, m3/m3",modelled soil moisture 2000 on (pre-SMAP)
+lga_month_features,gldas_evap_mm_month,float64,0.584,GLDAS-2.1 Noah,"mm, m3/m3",modelled soil moisture 2000 on (pre-SMAP)
+lga_month_features,modis_et_mm_month,float64,0.566,MODIS MOD16A2GF V6.1,"mm, ratio, z",actual/potential ET; use anomalies only
+lga_month_features,modis_pet_mm_month,float64,0.566,MODIS MOD16A2GF V6.1,"mm, ratio, z",actual/potential ET; use anomalies only
+lga_month_features,modis_et_ratio,float64,0.566,MODIS MOD16A2GF V6.1,"mm, ratio, z",actual/potential ET; use anomalies only
+lga_month_features,lst_day_c,float64,0.577,MODIS MOD11A2 V6.1,C,"land surface temperature, good-QC only"
+lga_month_features,lst_night_c,float64,0.581,MODIS MOD11A2 V6.1,C,"land surface temperature, good-QC only"
+lga_month_features,era5_tmax_c,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_tmin_c,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_tdew_c,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_rs_mj_m2,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_wind2m_ms,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_precip_mm_month,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_swvl1_0_7cm,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,era5_swvl2_7_28cm,float64,1.0,ERA5-Land daily,"C, MJ/m2, m/s, mm, m3/m3",independent check on POWER
+lga_month_features,modis_et_ratio_anom,float64,0.566,MODIS MOD16A2GF V6.1,"mm, ratio, z",actual/potential ET; use anomalies only
+lga_year_features,lga,str,1.0,geoBoundaries ADM2,,LGA display name
+lga_year_features,lga_key,str,1.0,derived,,normalised LGA key used for joins
+lga_year_features,year,int64,1.0,,,time key
+lga_year_features,urban_lga,bool,1.0,PRD decision,bool,"Kaduna North / Kaduna South (urban, little cropland)"
+lga_year_features,a2_onset_doy,float64,0.978,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_year_features,a2_cessation_doy,float64,0.978,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_year_features,a2_length_days,float64,0.978,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_year_features,a2_season_rain_mm,float64,0.978,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_year_features,a2_longest_dry_spell_days,float64,0.978,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_year_features,a2_dry_spells_10plus,float64,0.978,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_year_features,chirps_annual_mm,float64,0.978,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_year_features,chirps_complete_year,bool,1.0,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_year_features,season_rain_mm,float64,0.978,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_chirps_heavy_days_50mm,float64,0.978,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_power_heat_days,float64,1.0,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_power_et0_pm_mm,float64,1.0,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_power_tmax_mean_c,float64,1.0,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_water_balance_mm,float64,0.978,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_imerg_heavy_days_50mm,float64,0.63,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_imerg_extreme_days_p95,float64,0.63,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_imerg_peak_rate_mmhr,float64,0.63,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_smap_sm_rootzone,float64,0.261,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_smap_anomaly_z,float64,0.261,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_smap_model_only_days,float64,0.261,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_gldas_rootzone_mm,float64,0.587,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_modis_et_ratio_anom,float64,0.565,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_lst_day_c,float64,0.586,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,season_months,int64,1.0,season (Apr-Oct) aggregate,as source,growing-season sum/mean of the monthly column
+lga_year_features,target_peak_ndvi_crop,float64,0.587,MODIS NDVI (A6 target),"NDVI, z",Aug-Sep cropland NDVI and its within-LGA z-score
+lga_year_features,target_ndvi_anomaly_z,float64,0.587,MODIS NDVI (A6 target),"NDVI, z",Aug-Sep cropland NDVI and its within-LGA z-score
+lga_year_features,target_interpolated_share,float64,0.587,MODIS NDVI (A6 target),"NDVI, z",Aug-Sep cropland NDVI and its within-LGA z-score
+lga_year_features,target_suspect,bool,1.0,review,bool,MODIS Terra drift years (2025 on): do not train on
+lga_year_features,target_train_z,float64,0.543,MODIS NDVI (A6 target),z,"A6 TRAINING TARGET: Aug-Sep cropland NDVI z vs 2000-2024, blank when suspect"
+lga_year_features,viirs_peak_ndvi_crop,float64,0.326,VIIRS VNP13A1 V2,NDVI,NDVI cross-check for MODIS
+lga_year_features,viirs_ndvi_anomaly_z,float64,0.326,VIIRS VNP13A1 V2,NDVI,NDVI cross-check for MODIS
+lga_year_features,hls_dry_ndvi_crop,float64,0.283,NASA HLS v2 (Landsat 8/9 + Sentinel-2),"NDVI, count",30 m dry/peak-season cropland NDVI
+lga_year_features,hls_peak_ndvi_crop,float64,0.281,NASA HLS v2 (Landsat 8/9 + Sentinel-2),"NDVI, count",30 m dry/peak-season cropland NDVI
+lga_year_features,hls_peak_minus_dry_crop,float64,0.281,NASA HLS v2 (Landsat 8/9 + Sentinel-2),"NDVI, count",30 m dry/peak-season cropland NDVI
+lga_year_features,hls_dry_clear_obs_crop,float64,0.283,NASA HLS v2 (Landsat 8/9 + Sentinel-2),"NDVI, count",30 m dry/peak-season cropland NDVI
+lga_static,lga,str,1.0,geoBoundaries ADM2,,LGA display name
+lga_static,lga_key,str,1.0,derived,,normalised LGA key used for joins
+lga_static,urban_lga,bool,1.0,PRD decision,bool,"Kaduna North / Kaduna South (urban, little cropland)"
+lga_static,low_cropland,bool,1.0,ESA WorldCover + PRD,bool,"cropland < 10% or urban: show notice, not cards"
+lga_static,cropland_share,float64,1.0,ESA WorldCover v200,share,share of LGA in cropland (class 40)
+lga_static,srtm_elev_m,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,srtm_slope_pct,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,srtm_slope_pct_crop,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,srtm_slope_pct_crop_p90,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,srtm_crop_share_slope_gt2,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,srtm_crop_share_slope_gt5,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,srtm_crop_share_slope_gt8,float64,1.0,NASA SRTM 30 m,"m, %, share","elevation, slope, cropland share above slope thresholds"
+lga_static,soil_wp_0_20cm,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_fc_0_20cm,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_sat_0_20cm,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_awc_0_50cm_mm,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_ksat_min_mm_h,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_bedrock_depth_cm,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_hydrologic_group,str,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_k_factor,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_k_factor_si,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_k_class,str,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,soil_erodibility_rel,float64,1.0,iSDAsoil + Saxton-Rawls 2006 + Williams 1995,"m3/m3, mm, mm/h, K","soil water, group, erodibility"
+lga_static,imerg_p95_wet_mm,float64,1.0,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_static,imerg_mean_annual_rain_mm,float64,1.0,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_static,imerg_extreme_rain_share,float64,1.0,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_static,imerg_heavy_days_50mm_per_year,float64,1.0,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_static,imerg_wet_day_peak_rate_p50_mmhr,float64,1.0,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_static,imerg_wet_day_peak_rate_p90_mmhr,float64,1.0,GPM IMERG V07 Final,"mm, days, mm/h","satellite rain, extremes, 30-min peak rate"
+lga_static,imerg_suspect,bool,1.0,review,bool,IMERG unreliable here (urban single-pixel inflation)
+lga_static,chirps_annual_mm_1991_2020,float64,1.0,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_static,chirps_season_mm_1991_2020,float64,1.0,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_static,chirps_annual_mm_sd,float64,1.0,CHIRPS v2.0 (UCSB-CHG/CHIRPS/DAILY),"mm, days","gauge-blended daily rain, 0.05 deg"
+lga_static,a2_onset_normal_1991_2020,str,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_onset_normal_doy,float64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_onset_p20_early,str,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_onset_p80_late,str,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_cessation_median,str,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_cessation_normal_doy,float64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_length_median_days,int64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_longest_dry_spell_median_days,int64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_share_years_dry_spell_10plus,float64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_onset_trend_days_per_decade,float64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,a2_onset_trend_p,float64,1.0,A2 onset_a2.py on CHIRPS,"day of year, days, mm","onset, cessation, dry spells"
+lga_static,bare_prob_m01,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m02,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m03,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m04,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m05,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m06,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m07,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m08,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m09,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m10,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m11,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"
+lga_static,bare_prob_m12,float64,1.0,MODIS NDVI (A4),share of years,"probability the month is bare, per LGA"

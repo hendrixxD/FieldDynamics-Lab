@@ -1,0 +1,18 @@
+{
+  "chosen": "saxton_rawls",
+  "reference": "OpenLandMap cropland (wilting point scaled)",
+  "awc_mae_mm_per_m": {
+    "saxton_rawls": 11.8,
+    "hodnett_tomasella": 24.8,
+    "rosetta3": 28.3
+  },
+  "awc_mae_mm_per_m_all_land": {
+    "hodnett_tomasella": 56.4,
+    "rosetta3": 21.0,
+    "saxton_rawls": 33.0
+  },
+  "chosen_awc_mm_per_m": {
+    "awc_mm_per_m_0_20cm": 113.5,
+    "awc_mm_per_m_20_50cm": 120.3
+  }
+}

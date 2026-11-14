@@ -1,0 +1,235 @@
+# Crop rules knowledge base (PRD A11). Read by model/settings.py (CropConfig).
+#
+# Two kinds of fields per crop:
+#   - water fields (stages_days, kc, height_m, root_depth_max_m, depletion_fraction_p) for the
+#     FAO-56 water balance (A9); only crops under `crops:` have them.
+#   - `rules:` for the rotation engine: family, pest groups, nitrogen, forage, market, labour.
+#     Every value names a source id from `sources:` at the end of this file. A field with no
+#     source is left out and listed under `gaps:` (AGENTS.md: no made-up data).
+#
+# Crops in scope: the PRD list plus tomato, which the 2017-2021 Kaduna reports and the 2025
+# zone study (both unverified here: full papers not yet in the repo) put in the state's top ten.
+#
+# Sources
+#   FAO-56: Allen, Pereira, Raes and Smith (1998), Crop evapotranspiration, FAO Irrigation and
+#           Drainage Paper 56. Chapter 6: https://www.fao.org/4/x0490e/x0490e0b.htm
+#           Chapter 8: https://www.fao.org/4/x0490e/x0490e0e.htm
+#   stages_days: Table 11 (init, dev, mid, late). No Table 11 row is for the Nigerian savanna
+#                except maize, so the row used is named per crop.
+#   kc: Table 12. Kc ini is the crop group value on the group heading row (cereals 0.3,
+#       legumes 0.4, oil crops 0.35), which FAO-56 says to use when the wetting interval is
+#       unknown. Where Table 12 gives two Kc end values, the second (harvest after field
+#       drying) is used, because Kaduna grain is dried in the field.
+#   height_m: Table 12 maximum crop height, used in the Kc climate adjustment (Eq. 62).
+#   root_depth_max_m: Table 22, upper end of the range. FAO-56 says the larger values are for
+#                     modelling soil water stress or rainfed conditions.
+#   depletion_fraction_p: Table 22, for ETc of about 5 mm/day; adjusted daily (Table 22 note).
+#
+# Table 11 prints a total that differs from its own stage lengths for three rows used here:
+# sorghum (stages sum to 125, printed 130), cowpea (100, printed 110) and sesame (110, printed
+# 100). The water balance steps through the stages, so the stage lengths are used as printed.
+#
+# Crops in PRD scope left out for now, with the reason:
+#   rice: Table 12 values assume a flooded paddy, which a free-draining bucket cannot represent.
+#   cassava, yam, ginger: no Table 11 stage lengths for a rainfed West African crop, and
+#   cassava and yam stay in the ground through the dry season.
+
+crops:
+  maize:
+    label: Maize
+    stages_days: {init: 20, dev: 35, mid: 40, late: 30}  # Table 11, "Nigeria (humid)", June
+    kc: {ini: 0.30, mid: 1.20, end: 0.35}  # Table 12, Maize, Field (grain)
+    height_m: 2.0
+    root_depth_max_m: 1.7
+    depletion_fraction_p: 0.55
+    rules:
+      family: Poaceae
+      pest_groups: [striga_hermonthica_host, fall_armyworm_host]
+      nitrogen: {fixes: false, source: botany}
+      forage: {residue: stover, value_class: low, share_eaten: 0.50, source: residue_feeding}
+      market:
+        price: {ngn_per_100kg: {low: 85000, high: 85000}, market: "Anchau, Kubau LGA (hybrid maize)", date: 2024-08-13, source: dailytrust_2024}
+      labour: {days_per_ha: 100, source: kermah_2017}
+      gaps: [market.role]
+  sorghum:
+    label: Sorghum
+    stages_days: {init: 20, dev: 35, mid: 40, late: 30}  # Table 11, "USA, Pakis., Med.", May/June
+    kc: {ini: 0.30, mid: 1.05, end: 0.55}  # Table 12, Sorghum, grain (Kc mid 1.00-1.10: midpoint)
+    height_m: 1.5  # Table 12 gives 1-2 m: midpoint
+    root_depth_max_m: 2.0
+    depletion_fraction_p: 0.55
+    rules:
+      family: Poaceae
+      pest_groups: [striga_hermonthica_host, striga_main_seed_producer, fall_armyworm_host]
+      nitrogen: {fixes: false, source: botany}
+      forage: {residue: stover, value_class: low, share_eaten: 0.53, source: residue_feeding}
+      market:
+        price: {ngn_per_100kg: {low: 82000, high: 82000}, market: "Anchau, Kubau LGA", date: 2024-08-13, source: dailytrust_2024}
+      gaps: [market.role, labour]
+  millet:
+    label: Millet
+    stages_days: {init: 15, dev: 25, mid: 40, late: 25}  # Table 11, "Pakistan", June
+    kc: {ini: 0.30, mid: 1.00, end: 0.30}  # Table 12, Millet
+    height_m: 1.5
+    root_depth_max_m: 2.0
+    depletion_fraction_p: 0.55
+    rules:
+      family: Poaceae
+      pest_groups: [striga_hermonthica_host]
+      nitrogen: {fixes: false, source: botany}
+      forage: {residue: stover, value_class: low, share_eaten: 0.46, source: residue_feeding}
+      market:
+        price: {ngn_per_100kg: {low: 86000, high: 86000}, market: "Anchau, Kubau LGA (Dauro millet)", date: 2024-08-13, source: dailytrust_2024}
+      gaps: [market.role, labour]
+  soybean:
+    label: Soybean
+    stages_days: {init: 15, dev: 15, mid: 40, late: 15}  # Table 11, "Tropics", December
+    kc: {ini: 0.40, mid: 1.15, end: 0.50}  # Table 12, Soybeans
+    height_m: 0.75  # Table 12 gives 0.5-1.0 m: midpoint
+    root_depth_max_m: 1.3
+    depletion_fraction_p: 0.50
+    rules:
+      family: Fabaceae
+      pest_groups: [striga_trap_crop]
+      nitrogen:
+        fixes: true
+        net_n_after_grain_kg_ha: {low: -8, high: 43, mean: 18}
+        source: soy_n_balance
+      market:
+        role: cash
+        role_source: foli_2012
+        price: {ngn_per_100kg: {low: 90000, high: 95000}, market: "Anchau, Kubau LGA", date: 2024-08-13, source: dailytrust_2024}
+      labour: {days_per_ha: 130, source: kermah_2017}
+      gaps: [forage]
+  cowpea:
+    label: Cowpea
+    stages_days: {init: 20, dev: 30, mid: 30, late: 20}  # Table 11, "Mediterranean", March
+    kc: {ini: 0.40, mid: 1.05, end: 0.35}  # Table 12, Green Gram and Cowpeas
+    height_m: 0.4
+    root_depth_max_m: 1.0
+    depletion_fraction_p: 0.45
+    rules:
+      family: Fabaceae
+      pest_groups: [striga_gesnerioides_host, striga_trap_crop, cowpea_flowering_pests]
+      nitrogen:
+        fixes: true
+        net_n_after_grain_kg_ha: {low: -18.9, high: 9.4}
+        source: cowpea_n_balance
+      forage: {residue: haulm, value_class: high, share_eaten: 0.86, source: residue_feeding}
+      market:
+        role: food
+        role_source: foli_2012
+        price: {ngn_per_100kg: {low: 160000, high: 190000}, market: "Anchau, Kubau LGA", date: 2024-08-13, source: dailytrust_2024}
+      labour: {days_per_ha: 113, source: kermah_2017}
+      gaps: []
+  groundnut:
+    label: Groundnut
+    stages_days: {init: 25, dev: 35, mid: 45, late: 25}  # Table 11, "West Africa", dry season
+    kc: {ini: 0.40, mid: 1.15, end: 0.60}  # Table 12, Groundnut (Peanut)
+    height_m: 0.4
+    root_depth_max_m: 1.0
+    depletion_fraction_p: 0.50
+    rules:
+      family: Fabaceae
+      pest_groups: [aflatoxin_risk]
+      nitrogen:
+        fixes: true
+        net_n_after_grain_kg_ha: {mean: 4.3}
+        source: groundnut_n_balance
+      forage: {residue: haulm, value_class: high, share_eaten: 0.94, source: residue_feeding}
+      market:
+        role: cash
+        role_source: foli_2012
+      labour: {days_per_ha: 159, source: kermah_2017}
+      gaps: [market.price]
+  sesame:
+    label: Sesame
+    stages_days: {init: 20, dev: 30, mid: 40, late: 20}  # Table 11, "China", June
+    kc: {ini: 0.35, mid: 1.10, end: 0.25}  # Table 12, Sesame
+    height_m: 1.0
+    root_depth_max_m: 1.5
+    depletion_fraction_p: 0.60
+    rules:
+      family: Pedaliaceae
+      nitrogen: {fixes: false, source: botany}
+      gaps: [pest_groups, forage, market.role, market.price, labour]
+
+# Crops with rotation rules but no water balance. Reasons are in each entry.
+other_crops:
+  rice:
+    label: Rice
+    why_no_water_balance: "FAO-56 Table 12 assumes a flooded paddy; a free-draining bucket cannot represent it"
+    rules:
+      family: Poaceae
+      pest_groups: [striga_aspera_host]
+      nitrogen: {fixes: false, source: botany}
+      gaps: [forage, market.role, market.price, labour]
+  ginger:
+    label: Ginger
+    why_no_water_balance: "No FAO-56 Table 11 stage lengths for rainfed West African ginger"
+    rules:
+      family: Zingiberaceae
+      pest_groups: [ginger_blight]
+      nitrogen: {fixes: false, source: botany}
+      market: {role: cash, role_source: foli_2012}
+      gaps: [forage, market.price, labour]
+  tomato:
+    label: Tomato or other vegetables
+    why_no_water_balance: "Mostly dry-season irrigated in Kaduna; the rain-fed bucket does not apply"
+    rules:
+      family: Solanaceae
+      pest_groups: [tuta_absoluta_host]
+      nitrogen: {fixes: false, source: botany}
+      gaps: [forage, market.role, market.price, labour]
+  yam:
+    label: Yam
+    why_no_water_balance: "No FAO-56 stage lengths; tubers stay in the ground through the dry season"
+    rules:
+      family: Dioscoreaceae
+      nitrogen: {fixes: false, source: botany}
+      gaps: [pest_groups, forage, market.role, market.price, labour]
+  cassava:
+    label: Cassava
+    why_no_water_balance: "No FAO-56 stage lengths for a rainfed West African crop; stays in the ground for over a year"
+    rules:
+      family: Euphorbiaceae
+      nitrogen: {fixes: false, source: botany}
+      gaps: [pest_groups, forage, market.role, market.price, labour]
+
+# Pest groups named in rules, with the evidence (docs/pest-risk.md has the full review).
+pest_groups:
+  striga_hermonthica_host: "Parasitised by Striga hermonthica (striga_kaduna; striga_ngs)"
+  striga_main_seed_producer: "The main host for Striga seed production (striga_ngs)"
+  striga_gesnerioides_host: "Parasitised by Striga gesnerioides, worst in the northern Guinea savanna (striga_ne)"
+  striga_aspera_host: "Upland rice is parasitised by Striga aspera (striga_ngs)"
+  striga_trap_crop: "Grown before maize it reduced Striga 35% after one year, 76% after two; soybean beat cowpea (rotation_striga)"
+  fall_armyworm_host: "Fall armyworm damage, heavy in Kaduna in 2022 (naerls_2022; faw_hosts)"
+  cowpea_flowering_pests: "Thrips, Maruca pod borer and pod-sucking bugs; one spray at flowering raised yield 75% (cowpea_pests)"
+  aflatoxin_risk: "Aspergillus flavus; pre-harvest in the drier northern Guinea savanna, linked to drought near maturity (aflatoxin)"
+  ginger_blight: "Fungal blight; 2023 epidemic in seven southern Kaduna LGAs (ginger_blight)"
+  tuta_absoluta_host: "Tomato leaf miner; about 80% of Kaduna's tomato crop lost in 2016 (tuta)"
+
+# Market price band, relative to maize at the same market and date. Design choice, not from
+# the literature: a crop is "high" at 1.5x the maize price or more, "low" below 0.75x. A
+# per-kg price is not income per hectare (yields differ), so the card shows the band only.
+price_bands: {high: 1.5, low: 0.75}
+
+sources:
+  botany: "Botanical family and N fixing (Fabaceae fix N with rhizobia): standard taxonomy"
+  soy_n_balance: "Soybean in the northern Guinea savanna of Nigeria: net N input after grain harvest -8 to 43, mean 18 kg N/ha (Effect of P fertilizer application on N balance of soybean in the Guinea savanna of Nigeria; https://www.researchgate.net/publication/229187434)"
+  cowpea_n_balance: "Cowpea N balance -18.9 to 9.4 kg N/ha, northern Guinea savanna (Genotype effects of cowpea and soybean on nodulation, N2 fixation and N balance in the northern Guinea savanna of Nigeria, J. Agronomy 2008; https://scialert.net/fulltext/?doi=ja.2008.258.264)"
+  groundnut_n_balance: "Groundnut genotypes at IAR Samaru (northern Guinea savanna): mean N balance 4.3 kg N/ha (Genotypic effect of groundnut on nodulation, N fixation and N balance in the two savannahs of Nigeria; https://www.researchgate.net/publication/342522892). The genotype range is not clear from the abstract: read the full paper before adding it"
+  residue_feeding: "Share of offered residue eaten by rams: millet 46%, maize 50%, sorghum 53%, cowpea 86%, groundnut 94% (crop residue feeding trial, West Africa; https://core.ac.uk/download/132635919.pdf)"
+  dailytrust_2024: "Daily Trust, 'Food prices stabilise in Kano, Kaduna, Katsina', 19 Aug 2024, Anchau weekly market prices of 6 and 13 Aug 2024 (https://dailytrust.com/food-prices-stabilise-in-kano-kaduna-katsina/). Prices moved sharply since (maize fell in 2025): replace with a newer Kaduna market series"
+  foli_2012: "Foli (2012), Farm characterisations in the southern and northern Guinea savannah zones of Nigeria, MSc thesis, Wageningen: in Kachia ginger is the main cash crop and groundnut and soybean are grown for sale; in Bunkure cowpea is food (https://edepot.wur.nl/217095)"
+  kermah_2017: "Kermah et al. (2017), Field Crops Research 213: 38-50, Table 1b, sole-crop labour days/ha summed over sowing, P and K, N, spraying, two weedings, harvest and threshing. Guinea savanna of northern Ghana, not Kaduna"
+  striga_kaduna: "Farmers' perception of the Striga problem and its control in northern Nigeria (42 Kaduna communities; https://www.researchgate.net/publication/231908741)"
+  striga_ngs: "Population dynamics and determinants of Striga hermonthica on maize and sorghum in savanna farming systems (https://www.sciencedirect.com/science/article/abs/pii/026121949400004R)"
+  striga_ne: "Assessment of Striga infestation in crop fields in the savanna zones of northeast Nigeria (https://cgspace.cgiar.org/items/e30eaa9e-231b-4c48-89c0-7e6fe8a3b688)"
+  rotation_striga: "Influence of cereal-legume rotation on Striga control and maize grain yield in farmers' fields in the northern Guinea savanna of Nigeria (https://core.ac.uk/works/82334507)"
+  naerls_2022: "NAERLS Agricultural Performance Survey, 2022 wet season (https://naerls.gov.ng/wp-content/uploads/2025/04/Agricultural-Performance-Survey-of-2022-Wet-Season-in-Nigeria.pdf)"
+  faw_hosts: "Fall armyworm damages maize, sorghum, rice, soybean and other crops (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6681394/)"
+  cowpea_pests: "Kamara et al. (2007), insecticide spraying regimes and cowpea pests in the savannas of north-eastern Nigeria (https://cgspace.cgiar.org/items/d4102218-6607-41a7-8419-3a09635d5435)"
+  aflatoxin: "Manzo and Misari (1989), Status and management of aflatoxin in groundnuts in Nigeria (https://agris.fao.org/search/en/records/6471d3e969d6cbfdd4a30f30)"
+  ginger_blight: "Daily Trust, ginger blight returns (https://dailytrust.com/?p=1947929); FG support to farmers in 7 LGAs (https://allafrica.com/stories/202406130023.html)"
+  tuta: "Farm Radio, Kaduna tomato farmers and Tuta absoluta, June 2016 (https://wire.farmradio.fm/farmer-stories/nigeria-tomato-farmers-struggle-to-combat-pest-infestation/)"

@@ -330,12 +330,39 @@ def extraterrestrial_radiation(lat_deg, doy):
     )
 
 
+def fill_solar(df, ra):
+    """Fill missing solar radiation with FAO-56 eq. 50, calibrated locally.
+
+    POWER solar radiation starts on 1984-01-01, three years after its
+    temperature and rain. FAO-56 eq. 50 estimates Rs = kRs * sqrt(Tmax - Tmin)
+    * Ra when radiation is missing. kRs is fitted per grid cell and calendar
+    month on the days where POWER has both, so filled values follow each
+    cell's own record (FAO-56 inland default 0.16 if a cell-month has none).
+    """
+    rs = df["ALLSKY_SFC_SW_DWN"].copy()
+    proxy = np.sqrt((df["T2M_MAX"] - df["T2M_MIN"]).clip(lower=0)) * ra
+    month = df["date"].dt.month
+    ok = rs.notna() & (proxy > 0)
+    krs = (rs[ok] / proxy[ok]).groupby([df.loc[ok, "cell_id"], month[ok]]).median()
+    krs_row = (
+        pd.Series(list(zip(df["cell_id"], month, strict=True)), index=df.index)
+        .map(krs)
+        .fillna(0.16)
+    )
+    est = (krs_row * proxy).clip(upper=0.75 * ra * 1.05)  # never above clear-sky
+    filled = rs.isna() & proxy.notna()
+    rs[filled] = est[filled]
+    return rs, filled
+
+
 def add_et0(df):
     tmax, tmin, tmean = df["T2M_MAX"], df["T2M_MIN"], (df["T2M_MAX"] + df["T2M_MIN"]) / 2
     pres = df["PS"]  # kPa
     z = (293 / 0.0065) * (1 - (pres / 101.3) ** (1 / 5.26))  # elevation from pressure, m
-    ra = extraterrestrial_radiation(df["lat"], df["date"].dt.dayofyear)
-    rs = df["ALLSKY_SFC_SW_DWN"]
+    ra = extraterrestrial_radiation(df["lat"], df["date"].dt.day_of_year)
+    rs, filled = fill_solar(df, ra)
+    df["ALLSKY_SFC_SW_DWN"] = rs
+    df["rs_filled"] = filled
     rso = (0.75 + 2e-5 * z) * ra
     ea = _sat_vp(df["T2MDEW"])
     es = (_sat_vp(tmax) + _sat_vp(tmin)) / 2
@@ -363,7 +390,7 @@ def add_et0(df):
 # --------------------------------------------------------------------------- #
 # Aggregate
 # --------------------------------------------------------------------------- #
-VALUE_COLS = PARAMETERS + ["ET0_PM", "ET0_HG"]
+VALUE_COLS = PARAMETERS + ["ET0_PM", "ET0_HG", "rs_filled"]
 
 
 def to_lga_daily(cell_daily, weights):
@@ -381,26 +408,33 @@ def to_lga_daily(cell_daily, weights):
     return out.reset_index()
 
 
+def _full_sum(s):
+    """Monthly total only when every day has a value; a gap gives NaN, never 0."""
+    return s.sum() if len(s) and s.notna().all() else np.nan
+
+
 def to_lga_monthly(lga_daily):
     d = lga_daily.copy()
     d["year"], d["month"] = d["date"].dt.year, d["date"].dt.month
-    d["rain_day"] = d["PRECTOTCORR"] >= RAIN_DAY_MM
-    d["heat_day"] = d["T2M_MAX"] >= HEAT_C
-    d["cold_day"] = d["T2M_MIN"] <= COLD_C
+    d["rain_day"] = (d["PRECTOTCORR"] >= RAIN_DAY_MM).where(d["PRECTOTCORR"].notna())
+    d["heat_day"] = (d["T2M_MAX"] >= HEAT_C).where(d["T2M_MAX"].notna())
+    d["cold_day"] = (d["T2M_MIN"] <= COLD_C).where(d["T2M_MIN"].notna())
+    d["rs_filled_day"] = d["rs_filled"] > 0
     m = d.groupby(["lga", "year", "month"], as_index=False).agg(
         days=("date", "nunique"),
-        rain_mm=("PRECTOTCORR", "sum"),
-        rain_days=("rain_day", "sum"),
+        rain_mm=("PRECTOTCORR", _full_sum),
+        rain_days=("rain_day", _full_sum),
         max_daily_rain_mm=("PRECTOTCORR", "max"),
         tmax_mean_c=("T2M_MAX", "mean"),
         tmin_mean_c=("T2M_MIN", "mean"),
-        heat_days=("heat_day", "sum"),
-        cold_days=("cold_day", "sum"),
+        heat_days=("heat_day", _full_sum),
+        cold_days=("cold_day", _full_sum),
         rh_mean_pct=("RH2M", "mean"),
-        et0_pm_mm=("ET0_PM", "sum"),
-        et0_hg_mm=("ET0_HG", "sum"),
+        et0_pm_mm=("ET0_PM", _full_sum),
+        et0_hg_mm=("ET0_HG", _full_sum),
         gwettop_mean=("GWETTOP", "mean"),
         gwetroot_mean=("GWETROOT", "mean"),
+        rs_filled_days=("rs_filled_day", "sum"),
     )
     m["water_balance_mm"] = m["rain_mm"] - m["et0_pm_mm"]
     full = (

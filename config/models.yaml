@@ -1,0 +1,226 @@
+# Settings for the analytical components A3 to A12 (PRD section 5).
+# Read by model/settings.py. Method and results: docs/model-results.md.
+
+# Shared by A5 and A6.
+# MODIS NDVI starts in 2000. From 2025 on, Terra's orbit drift lifts peak NDVI while VIIRS and
+# HLS stay flat (see target_suspect in data/features_join.py), so the record ends at 2024.
+years: {start: 2000, end: 2024}
+# An LGA-year counts as stressed when peak cropland NDVI is more than half a standard deviation
+# below the LGA's own normal. Our choice for card wording, not a published threshold.
+stressed_ndvi_z: -0.5
+# Fixed so every rerun gives the same clusters, folds and trees (engineering standards, section 4).
+random_seed: 0
+
+# Kaduna's three senatorial districts, used as the spatial block for grouped validation.
+# Source: INEC senatorial district composition, via Situation Room's Kaduna State brief
+# (SD/052/KD, SD/053/KD, SD/054/KD): https://situationroomng.org/wp-content/uploads/2015/02/KADUNA.pdf
+zones:
+  North: [Ikara, Kubau, Kudan, Lere, Makarfi, Sabon Gari, Soba, Zaria]
+  Central: [Birnin Gwari, Chikun, Giwa, Igabi, Kaduna North, Kaduna South, Kajuru]
+  South: [Jaba, "Jema'a", Kachia, Kagarko, Kaura, Kauru, Sanga, Zangon Kataf]
+
+season_types:
+  # Weather only. Peak NDVI is kept out so the greenness of each type is an independent check;
+  # with NDVI as an input the check was partly circular (48% of the stress type stressed, 38%
+  # without). Each feature becomes an anomaly against the LGA's own mean.
+  features:
+    a2_onset_doy: onset day
+    a2_cessation_doy: cessation day
+    a2_length_days: season length
+    season_rain_mm: season rain (Apr-Oct)
+    a2_longest_dry_spell_days: longest dry spell
+    a2_dry_spells_10plus: 10+ day dry spells
+    season_power_heat_days: heat days
+  k_candidates: [2, 3, 4, 5, 6]
+  # Silhouette is 0.19 to 0.21 for every k from 2 to 6, below the 0.25 Kaufman and Rousseeuw
+  # (1990) give as the floor for real structure, so no k is clearly natural. k = 4 scores within
+  # 0.014 of the best and gives the season selector (PRD I8, F3c) its four scenarios.
+  k: 4
+  n_init: 50
+  stability_seeds: 20
+  permutation_runs: 2000
+  # A cluster takes a name only if its centroid shows the trait by at least this many sd.
+  name_min_z: 0.3
+  # The monthly profile of a type falls back to the statewide shape when an LGA has fewer years.
+  profile_min_years: 2
+
+stress_model:
+  target: target_train_z
+  # Weather anomalies (within-LGA z), with labels used in card and Learn text.
+  weather_features:
+    a2_onset_doy: rain start date
+    a2_cessation_doy: rain end date
+    a2_longest_dry_spell_days: longest dry spell
+    a2_dry_spells_10plus: 10+ day dry spells
+    rain_early_mm: May-June rain
+    rain_mid_mm: July-August rain
+    rain_late_mm: September-October rain
+    season_power_heat_days: heat days
+    tmax_mid_c: July-August daytime heat
+    season_chirps_heavy_days_50mm: very heavy rain days
+    season_imerg_extreme_days_p95: extreme rain days
+    water_balance_mid_mm: July-August water balance
+    season_smap_anomaly_z: soil moisture (SMAP, 2015 on)
+  static_features:
+    soil_awc_0_50cm_mm: soil water holding
+    soil_ksat_min_mm_h: soil infiltration
+    cropland_share: cropland share
+  # Months summed into early, mid and late season. Kaduna's onset falls in May or June
+  # (A2 normal onset day 128 to 174 across LGAs) and cessation from mid October to mid November.
+  windows:
+    rain_early_mm: {column: rain_mm, months: [5, 6]}
+    rain_mid_mm: {column: rain_mm, months: [7, 8]}
+    rain_late_mm: {column: rain_mm, months: [9, 10]}
+    water_balance_mid_mm: {column: water_balance_mm, months: [7, 8]}
+  tmax_mid_months: [7, 8]
+  # LightGBM kept shallow for about 500 rows (PRD A6): at most 8 leaves, 20 rows per leaf.
+  lightgbm:
+    num_leaves: 8
+    min_child_samples: 20
+    learning_rate: 0.03
+    n_estimators: 2000
+    subsample: 0.8
+    subsample_freq: 1
+    colsample_bytree: 0.8
+    reg_lambda: 1.0
+    verbose: -1
+  early_stopping_rounds: 100
+  early_stopping_min_trees: 20
+  # Share of training years held out, as a block, for early stopping inside each fold.
+  early_stopping_year_share: 0.2
+  ridge_alphas: {log10_min: -2, log10_max: 4, count: 40}
+  quantiles: [0.1, 0.9]
+  # Optuna, 30 to 50 trials on grouped CV (engineering standards, section 4).
+  optuna_trials: 40
+  # Leakage checks in a6_stress_model.ipynb: Optuna trials per fold for nested tuning (fewer than
+  # optuna_trials to keep 25 folds affordable), and how many shuffled-target reruns.
+  nested_optuna_trials: 15
+  shuffle_runs: 20
+  bootstrap_runs: 200
+  permutation_repeats: 20
+  # Ship the model only if it lowers RMSE against climatology by more than this, in both schemes.
+  min_skill: 0.02
+  # A scenario uses an LGA's own years of a season type only when it has at least this many.
+  scenario_min_years: 3
+
+# A9 crop water balance: FAO-56 daily root-zone bucket, one run per crop and LGA-year, planted on
+# that year's A2 onset date. Crop parameters: config/crops.yaml.
+water_balance:
+  # CHIRPS daily rain and POWER daily ET0 both start in 1981; 2026 is still in progress.
+  years: {start: 1981, end: 2025}
+  # Roots start shallow and reach root_depth_max_m at the end of the development stage, growing
+  # linearly. FAO-56 gives no starting depth; 0.2 m matches the iSDA topsoil layer (our choice).
+  root_depth_initial_m: 0.2
+  # iSDA reports AWC for 0-20 cm and 20-50 cm; the 20-50 cm value is extended below 50 cm.
+  topsoil_depth_m: 0.2
+  # FAO-56 Table 22 note: p = p_table + 0.04 (5 - ETc), limited to 0.1 to 0.8.
+  p_adjust: {slope: 0.04, reference_etc_mm_day: 5.0, min: 0.1, max: 0.8}
+  # FAO-56 Eq. 62 (Kc mid) and Eq. 65 (Kc end, applied when Kc end >= 0.45).
+  # Eq. 62 holds for 1 <= u2 <= 6 m/s and 20 <= RHmin <= 80 %, so inputs are limited to those.
+  kc_climate: {wind_ref_m_s: 2.0, rhmin_ref_pct: 45.0, wind_coef: 0.04, rh_coef: -0.004,
+               height_exponent: 0.3, kc_end_min_to_adjust: 0.45,
+               wind_range_m_s: [1.0, 6.0], rhmin_range_pct: [20.0, 80.0]}
+  # A season "runs short" when actual ET falls more than this share below crop need. Our
+  # choice: FAO-33 yield response factors near 1 make it roughly a 10% yield loss.
+  shortfall_share: 0.10
+  # Ks below 1 counts as a water-stressed day.
+  stress_ks: 1.0
+  # Validation: daily root-zone wetness against SMAP L4 root-zone soil moisture.
+  smap_years: {start: 2015, end: 2025}
+  smap_check_crop: maize
+
+# A8 soil water holding. The three pedotransfer functions in model/soil_water.py are scored in
+# notebooks/a8_soil_water.ipynb against OpenLandMap water content (mapped from measured profiles,
+# no PTF); the one with the lowest mean absolute error in available water, averaged over both
+# iSDA layers, is written for A9. Field capacity at 33 kPa, wilting point at 1500 kPa.
+soil_water:
+  methods: [saxton_rawls, hodnett_tomasella, rosetta3]
+  layers_cm: {"0_20": [0, 20], "20_50": [20, 50]}
+  reference_depths_cm: [0, 10, 30, 60, 100, 200]
+
+# A3 climate indicators per LGA and calendar month: the long-term mean of each monthly value, and
+# the share of years in which the month held at least one event day. Heat day (Tmax >= 35 C,
+# maize pollination risk) and frost day (Tmin <= 2 C) are counted in data/power_kaduna.py
+# (HEAT_C, COLD_C), as PRD A3 sets them.
+climate_indicators:
+  years: {start: 1981, end: 2025}
+  events:
+    heat: power_heat_days
+    frost: power_cold_days
+    very_heavy_rain_50mm: chirps_heavy_days_50mm
+    extreme_rain_p95: imerg_extreme_days_p95
+  means: [rain_mm, power_tmax_mean_c, power_heat_days, power_cold_days, chirps_heavy_days_50mm,
+          imerg_extreme_days_p95, smap_anomaly_z, power_et0_pm_mm, water_balance_mm]
+  # A month counts as dry when its SMAP anomaly is below this many sd (our choice: 1 sd).
+  smap_dry_z: -1.0
+
+# A4 bare fields: smoothed against raw cropland NDVI. Thresholds as in data/ndvi_gee.py: the PRD's
+# absolute 0.25, and the per-LGA relative threshold (5th percentile + 0.25 x the 5th-95th range).
+bare_fields:
+  dry_season_months: [11, 12, 1, 2, 3, 4]
+  absolute_threshold: 0.25
+  relative_fraction: 0.25
+  years: {start: 2000, end: 2024}
+
+# A7 long-term trends, 1981 to the last complete year: Mann-Kendall with Sen's slope, against OLS.
+# Hamed and Rao (1998) corrects the Mann-Kendall variance for autocorrelation; Benjamini and
+# Hochberg (1995) controls false discoveries across the 23 LGAs x 4 series tested together.
+trends:
+  years: {start: 1981, end: 2025}
+  series:
+    season_rain_mm: April to October rain (CHIRPS)
+    onset_doy: rain start day (A2)
+    dry_spells_10plus: 10+ day dry spells (A2)
+    heat_days: heat days, Tmax >= 35 C (POWER)
+  alpha: 0.05
+
+# A10 erosion and infiltration per LGA. Erosion risk = cropland slope x rain intensity x relative
+# erodibility K (PRD A10), scaled 0 to 1 across LGAs; infiltration from saturated conductivity and
+# hydrologic soil group (NEH 630 Ch. 7). Bands split the 0-1 index into thirds (our choice).
+land_risk:
+  slope_column: srtm_slope_pct_crop
+  intensity_column: imerg_p95_wet_mm
+  erodibility_column: soil_erodibility_rel
+  ksat_column: soil_ksat_min_mm_h
+  group_column: soil_hydrologic_group
+  band_edges: [0.333, 0.667]
+
+# A12 confidence: each LGA-level input scores 0 (weak) to 2 (strong); the rotation engine adds the
+# evidence strength of each template. Cut-offs are our choices. Cropland share and cloud-filled
+# vegetation data separate LGAs; iSDA's own uncertainty (relative width 0.18 to 0.26) is about the
+# same in every LGA, so the soil input scores 2 everywhere today and only bites if the map is far
+# less certain somewhere. The card's information-gap line still says soil is a satellite estimate.
+confidence:
+  cropland_share: [0.10, 0.30]   # below 0.10: 0, 0.10-0.30: 1, above: 2 (PRD low_cropland = 0.10)
+  ndvi_interpolated_share: [0.10, 0.05]   # above 0.10: 0, 0.05-0.10: 1, below: 2
+  soil_relative_width: [0.6, 0.4]   # iSDA (upper - lower) / value, mean of sand, clay, OC, 0-20 cm
+  vegetation_stress: 0   # A6 has no out-of-sample skill (data/processed/models/a6)
+  levels: {High: 6, Medium: 4}   # total out of 8 at or above: High; at or above Medium: Medium
+
+# python -m model.build runs these training notebooks in order, each saving its outputs.
+build:
+  notebooks: [a3_climate_indicators, a4_bare_fields, a5_season_types, a6_stress_model,
+              a7_trends, a8_soil_water, a9_water_balance, a10_land_risk, a12_confidence]
+  timeout_s: 1800
+
+# Where the models read from and write to, relative to the repo root.
+paths:
+  features_dir: data/processed/features
+  output_dir: data/processed/models
+  experiment_log: docs/experiments.csv
+  rain_daily: data/processed/chirps/chirps_lga_daily.csv
+  power_daily: data/processed/power/power_lga_daily.parquet
+  onset: data/processed/a2/a2_lga_year.csv
+  # A9 reads the soil water chosen by A8.
+  soil: data/processed/models/a8/a8_lga_soil_water.csv
+  isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
+  # Reference for A8: 33 and 1500 kPa from Zenodo, all land per LGA (python -m data.openlandmap_zenodo)
+  openlandmap: data/processed/extras/openlandmap/openlandmap_lga_water_zenodo.csv
+  # 33 kPa over cropland only, from Earth Engine (python -m data.gee_extras openlandmap): mask check
+  openlandmap_cropland_fc: data/processed/extras/openlandmap/openlandmap_lga_water.csv
+  notebooks: notebooks
+  annual_features: data/processed/features/lga_year_features.parquet
+  monthly_features: data/processed/features/lga_month_features.parquet
+  static_features: data/processed/features/lga_static.parquet
+  ndvi_composites: data/processed/ndvi/ndvi_lga_composites.csv
+  smap_daily: data/processed/smap/lga_daily.csv

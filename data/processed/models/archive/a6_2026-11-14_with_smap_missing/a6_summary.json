@@ -1,0 +1,27 @@
+{
+  "rows": 525,
+  "lgas": 21,
+  "shipped": "ridge",
+  "lgbm_beats_ridge": false,
+  "has_skill": false,
+  "skill_loyo": -0.04,
+  "skill_zone": -0.054,
+  "card_source": "weather_risk_a2_a9",
+  "optuna_cv_rmse_optimistic": 1.0037,
+  "tuned_params": {
+    "num_leaves": 12,
+    "min_child_samples": 59,
+    "learning_rate": 0.011127708190443111,
+    "n_estimators": 21,
+    "colsample_bytree": 0.8015395975159688,
+    "reg_lambda": 0.013223621386250427
+  },
+  "ridge_alpha": 142.51026703029993,
+  "residual_range": [
+    -1.298,
+    1.378
+  ],
+  "max_abs_r_between_years": 0.413,
+  "max_abs_r_within_year": 0.112,
+  "best_single_feature_loyo_skill": 0.005
+}

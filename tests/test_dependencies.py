@@ -29,6 +29,7 @@ LIBRARY_MODULES = [
     "pymannkendall",
     "requests",
     "rioxarray",
+    "rosetta",
     "SALib",
     "scipy",
     "shap",
