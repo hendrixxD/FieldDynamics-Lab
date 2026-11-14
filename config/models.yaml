@@ -201,7 +201,7 @@ confidence:
 build:
   notebooks: [a3_climate_indicators, a4_bare_fields, a5_season_types, a6_stress_model,
               a7_trends, a8_soil_water, a9_water_balance, a10_land_risk, a12_confidence,
-              a14_risk_lines, a15_crop_suitability]
+              a14_risk_lines, a15_crop_suitability, a13_engine_validation]
   timeout_s: 1800
 
 # Where the models read from and write to, relative to the repo root.
