@@ -2,63 +2,77 @@
 """
 SMAP L4 root zone soil moisture for Kaduna State, summarised per LGA.
 
-Product : SPL4SMGP V008 (SMAP L4 Global 3-hourly 9 km EASE-Grid Surface and
-          Root Zone Soil Moisture Geophysical Data), NSIDC DAAC.
+Product : SPL4SMGP V008 (SMAP L4 Global 3-hourly 9 km Surface and Root Zone Soil
+          Moisture Geophysical Data), NSIDC DAAC.
+Source  : Earth Engine NASA/SMAP/SPL4SMGP/008 by default. Earth Engine sends back only
+          the Kaduna window, so 2015 to date takes minutes. --source earthdata reads the
+          native 9 km EASE-Grid files instead, but each day costs ~13 MB of download
+          because every variable is stored as one global chunk.
 Boundary: data/processed/kaduna_lgas.geojson (geoBoundaries, built by data.boundaries) by
           default. Any admin level 2 file works, e.g. OCHA COD-AB with --adm1-field ADM1_EN.
 
 What it does
-  1. Reads the Kaduna LGAs and builds a bounding box.
-  2. Searches Earthdata for SPL4SMGP granules in the growing-season months of
-     each year, keeping ONE granule per day (default 13:30 UTC).
-  3. Opens each granule remotely and reads only the Kaduna window of the
-     three moisture variables (it never pulls the full ~140 MB global file
-     to disk). Each day is cached as a tiny .npz, so the run can be stopped
-     and resumed at any time.
-  4. Maps every 9 km cell to an LGA and writes three CSVs:
+  1. Reads the Kaduna LGAs (or a state outline with --aoi) and builds a bounding box.
+  2. Picks ONE time step per day (default 13:30 UTC) for every month in --months.
+  3. Saves each day's Kaduna window of three moisture variables as a tiny .npz, so the
+     run can be stopped and resumed at any time.
+  4. Maps every cell to an LGA and writes three CSVs:
         lga_daily.csv    one row per LGA per day
         lga_monthly.csv  monthly means + anomaly vs that LGA's own climatology
-        lga_season.csv   one row per LGA per year: season mean, anomaly,
-                         share of dry days, and rank of the year
+        lga_season.csv   one row per LGA per year over --season-months: season mean,
+                         anomaly, share of dry days, and rank of the year
 
-EASE-Grid 2.0 is an equal-area grid, so a plain mean over cells is already
-an area-weighted mean.
+Earth Engine holds this product on a ~0.095 degree lat/lon grid rather than the native
+equal-area EASE grid. Across Kaduna (9-12 N) cell areas differ by under 2%, so a plain
+mean over cells is still close to an area-weighted mean.
 
 Setup
-  Everything is in requirements.txt. You need a free Earthdata Login
-  (urs.earthdata.nasa.gov). Put EARTHDATA_USERNAME and EARTHDATA_PASSWORD in .env,
-  or use a ~/.netrc entry.
+  Everything is in requirements.txt. Earth Engine needs EE_PROJECT in .env. Earthdata
+  needs a free Earthdata Login: EARTHDATA_USERNAME and EARTHDATA_PASSWORD in .env, or
+  a ~/.netrc entry.
 
-Example
-  python -m data.smap_kaduna --start-year 2015 --end-year 2025 --months 4-10
-  python -m data.smap_kaduna --every-n-days 5 --start-year 2024 --end-year 2024  # quick test
+Examples
+  python -m data.smap_kaduna                    # 2015-2026, all months, per LGA
+  python -m data.smap_kaduna --aoi data/kaduna_aoi.geojson  # one whole-state row
+  python -m data.smap_kaduna --source earthdata --start-year 2024 --end-year 2024 \\
+      --months 4-10 --every-n-days 5            # native cross-check, slow
+
+  Note: the read window is fixed by the first run into a --cache folder (saved in
+  grid.npz) so cached days always line up. Use a new --cache folder for a new window.
 """
 
 import argparse
 import calendar
+import datetime
 import logging
 import re
 import sys
 import time
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("smap_kaduna")
 
 SHORT_NAME = "SPL4SMGP"
 VERSION = "008"
+EE_COLLECTION = "NASA/SMAP/SPL4SMGP/008"
+FIRST_DAY = datetime.date(2015, 3, 31)  # first SPL4SMGP granule
 
-# Variable name in output -> path inside the SPL4SMGP HDF5 file
+# Variable name in output -> path inside the SPL4SMGP HDF5 file. Earth Engine band
+# names equal the output names.
 VARIABLES = {
     "sm_rootzone": "Geophysical_Data/sm_rootzone",  # m3/m3, 0-100 cm
     "sm_surface": "Geophysical_Data/sm_surface",  # m3/m3, 0-5 cm
     # 0-1, wilting point to saturation
     "sm_rootzone_wetness": "Geophysical_Data/sm_rootzone_wetness",
 }
-FILL_THRESHOLD = -9000.0  # SMAP fill value is -9999
+FILL_VALUE = -9999.0  # SMAP fill value; Earth Engine masked pixels are given it too
+FILL_THRESHOLD = -9000.0
 GRANULE_TIME_RE = re.compile(r"_(\d{8})T(\d{6})_")
+EE_BAND_RE = re.compile(r"^(\d{8})_\d{4}_(.+)$")  # e.g. 20240401_1330_sm_rootzone
 
 
 # --------------------------------------------------------------------------- #
@@ -68,11 +82,13 @@ def load_lgas(shapefile, state, adm1_field, adm2_field):
     import geopandas as gpd
 
     gdf = gpd.read_file(shapefile)
-    for field in filter(None, (adm1_field, adm2_field)):
-        if field not in gdf.columns:
-            sys.exit(f"Field '{field}' not in shapefile. Columns are: {list(gdf.columns)}")
-    # A file that already holds only the state's LGAs needs no state filter.
-    if not adm1_field:
+    if adm2_field not in gdf.columns and "lga" in gdf.columns:
+        adm2_field = "lga"
+    if adm2_field not in gdf.columns:
+        sys.exit(f"Field '{adm2_field}' not in boundary file. Columns are: {list(gdf.columns)}")
+    if adm1_field not in gdf.columns:
+        # e.g. processed/kaduna_lgas.geojson: already one state's LGAs, no state column
+        log.info(f"  no '{adm1_field}' column, so using every row as an LGA of {state}")
         lgas = gdf.copy()
     else:
         lgas = gdf[gdf[adm1_field].str.strip().str.lower() == state.lower()].copy()
@@ -82,6 +98,15 @@ def load_lgas(shapefile, state, adm1_field, adm2_field):
     lgas = lgas.to_crs(4326)
     lgas = lgas[[adm2_field, "geometry"]].rename(columns={adm2_field: "lga"})
     return lgas.reset_index(drop=True)
+
+
+def load_aoi(path, label="Kaduna State"):
+    """State outline (e.g. kaduna_aoi.geojson) as a one-row 'lga' frame."""
+    import geopandas as gpd
+
+    aoi = gpd.read_file(path).to_crs(4326)
+    geom = aoi.union_all() if hasattr(aoi, "union_all") else aoi.unary_union
+    return gpd.GeoDataFrame({"lga": [label]}, geometry=[geom], crs=4326)
 
 
 def bbox_of(lgas, buffer_deg=0.1):
@@ -147,10 +172,92 @@ def cell_lga_map(lat_sub, lon_sub, lgas):
     if extra:
         mapping = pd.concat([mapping, pd.DataFrame(extra)], ignore_index=True)
         log.info(
-            f"  {len(missing)} LGA(s) smaller than a 9 km cell, using nearest cell: "
+            f"  {len(missing)} LGA(s) smaller than one cell, using nearest cell: "
             f"{', '.join(missing)}"
         )
     return mapping.reset_index(drop=True)
+
+
+def with_retries(fn, label, retries=3):
+    """Run fn, retrying with a growing pause. Returns None once every attempt has failed."""
+    for attempt in range(1, retries + 1):
+        try:
+            return fn()
+        # Remote reads fail in many library-specific ways; log it and retry.
+        except Exception as exc:  # noqa: BLE001
+            log.info(f"  {label} attempt {attempt} failed: {exc}")
+            time.sleep(5 * attempt)
+    log.info(f"  giving up on {label}; rerun the script later to retry it")
+    return None
+
+
+# --------------------------------------------------------------------------- #
+# Earth Engine
+# --------------------------------------------------------------------------- #
+def wanted_days(years, months, every_n_days, today):
+    """YYYYMMDD strings for the chosen months, every Nth day, within the product's record."""
+    picked = []
+    for year in years:
+        days = [
+            datetime.date(year, month, d)
+            for month in months
+            for d in range(1, calendar.monthrange(year, month)[1] + 1)
+        ]
+        days = [d for d in days if FIRST_DAY <= d < today]
+        picked += [d.strftime("%Y%m%d") for d in days[::every_n_days]]
+    return picked
+
+
+def save_ee_days(props, wanted, cache_dir):
+    """Write each wanted day in a sampleRectangle result to <day>.npz. Returns days saved."""
+    by_day = defaultdict(dict)
+    for key, values in props.items():
+        m = EE_BAND_RE.match(key)
+        if m and m.group(1) in wanted and m.group(2) in VARIABLES:
+            arr = np.array(values, dtype="float32")
+            arr[arr < FILL_THRESHOLD] = np.nan
+            by_day[m.group(1)][m.group(2)] = arr
+    for day, arrays in by_day.items():
+        if set(arrays) != set(VARIABLES):
+            raise ValueError(f"{day}: Earth Engine returned {sorted(arrays)}")
+        np.savez_compressed(cache_dir / f"{day}.npz", **arrays)
+    return len(by_day)
+
+
+def fetch_days_ee(days, bbox, hour, cache_dir):
+    """Fetch uncached days from Earth Engine, one request per month."""
+    import ee
+
+    from config.settings import Settings
+
+    ee.Initialize(project=Settings().ee_project)
+    col = ee.ImageCollection(EE_COLLECTION).select(list(VARIABLES))
+    proj = col.first().select("sm_rootzone").projection()
+    region = ee.Geometry.Rectangle(list(bbox), "EPSG:4326", False)
+
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    grid_file = cache_dir / "grid.npz"
+    if not grid_file.exists():
+        ll = ee.Image.pixelLonLat().reproject(proj).sampleRectangle(region).getInfo()
+        lat = np.array(ll["properties"]["latitude"])[:, 0]
+        lon = np.array(ll["properties"]["longitude"])[0, :]
+        np.savez(grid_file, window=np.array([0, lat.size, 0, lon.size]), lat=lat, lon=lon)
+
+    todo = [d for d in days if not (cache_dir / f"{d}.npz").exists()]
+    log.info(f"  {len(days) - len(todo)} days already cached, {len(todo)} to fetch")
+    months = defaultdict(set)
+    for day in todo:
+        months[day[:6]].add(day)
+    for n, (ym, month_days) in enumerate(sorted(months.items()), 1):
+        start = datetime.date(int(ym[:4]), int(ym[4:]), 1)
+        end = (start + datetime.timedelta(days=32)).replace(day=1)
+        images = col.filterDate(start.isoformat(), end.isoformat()).filter(
+            ee.Filter.stringEndsWith("system:index", f"_{hour[:4]}")
+        )
+        sample = images.toBands().reproject(proj).sampleRectangle(region, defaultValue=FILL_VALUE)
+        props = with_retries(lambda s=sample: s.getInfo()["properties"], ym)
+        saved = save_ee_days(props, month_days, cache_dir) if props else 0
+        log.info(f"  [{n}/{len(months)}] {ym}: {saved} of {len(month_days)} days")
 
 
 # --------------------------------------------------------------------------- #
@@ -199,34 +306,28 @@ def read_window(h5, window):
     return out
 
 
-def fetch_days(granules, bbox, cache_dir, retries=3):
+def fetch_day_earthdata(g, bbox, grid_file):
     import earthaccess
     import h5py
 
+    fobj = earthaccess.open([g], show_progress=False)[0]
+    with h5py.File(fobj, "r") as h5:
+        if not grid_file.exists():
+            window, lat_sub, lon_sub = grid_window(h5, bbox)
+            np.savez(grid_file, window=np.array(window), lat=lat_sub, lon=lon_sub)
+        return read_window(h5, tuple(np.load(grid_file)["window"]))
+
+
+def fetch_days_earthdata(granules, bbox, cache_dir):
     cache_dir.mkdir(parents=True, exist_ok=True)
     grid_file = cache_dir / "grid.npz"
     todo = [(d, g) for d, g in granules if not (cache_dir / f"{d}.npz").exists()]
     log.info(f"  {len(granules) - len(todo)} days already cached, {len(todo)} to fetch")
-
     for n, (day, g) in enumerate(todo, 1):
-        for attempt in range(1, retries + 1):
-            try:
-                fobj = earthaccess.open([g])[0]
-                with h5py.File(fobj, "r") as h5:
-                    if not grid_file.exists():
-                        window, lat_sub, lon_sub = grid_window(h5, bbox)
-                        np.savez(grid_file, window=np.array(window), lat=lat_sub, lon=lon_sub)
-                    window = tuple(np.load(grid_file)["window"])
-                    data = read_window(h5, window)
-                np.savez_compressed(cache_dir / f"{day}.npz", **data)
-                log.info(f"  [{n}/{len(todo)}] {day} ok")
-                break
-            # Remote reads fail in many library-specific ways; log it and retry the day.
-            except Exception as exc:  # noqa: BLE001
-                log.info(f"  [{n}/{len(todo)}] {day} attempt {attempt} failed: {exc}")
-                time.sleep(5 * attempt)
-        else:
-            log.info(f"  giving up on {day}; rerun the script later to retry it")
+        data = with_retries(lambda g=g: fetch_day_earthdata(g, bbox, grid_file), day)
+        if data is not None:
+            np.savez_compressed(cache_dir / f"{day}.npz", **data)
+            log.info(f"  [{n}/{len(todo)}] {day} ok")
 
 
 # --------------------------------------------------------------------------- #
@@ -272,7 +373,9 @@ def monthly_summary(daily):
     return m
 
 
-def season_summary(daily, dry_percentile):
+def season_summary(daily, dry_percentile, season_months):
+    # Only growing-season days count, so fetching all 12 months never dilutes the season.
+    daily = daily[daily["month"].isin(season_months)]
     # Dry day = root zone wetness below this LGA's own Nth percentile across all
     # seasons. Relative to the LGA, so sandy and clay LGAs are judged fairly.
     p = (
@@ -310,85 +413,102 @@ def parse_months(text):
     return list(range(a, b + 1))
 
 
-def main():
+def parse_args():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
+    ap.add_argument("--source", choices=["earthengine", "earthdata"], default="earthengine")
     ap.add_argument(
         "--shapefile",
-        default="data/processed/kaduna_lgas.geojson",
-        help="admin level 2 (LGA) boundaries, any format geopandas reads",
+        help="admin level 2 (LGA) boundaries. Defaults to data/processed/kaduna_lgas.geojson "
+        "unless --aoi is given alone",
+    )
+    ap.add_argument(
+        "--aoi",
+        help="state outline, e.g. kaduna_aoi.geojson. Sets the area read each day. Without "
+        "--shapefile, results are one whole-state row instead of per LGA",
     )
     ap.add_argument("--state", default="Kaduna")
-    ap.add_argument(
-        "--adm1-field",
-        default="",
-        help="state column to filter on; leave empty if the file is one state",
-    )
-    ap.add_argument("--adm2-field", default="lga")
+    ap.add_argument("--adm1-field", default="ADM1_EN")
+    ap.add_argument("--adm2-field", default="ADM2_EN")
     ap.add_argument("--start-year", type=int, default=2015)
-    ap.add_argument("--end-year", type=int, default=2025)
+    ap.add_argument("--end-year", type=int, default=2026)
     ap.add_argument(
         "--months",
         type=parse_months,
+        default=parse_months("1-12"),
+        help="months to fetch; lga_daily and lga_monthly cover all of them",
+    )
+    ap.add_argument(
+        "--season-months",
+        type=parse_months,
         default=parse_months("4-10"),
-        help="growing-season months, e.g. 4-10 for April to October",
+        help="growing-season months that lga_season.csv summarises",
     )
     ap.add_argument(
         "--hour",
         default="133000",
-        help="granule time to keep (UTC, hhmmss). SPL4SMGP times are 013000, 043000, ... 223000",
+        help="time step to keep (UTC, hhmmss). SPL4SMGP times are 013000, 043000, ... 223000",
     )
     ap.add_argument(
-        "--every-n-days",
-        type=int,
-        default=1,
-        help="keep every Nth day; 3 or 5 is fine for a quick first pass",
+        "--every-n-days", type=int, default=1, help="keep every Nth day, for a quick first pass"
     )
     ap.add_argument("--dry-percentile", type=float, default=20)
     ap.add_argument("--out", default="data/processed/smap")
     ap.add_argument(
         "--cache",
-        default="data/raw/smap_cache",
-        help="per-day Kaduna windows; raw pulls live under the git-ignored data/raw/",
+        help="per-day windows. Defaults to data/raw/smap_cache/<source>, under the "
+        "git-ignored data/raw/",
     )
     ap.add_argument(
-        "--skip-download",
-        action="store_true",
-        help="only rebuild the CSVs from what is already cached",
+        "--skip-download", action="store_true", help="only rebuild the CSVs from the cache"
     )
-    args = ap.parse_args()
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    return ap.parse_args()
+
+
+def main():
+    args = parse_args()
+    # Libraries log every HTTP block at INFO, so only this script's progress is shown.
+    logging.basicConfig(level=logging.WARNING, format="%(message)s")
+    log.setLevel(logging.INFO)
 
     out = Path(args.out)
-    cache = Path(args.cache)
+    cache = Path(args.cache or f"data/raw/smap_cache/{args.source}")
     out.mkdir(parents=True, exist_ok=True)
 
-    log.info("Loading LGA boundaries")
-    lgas = load_lgas(args.shapefile, args.state, args.adm1_field, args.adm2_field)
-    bbox = bbox_of(lgas)
+    log.info("Loading boundaries")
+    aoi = load_aoi(args.aoi) if args.aoi else None
+    shapefile = args.shapefile or (
+        None if aoi is not None else "data/processed/kaduna_lgas.geojson"
+    )
+    lgas = load_lgas(shapefile, args.state, args.adm1_field, args.adm2_field) if shapefile else aoi
+    bbox = bbox_of(aoi if aoi is not None else lgas)
     log.info(f"  {len(lgas)} LGAs, bbox (W,S,E,N) = {tuple(round(float(v), 3) for v in bbox)}")
 
     if not args.skip_download:
-        import earthaccess
-        from dotenv import load_dotenv
-
-        load_dotenv()
-        earthaccess.login()
-        if args.start_year < 2015 or (args.start_year == 2015 and args.months[0] < 4):
-            log.info("  note: SPL4SMGP starts 2015-03-31")
-        log.info("Searching Earthdata")
         years = range(args.start_year, args.end_year + 1)
-        granules = search_granules(years, args.months, bbox, args.hour, args.every_n_days)
-        log.info("Fetching Kaduna windows")
-        fetch_days(granules, bbox, cache)
+        if args.source == "earthengine":
+            log.info(f"Fetching Kaduna windows from Earth Engine {EE_COLLECTION}")
+            today = datetime.datetime.now(datetime.UTC).date()
+            days = wanted_days(years, args.months, args.every_n_days, today)
+            fetch_days_ee(days, bbox, args.hour, cache)
+        else:
+            import earthaccess
+            from dotenv import load_dotenv
+
+            load_dotenv(".env")
+            earthaccess.login()
+            log.info("Searching Earthdata")
+            granules = search_granules(years, args.months, bbox, args.hour, args.every_n_days)
+            log.info("Fetching Kaduna windows")
+            fetch_days_earthdata(granules, bbox, cache)
 
     grid_file = cache / "grid.npz"
     if not grid_file.exists():
         sys.exit("No grid cached yet; run once without --skip-download.")
     grid = np.load(grid_file)
 
-    log.info("Mapping 9 km cells to LGAs")
+    log.info("Mapping cells to LGAs")
     mapping = cell_lga_map(grid["lat"], grid["lon"], lgas)
     mapping.to_csv(out / "cell_lga_map.csv", index=False)
 
@@ -396,7 +516,8 @@ def main():
     daily = aggregate_daily(cache, mapping)
     daily.to_csv(out / "lga_daily.csv", index=False)
     monthly_summary(daily).to_csv(out / "lga_monthly.csv", index=False)
-    season_summary(daily, args.dry_percentile).to_csv(out / "lga_season.csv", index=False)
+    season = season_summary(daily, args.dry_percentile, args.season_months)
+    season.to_csv(out / "lga_season.csv", index=False)
     log.info(f"Done. Wrote lga_daily.csv, lga_monthly.csv, lga_season.csv to {out}/")
 
 

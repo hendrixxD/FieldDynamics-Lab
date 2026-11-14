@@ -1,6 +1,7 @@
 """Checks the SMAP Kaduna script's windowing, LGA mapping and summaries on known inputs."""
 
 import argparse
+import datetime
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -106,7 +107,8 @@ def test_aggregate_and_summaries(tmp_path: Path) -> None:
     big = monthly[monthly["lga"] == "Big"].set_index("year")
     assert big.loc[2024, "anomaly_rootzone"] == pytest.approx(0.05)
 
-    season = smap.season_summary(daily, dry_percentile=50).set_index(["lga", "year"])
+    season = smap.season_summary(daily, dry_percentile=50, season_months=[7])
+    season = season.set_index(["lga", "year"])
     assert season.loc[("Big", 2024), "wettest_rank"] == 1
     assert season.loc[("Big", 2024), "anomaly_pct"] == pytest.approx(20.0)
     assert season.loc[("Tiny", 2023), "nearest_fallback"]
@@ -141,3 +143,44 @@ def test_monthly_summary_columns_are_complete() -> None:
     monthly = smap.monthly_summary(daily)
     assert monthly["clim_rootzone"].tolist() == pytest.approx([0.3, 0.3])
     assert monthly["anomaly_z"].notna().all()
+
+
+def test_season_summary_ignores_days_outside_the_season(tmp_path: Path) -> None:
+    np.savez(tmp_path / "grid.npz", window=np.array([0, 4, 0, 4]), lat=LAT, lon=LON)
+    write_day(tmp_path, "20240115", rootzone=0.05, wetness=0.1)  # dry season, outside
+    write_day(tmp_path, "20240715", rootzone=0.3, wetness=0.6)
+    daily = smap.aggregate_daily(tmp_path, smap.cell_lga_map(LAT, LON, two_lgas()))
+    season = smap.season_summary(daily, dry_percentile=20, season_months=[4, 5, 6, 7, 8, 9, 10])
+    big = season[season["lga"] == "Big"].iloc[0]
+    assert big["season_rootzone"] == pytest.approx(0.3)
+    assert big["days"] == 1
+
+
+def test_wanted_days_respects_record_start_and_today() -> None:
+    days = smap.wanted_days([2015], [3, 4], every_n_days=1, today=datetime.date(2015, 4, 3))
+    assert days == ["20150331", "20150401", "20150402"]
+
+
+def test_wanted_days_every_nth_day() -> None:
+    days = smap.wanted_days([2024], [2], every_n_days=10, today=datetime.date(2025, 1, 1))
+    assert days == ["20240201", "20240211", "20240221"]
+
+
+def test_save_ee_days_writes_only_wanted_days(tmp_path: Path) -> None:
+    props = {}
+    for day, value in [("20240401", 0.2), ("20240402", 0.3)]:
+        for name in smap.VARIABLES:
+            props[f"{day}_1330_{name}"] = [[value, -9999.0]]
+    props["20240401_1330_sm_profile"] = [[0.9, 0.9]]  # a band the script does not use
+
+    assert smap.save_ee_days(props, {"20240401"}, tmp_path) == 1
+    saved = np.load(tmp_path / "20240401.npz")
+    assert sorted(saved.files) == sorted(smap.VARIABLES)
+    assert saved["sm_rootzone"][0, 0] == pytest.approx(0.2)
+    assert np.isnan(saved["sm_rootzone"][0, 1])
+    assert not (tmp_path / "20240402.npz").exists()
+
+
+def test_save_ee_days_rejects_a_day_with_missing_variables(tmp_path: Path) -> None:
+    with pytest.raises(ValueError):
+        smap.save_ee_days({"20240401_1330_sm_rootzone": [[0.2]]}, {"20240401"}, tmp_path)
