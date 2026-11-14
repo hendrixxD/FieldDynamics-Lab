@@ -175,6 +175,7 @@ class Paths(BaseModel):
     ndvi_composites: Path
     contract: Path
     dry_spells: Path
+    isda_grid: Path
 
 
 class ContractConfig(BaseModel):
@@ -253,6 +254,9 @@ class EngineConfig(BaseModel):
     striga: EngineStriga
     levels: dict[str, float]
     sensitivity: EngineSensitivity
+    check_with: list[tuple[str, str]]
+    check_with_default: str
+    phosphorus_sulphur_line: str
     scouting: dict[str, str]
 
 

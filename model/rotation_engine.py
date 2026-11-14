@@ -8,7 +8,7 @@ mark opportunities, attach confidence and risk lines.
 
 import itertools
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Any, Literal
 
 import numpy as np
 import pandas as pd
@@ -226,7 +226,8 @@ def nutrients(rot: Rotation, data: EngineData) -> Score:
         credits.append(best)
     fixers = [c for c in crops_in(rot) if c in rules and rules[c].nitrogen.fixes]
     reason = (
-        f"{' and '.join(fixers)} fix nitrogen, though most of it leaves with the grain"
+        f"{' and '.join(fixers)} {'fix' if len(fixers) > 1 else 'fixes'} nitrogen, "
+        "though most of it leaves with the grain"
         if fixers
         else "no nitrogen-fixing crop"
     )
@@ -284,7 +285,7 @@ def pests(rot: Rotation, data: EngineData) -> Score:
     value = changes - p["striga_repeat_penalty"] * any(striga) + p["trap_crop_credit"] * trap
     reason = "crop family changes every season" if changes == 1 else "the same crop family repeats"
     if trap:
-        reason += "; a legume before maize cuts Striga"
+        reason += "; a legume trap crop lowers Striga for the next cereal"
     return Score(float(np.clip(value, 0, 1)), reason)
 
 
@@ -528,6 +529,11 @@ def risk_lines(rot: Rotation, req: Request, data: EngineData, striga: tuple[str,
     if "striga_gesnerioides_host" in groups and striga[0] == "High":
         lines.append("Cowpea has its own Striga: ask for a resistant variety")
     lines += [e.scouting[g] for g in e.scouting if g in groups]
+    if any(rules[c].nitrogen.fixes for c in crops_in(rot) if c in rules):
+        lines.append(
+            f"{e.phosphorus_sulphur_line}. iSDA puts cropland phosphorus here at about "
+            f"{data.phosphorus_ppm.loc[req.lga]:.0f} ppm"
+        )
     if req.soil and req.soil != "Not sure":
         lines.append(f"You chose {req.soil.lower()} soil; water figures use the satellite soil map")
     return lines
@@ -597,6 +603,7 @@ def card(
             "reason": s.reason,
         }
     conf = confidence(req, data, rot)
+    facts = crop_facts(rot, req, data)
     return {
         "key": rot.key,
         "title": rot.name,
@@ -604,14 +611,175 @@ def card(
         "rows": rows,
         "total": total(scores, w),
         "rows_scored": sum(s.value is not None for s in scores.values()),
+        "crops": facts,
+        "water_line": water_line(facts, req.season_type),
+        "why": why_line(scores, w, base),
+        "benefits": benefits(rows, scores, req, current=base is None),
         "studies": studies(rot.seasons, data),
         "source": "current" if rot.status == "current" else "data",
         "confidence": {"level": conf[0], "reason": conf[1]},
-        "risks": risk_lines(rot, req, data, striga),
+        "risks": [
+            {"text": line, "check_with": check_with(line, data)}
+            for line in risk_lines(rot, req, data, striga)
+        ],
         "labour": labour_line(rot, req, data),
-        "gaps": sorted({g for s in scores.values() for g in s.gaps}),
+        "gaps": gaps_for(scores, req, data),
+        "trend_line": trend_line(rot, req, data),
         "check_first": conf[0] == "Low",
     }
+
+
+ROW_LABELS = {
+    "nutrients": "Nutrients",
+    "organic_matter": "Organic matter",
+    "erosion": "Erosion and infiltration",
+    "pests": "Pests",
+    "water": "Water use",
+    "forage": "Forage",
+    "market": "Market",
+}
+
+
+def crop_facts(rot: Rotation, req: Request, data: EngineData) -> list[dict[str, Any]]:
+    """Each crop's water need under the chosen season type (A9) and whether it fixes N (R4)."""
+    rules, facts = data.crops.rules(), []
+    for crop in crops_in(rot):
+        key = (req.lga, crop, req.season_type)
+        need = data.water.loc[key, "water_need_mm"] if key in data.water.index else float("nan")
+        facts.append(
+            {
+                "crop": crop,
+                "fixes_nitrogen": bool(crop in rules and rules[crop].nitrogen.fixes),
+                "water_need_mm": None if np.isnan(need) else float(need),
+                "short_share": nan_to_none(short_share(data, req.lga, crop, req.season_type)),
+            }
+        )
+    return facts
+
+
+def nan_to_none(value: float) -> float | None:
+    return None if np.isnan(value) else float(value)
+
+
+def water_line(facts: list[dict[str, Any]], season_type: str) -> str:
+    """'Maize needs about 370 mm and ran short in 0 of 10 typical seasons; ...' (R4, R13)."""
+    parts = []
+    for f in facts:
+        short = (
+            f"ran short in {round(f['short_share'] * 10)} of 10 {season_type.lower()} seasons"
+            if f["short_share"] is not None
+            else "how often it runs short is not known"
+        )
+        need = (
+            f"needs about {round(f['water_need_mm'], -1):.0f} mm"
+            if f["water_need_mm"] is not None
+            else "has no water balance"
+        )
+        parts.append(f"{f['crop'].capitalize()} {need} and {short}")
+    return "; ".join(parts)
+
+
+def why_line(scores: dict[str, Score], w: dict[str, float], base: dict[str, Score] | None) -> str:
+    """The two reasons that carry most weight, preferring rows that beat Current (R8)."""
+    scored = [d for d in DIMENSIONS if scores[d].value is not None]
+    better = [
+        d
+        for d in scored
+        if base is not None and base[d].value is not None and scores[d].value > base[d].value + 0.05  # type: ignore[operator]
+    ]
+    ranked = sorted(better or scored, key=lambda d: -w[d] * scores[d].value)  # type: ignore[operator]
+    reasons = [scores[d].reason for d in ranked[:2]]
+    text = "; ".join(reasons) if reasons else "not enough data to score this rotation"
+    return text[0].upper() + text[1:] + "."
+
+
+def benefits(
+    rows: dict[str, dict[str, Any]], scores: dict[str, Score], req: Request, current: bool
+) -> list[str]:
+    """One line per chosen priority the card improves on Current (R10). Current lists what it
+    already does best, since it is never compared with itself."""
+    if current:
+        best = max(
+            (d for d in DIMENSIONS if scores[d].value is not None),
+            key=lambda d: scores[d].value,  # type: ignore[arg-type,return-value]
+            default=None,
+        )
+        return (
+            [f"Already strongest on {ROW_LABELS[best].lower()}: {scores[best].reason}"]
+            if best
+            else []
+        )
+    chosen = [PRIORITIES[p] for p in req.priorities]
+    wanted = [d for d in chosen if rows[d]["arrow"] == "better"] or [
+        d for d in DIMENSIONS if rows[d]["arrow"] == "better"
+    ]
+    return [f"{ROW_LABELS[d]}: {rows[d]['reason']}" for d in wanted[:3]]
+
+
+def gaps_for(scores: dict[str, Score], req: Request, data: EngineData) -> list[str]:
+    """Row gaps plus the standing ones, so every card names at least one (R11)."""
+    gaps = {g for s in scores.values() for g in s.gaps}
+    gaps.add(
+        "Soil values are a satellite estimate for the LGA, not a test of your field"
+        if req.soil in (None, "Not sure")
+        else "Water figures use the satellite soil map, not the soil type you chose"
+    )
+    if data.cfg.confidence.vegetation_stress == 0:  # A6: no out-of-sample skill
+        gaps.add("Satellite greenness could not predict crop stress here; risks come from weather")
+    return sorted(gaps)
+
+
+def check_with(line: str, data: EngineData) -> str:
+    """Who to check a risk with (R12): the first configured pattern found in the line."""
+    e = data.cfg.engine
+    return next(
+        (who for word, who in e.check_with if word.lower() in line.lower()), e.check_with_default
+    )
+
+
+def trend_line(rot: Rotation, req: Request, data: EngineData) -> str:
+    """How the rotation copes with the LGA's long-term shift (R32): A7 rain start and heat days,
+    the rotation's season fit in late-start years (A9 or A2 lengths) and its heat margin (A15)."""
+
+    def trend(series: str) -> tuple[float, bool]:
+        key = (req.lga, series)
+        if key not in data.trends.index:
+            return 0.0, False
+        row = data.trends.loc[key]
+        return float(row["sen_slope_per_decade"]), bool(row["significant"])
+
+    onset, onset_sig = trend("onset_doy")
+    heat, heat_sig = trend("heat_days")
+    rain = (
+        f"rain has started {'later' if onset > 0 else 'earlier'} here since 1981"
+        if onset_sig
+        else "rain start shows no clear trend here"
+    )
+    hot = "heat days are rising" if heat_sig and heat > 0 else "heat days show no clear trend"
+    late = "Late start" if "Late start" in data.season_types else req.season_type
+    fits = [water_stats(data, req.lga, c, late)[1] for c in crops_in(rot)]
+    fits = [f for f in fits if not np.isnan(f)]
+    fit = ""
+    if fits:
+        n = round(min(fits) * 10)
+        fit = (
+            f"; in {late.lower()} years these crops fit the rains in about {n} of 10"
+            if n
+            else f"; in {late.lower()} years these crops never fit the rains on record"
+        )
+    heats = {
+        c: data.suit_lookup[(req.lga, c)]["heat_share"]
+        for c in crops_in(rot)
+        if (req.lga, c) in data.suit_lookup
+    }
+    worst = max(heats, key=heats.get, default=None)  # type: ignore[arg-type]
+    heat_clause = ""
+    if worst and round(heats[worst] * 10) >= 1:
+        heat_clause = (
+            f", and {worst}'s hottest month is above its best range in "
+            f"{round(heats[worst] * 10)} of 10 years"
+        )
+    return f"{rain.capitalize()} and {hot}{fit}{heat_clause}."
 
 
 OPPORTUNITIES = {
@@ -622,13 +790,14 @@ OPPORTUNITIES = {
 }
 
 
-def opportunities(rows: dict) -> list[str]:
-    """PRD Step 5: an opportunity applies when its row beats Current."""
-    return [
-        name
-        for name, dims in OPPORTUNITIES.items()
-        if any(rows[d]["arrow"] == "better" for d in dims)
-    ]
+def opportunities(rows: dict[str, dict[str, Any]]) -> list[dict[str, str]]:
+    """PRD Step 5: an opportunity applies when its row beats Current; the row's reason says why."""
+    found = []
+    for name, dims in OPPORTUNITIES.items():
+        better = [d for d in dims if rows[d]["arrow"] == "better"]
+        if better:
+            found.append({"name": name, "reason": rows[better[0]]["reason"]})
+    return found
 
 
 def rank_candidates(
@@ -680,4 +849,7 @@ def score_request(req: Request, data: EngineData) -> dict:
         "close_call": flag,
         "dropped": dropped,
         "low_cropland": bool(data.land.loc[req.lga, "low_cropland"]),
+        "notice": None
+        if req.priorities
+        else "No priority chosen: rows are weighted by what this LGA's data says matters most",
     }

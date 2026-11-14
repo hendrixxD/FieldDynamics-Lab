@@ -1,0 +1,139 @@
+lga,series,sen_slope_per_decade,significant
+Birnin Gwari,dry_spells_10plus,0.0,False
+Birnin Gwari,heat_days,12.0,False
+Birnin Gwari,longest_dry_spell_days,0.0,False
+Birnin Gwari,onset_doy,2.0294,False
+Birnin Gwari,season_rain_mm,2.6179,False
+Birnin Gwari,season_water_balance_mm,2.1823,False
+Chikun,dry_spells_10plus,0.0,False
+Chikun,heat_days,10.4464,False
+Chikun,longest_dry_spell_days,-0.2744,False
+Chikun,onset_doy,1.1882,False
+Chikun,season_rain_mm,2.59,False
+Chikun,season_water_balance_mm,1.3513,False
+Giwa,dry_spells_10plus,0.0,False
+Giwa,heat_days,12.265,False
+Giwa,longest_dry_spell_days,0.0,False
+Giwa,onset_doy,1.3722,False
+Giwa,season_rain_mm,-1.0025,False
+Giwa,season_water_balance_mm,-6.8273,False
+Igabi,dry_spells_10plus,0.0,False
+Igabi,heat_days,10.7418,False
+Igabi,longest_dry_spell_days,0.0,False
+Igabi,onset_doy,3.0,False
+Igabi,season_rain_mm,2.9447,False
+Igabi,season_water_balance_mm,2.7952,False
+Ikara,dry_spells_10plus,0.0,False
+Ikara,heat_days,15.5419,True
+Ikara,longest_dry_spell_days,-0.2899,False
+Ikara,onset_doy,2.0,False
+Ikara,season_rain_mm,28.7193,False
+Ikara,season_water_balance_mm,10.7359,False
+Jaba,dry_spells_10plus,0.0,False
+Jaba,heat_days,15.3846,True
+Jaba,longest_dry_spell_days,0.0,False
+Jaba,onset_doy,4.333,False
+Jaba,season_rain_mm,-1.2387,False
+Jaba,season_water_balance_mm,-5.2468,False
+Jema'a,dry_spells_10plus,0.0,False
+Jema'a,heat_days,15.0,True
+Jema'a,longest_dry_spell_days,0.0,False
+Jema'a,onset_doy,3.0662,False
+Jema'a,season_rain_mm,-6.1667,False
+Jema'a,season_water_balance_mm,-11.0098,False
+Kachia,dry_spells_10plus,0.0,False
+Kachia,heat_days,10.5299,True
+Kachia,longest_dry_spell_days,0.0,False
+Kachia,onset_doy,4.6667,False
+Kachia,season_rain_mm,1.1222,False
+Kachia,season_water_balance_mm,3.9507,False
+Kaduna North,dry_spells_10plus,0.0,False
+Kaduna North,heat_days,9.1833,False
+Kaduna North,longest_dry_spell_days,0.0,False
+Kaduna North,onset_doy,3.75,False
+Kaduna North,season_rain_mm,3.6943,False
+Kaduna North,season_water_balance_mm,4.045,False
+Kaduna South,dry_spells_10plus,0.0,False
+Kaduna South,heat_days,9.1833,False
+Kaduna South,longest_dry_spell_days,0.0,False
+Kaduna South,onset_doy,3.4248,False
+Kaduna South,season_rain_mm,-0.7151,False
+Kaduna South,season_water_balance_mm,-1.8052,False
+Kagarko,dry_spells_10plus,0.0,False
+Kagarko,heat_days,13.75,True
+Kagarko,longest_dry_spell_days,0.0,False
+Kagarko,onset_doy,2.7525,False
+Kagarko,season_rain_mm,12.7769,False
+Kagarko,season_water_balance_mm,16.6928,False
+Kajuru,dry_spells_10plus,0.0,False
+Kajuru,heat_days,9.8438,False
+Kajuru,longest_dry_spell_days,-0.2326,False
+Kajuru,onset_doy,3.0669,False
+Kajuru,season_rain_mm,-6.4513,False
+Kajuru,season_water_balance_mm,-4.4219,False
+Kaura,dry_spells_10plus,0.0,False
+Kaura,heat_days,9.5652,True
+Kaura,longest_dry_spell_days,0.0,False
+Kaura,onset_doy,5.6386,False
+Kaura,season_rain_mm,-22.0171,False
+Kaura,season_water_balance_mm,-24.7169,False
+Kauru,dry_spells_10plus,0.0,False
+Kauru,heat_days,10.8893,True
+Kauru,longest_dry_spell_days,0.0,False
+Kauru,onset_doy,3.374,False
+Kauru,season_rain_mm,5.0275,False
+Kauru,season_water_balance_mm,1.396,False
+Kubau,dry_spells_10plus,0.0,False
+Kubau,heat_days,13.7981,True
+Kubau,longest_dry_spell_days,0.0,False
+Kubau,onset_doy,0.0,False
+Kubau,season_rain_mm,17.6155,False
+Kubau,season_water_balance_mm,9.9362,False
+Kudan,dry_spells_10plus,0.0,False
+Kudan,heat_days,14.0859,True
+Kudan,longest_dry_spell_days,0.0,False
+Kudan,onset_doy,0.3486,False
+Kudan,season_rain_mm,14.4739,False
+Kudan,season_water_balance_mm,4.387,False
+Lere,dry_spells_10plus,0.0,False
+Lere,heat_days,11.6667,True
+Lere,longest_dry_spell_days,0.0,False
+Lere,onset_doy,3.1142,False
+Lere,season_rain_mm,21.1961,False
+Lere,season_water_balance_mm,17.4125,False
+Makarfi,dry_spells_10plus,0.0,False
+Makarfi,heat_days,17.5,True
+Makarfi,longest_dry_spell_days,0.0,False
+Makarfi,onset_doy,0.0,False
+Makarfi,season_rain_mm,20.4214,False
+Makarfi,season_water_balance_mm,2.7419,False
+Sabon Gari,dry_spells_10plus,0.0,False
+Sabon Gari,heat_days,11.3333,True
+Sabon Gari,longest_dry_spell_days,0.0,False
+Sabon Gari,onset_doy,-2.132,False
+Sabon Gari,season_rain_mm,9.0246,False
+Sabon Gari,season_water_balance_mm,4.9279,False
+Sanga,dry_spells_10plus,0.0,False
+Sanga,heat_days,15.3239,True
+Sanga,longest_dry_spell_days,0.0,False
+Sanga,onset_doy,2.8571,False
+Sanga,season_rain_mm,-8.0995,False
+Sanga,season_water_balance_mm,-14.9123,False
+Soba,dry_spells_10plus,0.0,False
+Soba,heat_days,13.6515,True
+Soba,longest_dry_spell_days,0.0,False
+Soba,onset_doy,2.3431,False
+Soba,season_rain_mm,5.399,False
+Soba,season_water_balance_mm,0.5886,False
+Zangon Kataf,dry_spells_10plus,0.0,False
+Zangon Kataf,heat_days,10.7794,True
+Zangon Kataf,longest_dry_spell_days,-0.4167,False
+Zangon Kataf,onset_doy,4.5644,False
+Zangon Kataf,season_rain_mm,-13.5902,False
+Zangon Kataf,season_water_balance_mm,-14.2724,False
+Zaria,dry_spells_10plus,0.0,False
+Zaria,heat_days,11.3333,True
+Zaria,longest_dry_spell_days,0.0,False
+Zaria,onset_doy,0.8545,False
+Zaria,season_rain_mm,5.4782,False
+Zaria,season_water_balance_mm,2.7433,False

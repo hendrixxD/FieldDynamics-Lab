@@ -164,3 +164,40 @@ def test_no_risk_line_ever_reports_zero_of_ten() -> None:
     for lga in sorted(DATA.zone_of):
         for card in run(lga=lga)["cards"]:
             assert not any(" 0 of 10" in line for line in card["risks"]), (lga, card["risks"])
+
+
+def test_every_card_has_the_prd_section_9_fields() -> None:
+    """R4, R8, R10, R11, R12, R19, R32 on every card, in every LGA and season type."""
+    for lga in sorted(DATA.zone_of):
+        for season_type in DATA.season_types:
+            result = run(lga=lga, season_type=season_type, priorities=["add_nitrogen"])
+            for card in result["cards"]:
+                crops = {c for season in card["seasons"] for c in season}
+                assert {f["crop"] for f in card["crops"]} == crops  # R4
+                assert card["why"].endswith(".")  # R8
+                assert card["benefits"] and card["gaps"] and card["risks"]  # R10, R11, R12
+                assert all(r["check_with"] for r in card["risks"])  # R12: who to ask
+                assert card["trend_line"]  # R32
+            for card in result["cards"][1:]:
+                assert all(o["reason"] for o in card["opportunities"])  # R19
+
+
+def test_legume_rotations_carry_the_phosphorus_and_sulphur_line() -> None:
+    cards = run(past_seasons=[["maize"], ["soybean"]])["cards"]
+    current = cards[0]["risks"]
+    assert any("phosphorus and sulphur" in r["text"] for r in current)
+    assert all(
+        r["check_with"] == "a soil test through your extension officer"
+        for r in current
+        if "phosphorus" in r["text"]
+    )
+
+
+def test_no_priority_shows_a_notice_and_a_priority_clears_it() -> None:
+    assert run()["notice"]
+    assert run(priorities=["fewer_pests"])["notice"] is None
+
+
+def test_water_line_states_need_and_how_often_short() -> None:
+    line = run()["cards"][0]["water_line"]
+    assert line.startswith("Maize needs about ") and "of 10 typical seasons" in line
