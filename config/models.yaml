@@ -214,6 +214,8 @@ paths:
   # A9 reads the soil water chosen by A8.
   soil: data/processed/models/a8/a8_lga_soil_water.csv
   isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
+  # KDBS retail prices per LGA (python -m data.kdbs_prices)
+  kdbs_prices: data/processed/extras/kdbs/kdbs_lga_prices.csv
   # Reference for A8: 33 and 1500 kPa from Zenodo, all land per LGA (python -m data.openlandmap_zenodo)
   openlandmap: data/processed/extras/openlandmap/openlandmap_lga_water_zenodo.csv
   # 33 kPa over cropland only, from Earth Engine (python -m data.gee_extras openlandmap): mask check

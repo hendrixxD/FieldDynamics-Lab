@@ -15,6 +15,8 @@ geopandas
 # h5py reads the Kaduna window out of SMAP HDF5 granules.
 h5py
 numpy
+# openpyxl reads the KDBS retail price export (.xlsx).
+openpyxl
 pandas
 pillow
 # pyarrow is the Parquet engine for the feature tables.
