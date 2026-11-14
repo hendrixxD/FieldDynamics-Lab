@@ -3,5 +3,8 @@
 
 fastapi
 jinja2
+numpy
+pandas
 pydantic
+pyyaml
 uvicorn

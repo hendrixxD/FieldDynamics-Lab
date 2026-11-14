@@ -4,6 +4,7 @@ No live calls: the engine scores a request from these tables only (PRD section 1
 Reliability). LGA names are mapped to the feature tables' spelling on load.
 """
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -104,6 +105,11 @@ def _indexed(path: Path, lgas: list[str]) -> pd.DataFrame:
     return table.assign(lga=canonical_lga(table["lga"], lgas))
 
 
+# Tables the engine needs, as written to the serving bundle. Indexed ones keep their index.
+INDEXED_TABLES = ("land", "confidence", "lga", "type_share", "heat_share", "prices")
+FLAT_TABLES = ("water", "risk_lines", "suitability")
+
+
 def lga_table(isda: pd.DataFrame, land: pd.DataFrame, year: pd.DataFrame) -> pd.DataFrame:
     """Per-LGA inputs the engine reads: Striga soil base, dry-spell share, rain start, need."""
     spells = (year["a2_dry_spells_10plus"] > 0).groupby(year["lga"]).mean()
@@ -176,3 +182,32 @@ def load_engine_data(cfg: ModelConfig | None = None) -> EngineData:
     """Read the engine's data from the pipeline outputs (notebooks and tests)."""
     cfg = cfg or load_model_config()
     return assemble(cfg, pipeline_tables(cfg))
+
+
+def bundle_dir(cfg: ModelConfig) -> Path:
+    """The serving bundle, resolved from the repo root so the app finds it from any cwd."""
+    return CONFIG_DIR.parent / cfg.paths.engine_bundle
+
+
+def export_bundle(cfg: ModelConfig | None = None, dest: Path | None = None) -> Path:
+    """Write the engine's tables as small CSVs the deployed app reads (Vercel skips data/)."""
+    cfg = cfg or load_model_config()
+    dest = dest or bundle_dir(cfg)
+    dest.mkdir(parents=True, exist_ok=True)
+    for name, table in pipeline_tables(cfg).items():
+        table.to_csv(dest / f"{name}.csv", index=name in INDEXED_TABLES)
+    return dest
+
+
+def load_bundle(cfg: ModelConfig | None = None, dest: Path | None = None) -> EngineData:
+    """Read the engine's data from the serving bundle: CSV only, no pipeline files."""
+    cfg = cfg or load_model_config()
+    dest = dest or bundle_dir(cfg)
+    tables = {n: pd.read_csv(dest / f"{n}.csv", index_col=0) for n in INDEXED_TABLES}
+    tables |= {n: pd.read_csv(dest / f"{n}.csv") for n in FLAT_TABLES}
+    return assemble(cfg, tables)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    logging.getLogger("engine_data").info("Engine bundle written to %s", export_bundle())

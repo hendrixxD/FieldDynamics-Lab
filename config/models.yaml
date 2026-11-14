@@ -221,6 +221,9 @@ paths:
   kdbs_prices: data/processed/extras/kdbs/kdbs_lga_prices.csv
   risk_lines: data/processed/models/a14/a14_lga_crop_risk_lines.csv
   suitability: data/processed/models/a15/a15_lga_crop_suitability.csv
+  # Small CSV copy of the engine's tables for the deployed app (python -m model.engine_data).
+  # Outside data/ because .vercelignore drops data/.
+  engine_bundle: api/engine_inputs
   # Reference for A8: 33 and 1500 kPa from Zenodo, all land per LGA (python -m data.openlandmap_zenodo)
   openlandmap: data/processed/extras/openlandmap/openlandmap_lga_water_zenodo.csv
   # 33 kPa over cropland only, from Earth Engine (python -m data.gee_extras openlandmap): mask check
