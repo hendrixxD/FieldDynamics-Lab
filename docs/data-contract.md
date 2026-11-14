@@ -116,7 +116,7 @@ Built by `python -m model.build` into `data/processed/models/`. All are LGA-leve
 | Crop water by LGA | `a9/a9_lga_crop_summary.csv` | LGA, crop | `water_need_mm`, `short_share`, `fits_season_share`, `riskiest_stage_label`, `et0_filled_share` |
 | Crop water by season type | `a9/a9_lga_crop_season_type.csv` | LGA, crop, season type | As above, plus `years` (years of that type behind each share) |
 
-- Season type names: `Typical`, `Dry spell`, `Late start`, `Short and dry`.
+- Season type names: `Typical`, `Wet`, `Late start`, `Dry spell`. The names come from A5 (`model/season_types.py`, `name_clusters`); the engine and API read them from `a5_lga_type_share.csv`, so a rerun that renames a type cannot leave a stale name in the app.
 - Crops: `maize`, `sorghum`, `millet`, `soybean`, `cowpea`, `groundnut`, `sesame`.
 - LGA names follow the feature tables (`Jema'a`).
 
