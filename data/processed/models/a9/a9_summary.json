@@ -38,58 +38,58 @@
   },
   "short_share_by_crop_and_type": {
     "cassava": {
-      "Dry spell": 0.451,
-      "Late start": 0.917,
-      "Short and dry": 0.917,
-      "Typical": 0.441
+      "Dry spell": 0.919,
+      "Late start": 0.948,
+      "Typical": 0.449,
+      "Wet": 0.364
     },
     "cowpea": {
       "Dry spell": 0.0,
       "Late start": 0.0,
-      "Short and dry": 0.0,
-      "Typical": 0.0
+      "Typical": 0.0,
+      "Wet": 0.0
     },
     "groundnut": {
-      "Dry spell": 0.007,
-      "Late start": 0.168,
-      "Short and dry": 0.143,
-      "Typical": 0.0
+      "Dry spell": 0.104,
+      "Late start": 0.18,
+      "Typical": 0.0,
+      "Wet": 0.0
     },
     "maize": {
       "Dry spell": 0.0,
-      "Late start": 0.024,
-      "Short and dry": 0.0,
-      "Typical": 0.0
+      "Late start": 0.021,
+      "Typical": 0.0,
+      "Wet": 0.0
     },
     "millet": {
       "Dry spell": 0.0,
       "Late start": 0.0,
-      "Short and dry": 0.0,
-      "Typical": 0.0
+      "Typical": 0.0,
+      "Wet": 0.0
     },
     "sesame": {
       "Dry spell": 0.0,
       "Late start": 0.0,
-      "Short and dry": 0.0,
-      "Typical": 0.0
+      "Typical": 0.0,
+      "Wet": 0.0
     },
     "sorghum": {
       "Dry spell": 0.0,
-      "Late start": 0.015,
-      "Short and dry": 0.0,
-      "Typical": 0.0
+      "Late start": 0.012,
+      "Typical": 0.0,
+      "Wet": 0.0
     },
     "soybean": {
-      "Dry spell": 0.007,
+      "Dry spell": 0.0,
       "Late start": 0.0,
-      "Short and dry": 0.0,
-      "Typical": 0.016
+      "Typical": 0.018,
+      "Wet": 0.009
     },
     "tomato": {
-      "Dry spell": 0.022,
-      "Late start": 0.325,
-      "Short and dry": 0.256,
-      "Typical": 0.0
+      "Dry spell": 0.152,
+      "Late start": 0.376,
+      "Typical": 0.0,
+      "Wet": 0.0
     }
   },
   "median_water_need_mm": {

@@ -4,10 +4,10 @@
   "shipped": "ridge",
   "lgbm_beats_ridge": false,
   "has_skill": false,
-  "skill_loyo": -0.034,
-  "skill_zone": -0.019,
+  "skill_loyo": -0.038,
+  "skill_zone": -0.025,
   "card_source": "weather_risk_a2_a9",
-  "optuna_cv_rmse_optimistic": 1.0037,
+  "optuna_cv_rmse_optimistic": 1.0035,
   "tuned_params": {
     "num_leaves": 12,
     "min_child_samples": 59,
@@ -18,8 +18,8 @@
   },
   "ridge_alpha": 142.51026703029993,
   "residual_range": [
-    -1.293,
-    1.373
+    -1.337,
+    1.395
   ],
   "max_abs_r_between_years": 0.413,
   "max_abs_r_within_year": 0.112,
