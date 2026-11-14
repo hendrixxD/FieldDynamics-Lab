@@ -7,6 +7,7 @@ from model.engine_data import (
     export_bundle,
     load_bundle,
     load_engine_data,
+    season_fit_table,
     striga_soil_base,
     tercile_score,
 )
@@ -122,3 +123,29 @@ def test_committed_bundle_is_current() -> None:
     req = Request(lga="Kachia", past_seasons=[["maize"]], season_type="Typical")
     as_json = [json.dumps(score_request(req, d), sort_keys=True) for d in (committed, DATA)]
     assert as_json[0] == as_json[1], "run: python -m model.engine_data"
+
+
+def test_season_fit_table_counts_years_long_enough() -> None:
+    import pandas as pd
+
+    types = pd.DataFrame(
+        {
+            "lga": ["A"] * 4,
+            "season_type": ["Typical", "Typical", "Typical", "Late start"],
+            "a2_length_days_value": [150.0, 120.0, None, 100.0],
+        }
+    )
+    fit = season_fit_table(types, {"yam": 130.0, "cowpea": 100.0}).set_index(
+        ["crop", "season_type"]
+    )
+    assert fit.loc[("yam", "Typical"), "fits_season_share"] == 0.5  # missing length left out
+    assert fit.loc[("yam", "Typical"), "years"] == 2
+    assert fit.loc[("yam", "Late start"), "fits_season_share"] == 0.0
+    assert fit.loc[("cowpea", "Late start"), "fits_season_share"] == 1.0
+
+
+def test_crop_without_water_balance_still_meets_the_season_rule() -> None:
+    """Regression: yam (8 months, no A9 balance) used to top Ikara's late-start ranking."""
+    result = run(lga="Ikara", season_type="Late start")
+    assert all("yam" not in c["key"] for c in result["cards"][1:])
+    assert "rainy season" in result["dropped"]["yam>lablab"]

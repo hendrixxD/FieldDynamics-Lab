@@ -209,6 +209,7 @@ other_crops:
   stylosanthes:
     label: Stylosanthes
     why_no_water_balance: "Not in FAO-56 Tables 11 and 12; rain fit from ECOCROP (A15)"
+    must_fit_season: false  # perennial fodder bank, kept 3 years in the stylo_forage trial
     rules:
       family: Fabaceae
       nitrogen: {fixes: true, source: botany}
