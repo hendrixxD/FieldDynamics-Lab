@@ -28,8 +28,7 @@ mean over cells is still close to an area-weighted mean.
 
 Setup
   Everything is in requirements.txt. Earth Engine needs EE_PROJECT in .env. Earthdata
-  needs a free Earthdata Login: EARTHDATA_USERNAME and EARTHDATA_PASSWORD in .env, or
-  a ~/.netrc entry.
+  needs a free Earthdata Login: EARTHDATA_USERNAME and EARTHDATA_PASSWORD in .env.
 
 Examples
   python -m data.smap_kaduna                    # 2015-2026, all months, per LGA
