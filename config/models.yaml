@@ -200,7 +200,8 @@ confidence:
 # python -m model.build runs these training notebooks in order, each saving its outputs.
 build:
   notebooks: [a3_climate_indicators, a4_bare_fields, a5_season_types, a6_stress_model,
-              a7_trends, a8_soil_water, a9_water_balance, a10_land_risk, a12_confidence]
+              a7_trends, a8_soil_water, a9_water_balance, a10_land_risk, a12_confidence,
+              a14_risk_lines]
   timeout_s: 1800
 
 # Where the models read from and write to, relative to the repo root.
@@ -216,6 +217,7 @@ paths:
   isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
   # KDBS retail prices per LGA (python -m data.kdbs_prices)
   kdbs_prices: data/processed/extras/kdbs/kdbs_lga_prices.csv
+  risk_lines: data/processed/models/a14/a14_lga_crop_risk_lines.csv
   # Reference for A8: 33 and 1500 kPa from Zenodo, all land per LGA (python -m data.openlandmap_zenodo)
   openlandmap: data/processed/extras/openlandmap/openlandmap_lga_water_zenodo.csv
   # 33 kPa over cropland only, from Earth Engine (python -m data.gee_extras openlandmap): mask check
@@ -226,3 +228,18 @@ paths:
   static_features: data/processed/features/lga_static.parquet
   ndvi_composites: data/processed/ndvi/ndvi_lga_composites.csv
   smap_daily: data/processed/smap/lga_daily.csv
+
+risk_lines:
+  # docs/pest-risk.md, feature 2. Computed in notebooks/a14_risk_lines.ipynb; shown on cards,
+  # never scored. Thresholds marked "design" are our choices; none is a published number.
+  humid:
+    crops: [maize, sorghum]         # foliar blights of cereals in the Guinea savanna (pest-risk.md)
+    rh_quantile: 0.9                # design: humid relative to the LGA's own month
+    t_mean_c: [20, 32]              # design: warm days (blights favour warm, humid weather)
+    min_days: 5                     # design
+  late_dry:
+    crops: [groundnut]              # aflatoxin rises with drought near maturity (pest-risk.md)
+    weeks_before_harvest: 4         # design
+    dry_day_mm: 1.0                 # ETCCDI: a dry day has under 1 mm (CDD index)
+    min_days: 10                    # same length as A2's long dry spells
+  min_share: 0.3                    # design: a line shows when it happened in 3 of 10 seasons

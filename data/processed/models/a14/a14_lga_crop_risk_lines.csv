@@ -1,0 +1,70 @@
+lga,crop,share_all_years,share_Dry spell,share_Late start,share_Short and dry,share_Typical,line
+Birnin Gwari,maize,0.0889,0.0,0.1667,0.0,0.0,humid_spell
+Birnin Gwari,sorghum,0.0889,0.0,0.1667,0.0,0.0,humid_spell
+Chikun,maize,0.1111,0.1429,0.1667,0.0,0.0,humid_spell
+Chikun,sorghum,0.1111,0.1429,0.1667,0.0,0.0,humid_spell
+Giwa,maize,0.1556,0.1429,0.0,0.4,0.0,humid_spell
+Giwa,sorghum,0.1556,0.1429,0.0,0.4,0.0,humid_spell
+Igabi,maize,0.1333,0.0,0.0,0.3333,0.1667,humid_spell
+Igabi,sorghum,0.1333,0.0,0.0,0.3333,0.1667,humid_spell
+Ikara,maize,0.1778,0.0,0.0,0.3333,0.2,humid_spell
+Ikara,sorghum,0.1778,0.0,0.0,0.3333,0.2,humid_spell
+Jaba,maize,0.1778,0.0,0.25,0.0,0.2,humid_spell
+Jaba,sorghum,0.1778,0.0,0.25,0.0,0.2,humid_spell
+Jema'a,maize,0.1556,0.0,0.25,0.0,0.1429,humid_spell
+Jema'a,sorghum,0.1556,0.0,0.25,0.0,0.1429,humid_spell
+Kachia,maize,0.1778,0.1111,0.0,0.1429,0.1667,humid_spell
+Kachia,sorghum,0.1778,0.1111,0.0,0.1429,0.1667,humid_spell
+Kaduna North,maize,0.1111,0.0,0.2,0.1667,0.25,humid_spell
+Kaduna North,sorghum,0.1111,0.0,0.2,0.1667,0.25,humid_spell
+Kaduna South,maize,0.1111,0.0,0.2,0.2,0.125,humid_spell
+Kaduna South,sorghum,0.1111,0.0,0.2,0.2,0.125,humid_spell
+Kagarko,maize,0.1778,0.125,0.0,0.0,0.1429,humid_spell
+Kagarko,sorghum,0.1778,0.125,0.0,0.0,0.1429,humid_spell
+Kajuru,maize,0.1778,0.1111,0.0,0.4286,0.2,humid_spell
+Kajuru,sorghum,0.1778,0.1111,0.0,0.4286,0.2,humid_spell
+Kaura,maize,0.1778,0.0,0.3333,0.0,0.1429,humid_spell
+Kaura,sorghum,0.1778,0.0,0.3333,0.0,0.1429,humid_spell
+Kauru,maize,0.1556,0.2,0.0,0.6667,0.0,humid_spell
+Kauru,sorghum,0.1556,0.2,0.0,0.6667,0.0,humid_spell
+Kubau,maize,0.1778,0.125,0.0,0.25,0.375,humid_spell
+Kubau,sorghum,0.1778,0.125,0.0,0.25,0.375,humid_spell
+Kudan,maize,0.1778,0.0,0.0,0.4286,0.125,humid_spell
+Kudan,sorghum,0.1778,0.0,0.0,0.4286,0.125,humid_spell
+Lere,maize,0.2222,0.3333,0.25,0.4,0.3,humid_spell
+Lere,sorghum,0.2222,0.3333,0.25,0.4,0.3,humid_spell
+Makarfi,maize,0.1556,0.1667,0.0,0.1667,0.1667,humid_spell
+Makarfi,sorghum,0.1556,0.1667,0.0,0.1667,0.1667,humid_spell
+Sabon Gari,maize,0.1333,0.0,0.0,0.3333,0.1,humid_spell
+Sabon Gari,sorghum,0.1333,0.0,0.0,0.3333,0.1,humid_spell
+Sanga,maize,0.1333,0.0,0.0,0.0,0.1429,humid_spell
+Sanga,sorghum,0.1333,0.0,0.0,0.0,0.1429,humid_spell
+Soba,maize,0.1556,0.1429,0.0,0.3333,0.0,humid_spell
+Soba,sorghum,0.1556,0.1429,0.0,0.3333,0.0,humid_spell
+Zangon Kataf,maize,0.1333,0.0,0.2,0.1429,0.0,humid_spell
+Zangon Kataf,sorghum,0.1333,0.0,0.2,0.1429,0.0,humid_spell
+Zaria,maize,0.1111,0.4,0.0,0.1667,0.0,humid_spell
+Zaria,sorghum,0.1111,0.4,0.0,0.1667,0.0,humid_spell
+Birnin Gwari,groundnut,0.0667,0.0,0.1667,0.25,0.0,late_dry_spell
+Chikun,groundnut,0.0667,0.0,0.1667,0.2,0.0,late_dry_spell
+Giwa,groundnut,0.2222,0.0,0.4,0.6,0.0,late_dry_spell
+Igabi,groundnut,0.2,0.0,0.5,0.8333,0.0,late_dry_spell
+Ikara,groundnut,0.5333,0.5,1.0,0.8333,0.0,late_dry_spell
+Jaba,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Jema'a,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Kachia,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Kaduna North,groundnut,0.1333,0.0,0.2,0.5,0.0,late_dry_spell
+Kaduna South,groundnut,0.1111,0.0,0.2,0.6,0.0,late_dry_spell
+Kagarko,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Kajuru,groundnut,0.0222,0.0,0.0,0.1429,0.0,late_dry_spell
+Kaura,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Kauru,groundnut,0.0222,0.0,0.25,0.0,0.0,late_dry_spell
+Kubau,groundnut,0.1556,0.0,0.6,0.25,0.0,late_dry_spell
+Kudan,groundnut,0.4222,0.0,1.0,0.8571,0.0,late_dry_spell
+Lere,groundnut,0.0444,0.0,0.25,0.2,0.0,late_dry_spell
+Makarfi,groundnut,0.4889,0.3333,1.0,0.8333,0.0,late_dry_spell
+Sabon Gari,groundnut,0.3333,0.0,1.0,0.5,0.0,late_dry_spell
+Sanga,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Soba,groundnut,0.2444,0.0,0.75,0.6667,0.0,late_dry_spell
+Zangon Kataf,groundnut,0.0,0.0,0.0,0.0,0.0,late_dry_spell
+Zaria,groundnut,0.2667,0.0,0.8,0.6667,0.0,late_dry_spell
