@@ -42,7 +42,7 @@ class Request(BaseModel):
     sell: Literal["Local market", "Buyer, processor or feed mill", "Mostly home use"] = (
         "Local market"
     )
-    season_type: Literal["Typical", "Late start", "Dry spell", "Short and dry"] = "Typical"
+    season_type: str = "Typical"  # an A5 type name; checked against the data in score_request
 
     @field_validator("priorities")
     @classmethod
@@ -520,10 +520,11 @@ def risk_lines(rot: Rotation, req: Request, data: EngineData, striga: tuple[str,
     if striga[0] != "Low" and groups & {"striga_hermonthica_host", "striga_main_seed_producer"}:
         lines.append(striga[1])
         share = float(data.dry_spell_share.loc[req.lga])
-        lines.append(
-            f"Long dry spells (10+ days) came in {round(share * 10)} of 10 seasons here; "
-            "they make Striga damage worse"
-        )
+        if round(share * 10) >= 1:  # a line that would say "0 of 10" tells the farmer nothing
+            lines.append(
+                f"Long dry spells (10+ days) came in {round(share * 10)} of 10 seasons here; "
+                "they make Striga damage worse"
+            )
     if "striga_gesnerioides_host" in groups and striga[0] == "High":
         lines.append("Cowpea has its own Striga: ask for a resistant variety")
     lines += [e.scouting[g] for g in e.scouting if g in groups]
@@ -648,6 +649,8 @@ def score_request(req: Request, data: EngineData) -> dict:
     """The PRD's /api/score result: Current plus Options A and B, with what was dropped."""
     if req.lga not in data.zone_of:
         raise ValueError(f"unknown LGA {req.lga!r}")
+    if req.season_type not in data.season_types:
+        raise ValueError(f"unknown season type {req.season_type!r}: one of {data.season_types}")
     striga = striga_risk(req, data)
     w = weights(req, data, striga[0])
     current = current_rotation(req, data)

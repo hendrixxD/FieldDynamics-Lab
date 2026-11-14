@@ -1,461 +1,461 @@
 lga,crop,season_type,years,fits_season_share
-Birnin Gwari,ginger,Dry spell,9,0.0
+Birnin Gwari,ginger,Dry spell,6,0.0
 Birnin Gwari,ginger,Late start,6,0.0
-Birnin Gwari,ginger,Short and dry,4,0.0
-Birnin Gwari,ginger,Typical,6,0.0
-Birnin Gwari,lablab,Dry spell,9,0.3333333333333333
+Birnin Gwari,ginger,Typical,7,0.0
+Birnin Gwari,ginger,Wet,6,0.0
+Birnin Gwari,lablab,Dry spell,6,0.0
 Birnin Gwari,lablab,Late start,6,0.0
-Birnin Gwari,lablab,Short and dry,4,0.0
-Birnin Gwari,lablab,Typical,6,0.16666666666666666
-Birnin Gwari,rice,Dry spell,9,1.0
-Birnin Gwari,rice,Late start,6,0.8333333333333334
-Birnin Gwari,rice,Short and dry,4,0.75
-Birnin Gwari,rice,Typical,6,1.0
-Birnin Gwari,stylosanthes,Dry spell,9,1.0
-Birnin Gwari,stylosanthes,Late start,6,0.8333333333333334
-Birnin Gwari,stylosanthes,Short and dry,4,0.75
-Birnin Gwari,stylosanthes,Typical,6,1.0
-Birnin Gwari,yam,Dry spell,9,0.0
+Birnin Gwari,lablab,Typical,7,0.0
+Birnin Gwari,lablab,Wet,6,0.6666666666666666
+Birnin Gwari,rice,Dry spell,6,1.0
+Birnin Gwari,rice,Late start,6,0.6666666666666666
+Birnin Gwari,rice,Typical,7,1.0
+Birnin Gwari,rice,Wet,6,1.0
+Birnin Gwari,stylosanthes,Dry spell,6,1.0
+Birnin Gwari,stylosanthes,Late start,6,0.6666666666666666
+Birnin Gwari,stylosanthes,Typical,7,1.0
+Birnin Gwari,stylosanthes,Wet,6,1.0
+Birnin Gwari,yam,Dry spell,6,0.0
 Birnin Gwari,yam,Late start,6,0.0
-Birnin Gwari,yam,Short and dry,4,0.0
-Birnin Gwari,yam,Typical,6,0.0
+Birnin Gwari,yam,Typical,7,0.0
+Birnin Gwari,yam,Wet,6,0.0
 Chikun,ginger,Dry spell,7,0.0
 Chikun,ginger,Late start,6,0.0
-Chikun,ginger,Short and dry,5,0.0
 Chikun,ginger,Typical,7,0.0
-Chikun,lablab,Dry spell,7,0.2857142857142857
+Chikun,ginger,Wet,5,0.0
+Chikun,lablab,Dry spell,7,0.0
 Chikun,lablab,Late start,6,0.0
-Chikun,lablab,Short and dry,5,0.0
 Chikun,lablab,Typical,7,0.0
+Chikun,lablab,Wet,5,0.4
 Chikun,rice,Dry spell,7,1.0
-Chikun,rice,Late start,6,0.8333333333333334
-Chikun,rice,Short and dry,5,0.8
+Chikun,rice,Late start,6,0.6666666666666666
 Chikun,rice,Typical,7,1.0
+Chikun,rice,Wet,5,1.0
 Chikun,stylosanthes,Dry spell,7,1.0
-Chikun,stylosanthes,Late start,6,0.8333333333333334
-Chikun,stylosanthes,Short and dry,5,0.8
+Chikun,stylosanthes,Late start,6,0.6666666666666666
 Chikun,stylosanthes,Typical,7,1.0
+Chikun,stylosanthes,Wet,5,1.0
 Chikun,yam,Dry spell,7,0.0
 Chikun,yam,Late start,6,0.0
-Chikun,yam,Short and dry,5,0.0
 Chikun,yam,Typical,7,0.0
-Giwa,ginger,Dry spell,7,0.0
-Giwa,ginger,Late start,5,0.0
-Giwa,ginger,Short and dry,5,0.0
-Giwa,ginger,Typical,8,0.0
-Giwa,lablab,Dry spell,7,0.14285714285714285
-Giwa,lablab,Late start,5,0.0
-Giwa,lablab,Short and dry,5,0.0
-Giwa,lablab,Typical,8,0.0
-Giwa,rice,Dry spell,7,1.0
-Giwa,rice,Late start,5,0.4
-Giwa,rice,Short and dry,5,0.4
-Giwa,rice,Typical,8,1.0
-Giwa,stylosanthes,Dry spell,7,1.0
-Giwa,stylosanthes,Late start,5,0.4
-Giwa,stylosanthes,Short and dry,5,0.4
-Giwa,stylosanthes,Typical,8,1.0
-Giwa,yam,Dry spell,7,0.0
-Giwa,yam,Late start,5,0.0
-Giwa,yam,Short and dry,5,0.0
-Giwa,yam,Typical,8,0.0
-Igabi,ginger,Dry spell,9,0.0
-Igabi,ginger,Late start,4,0.0
-Igabi,ginger,Short and dry,6,0.0
-Igabi,ginger,Typical,6,0.0
-Igabi,lablab,Dry spell,9,0.1111111111111111
-Igabi,lablab,Late start,4,0.0
-Igabi,lablab,Short and dry,6,0.0
-Igabi,lablab,Typical,6,0.0
-Igabi,rice,Dry spell,9,1.0
-Igabi,rice,Late start,4,0.25
-Igabi,rice,Short and dry,6,0.5
-Igabi,rice,Typical,6,1.0
-Igabi,stylosanthes,Dry spell,9,1.0
-Igabi,stylosanthes,Late start,4,0.25
-Igabi,stylosanthes,Short and dry,6,0.5
-Igabi,stylosanthes,Typical,6,1.0
-Igabi,yam,Dry spell,9,0.0
-Igabi,yam,Late start,4,0.0
-Igabi,yam,Short and dry,6,0.0
-Igabi,yam,Typical,6,0.0
+Chikun,yam,Wet,5,0.0
+Giwa,ginger,Dry spell,6,0.0
+Giwa,ginger,Late start,7,0.0
+Giwa,ginger,Typical,5,0.0
+Giwa,ginger,Wet,7,0.0
+Giwa,lablab,Dry spell,6,0.0
+Giwa,lablab,Late start,7,0.0
+Giwa,lablab,Typical,5,0.0
+Giwa,lablab,Wet,7,0.14285714285714285
+Giwa,rice,Dry spell,6,0.6666666666666666
+Giwa,rice,Late start,7,0.42857142857142855
+Giwa,rice,Typical,5,1.0
+Giwa,rice,Wet,7,1.0
+Giwa,stylosanthes,Dry spell,6,0.6666666666666666
+Giwa,stylosanthes,Late start,7,0.42857142857142855
+Giwa,stylosanthes,Typical,5,1.0
+Giwa,stylosanthes,Wet,7,1.0
+Giwa,yam,Dry spell,6,0.0
+Giwa,yam,Late start,7,0.0
+Giwa,yam,Typical,5,0.0
+Giwa,yam,Wet,7,0.0
+Igabi,ginger,Dry spell,6,0.0
+Igabi,ginger,Late start,6,0.0
+Igabi,ginger,Typical,5,0.0
+Igabi,ginger,Wet,8,0.0
+Igabi,lablab,Dry spell,6,0.0
+Igabi,lablab,Late start,6,0.0
+Igabi,lablab,Typical,5,0.0
+Igabi,lablab,Wet,8,0.125
+Igabi,rice,Dry spell,6,0.8333333333333334
+Igabi,rice,Late start,6,0.16666666666666666
+Igabi,rice,Typical,5,1.0
+Igabi,rice,Wet,8,1.0
+Igabi,stylosanthes,Dry spell,6,0.8333333333333334
+Igabi,stylosanthes,Late start,6,0.16666666666666666
+Igabi,stylosanthes,Typical,5,1.0
+Igabi,stylosanthes,Wet,8,1.0
+Igabi,yam,Dry spell,6,0.0
+Igabi,yam,Late start,6,0.0
+Igabi,yam,Typical,5,0.0
+Igabi,yam,Wet,8,0.0
 Ikara,ginger,Dry spell,6,0.0
-Ikara,ginger,Late start,8,0.0
-Ikara,ginger,Short and dry,6,0.0
-Ikara,ginger,Typical,5,0.0
+Ikara,ginger,Late start,10,0.0
+Ikara,ginger,Typical,4,0.0
+Ikara,ginger,Wet,5,0.0
 Ikara,lablab,Dry spell,6,0.0
-Ikara,lablab,Late start,8,0.0
-Ikara,lablab,Short and dry,6,0.0
-Ikara,lablab,Typical,5,0.0
-Ikara,rice,Dry spell,6,0.6666666666666666
-Ikara,rice,Late start,8,0.0
-Ikara,rice,Short and dry,6,0.16666666666666666
-Ikara,rice,Typical,5,1.0
-Ikara,stylosanthes,Dry spell,6,0.6666666666666666
-Ikara,stylosanthes,Late start,8,0.0
-Ikara,stylosanthes,Short and dry,6,0.16666666666666666
-Ikara,stylosanthes,Typical,5,1.0
+Ikara,lablab,Late start,10,0.0
+Ikara,lablab,Typical,4,0.0
+Ikara,lablab,Wet,5,0.0
+Ikara,rice,Dry spell,6,0.16666666666666666
+Ikara,rice,Late start,10,0.0
+Ikara,rice,Typical,4,1.0
+Ikara,rice,Wet,5,1.0
+Ikara,stylosanthes,Dry spell,6,0.16666666666666666
+Ikara,stylosanthes,Late start,10,0.0
+Ikara,stylosanthes,Typical,4,1.0
+Ikara,stylosanthes,Wet,5,1.0
 Ikara,yam,Dry spell,6,0.0
-Ikara,yam,Late start,8,0.0
-Ikara,yam,Short and dry,6,0.0
-Ikara,yam,Typical,5,0.0
-Jaba,ginger,Dry spell,9,0.0
-Jaba,ginger,Late start,4,0.0
-Jaba,ginger,Short and dry,7,0.0
+Ikara,yam,Late start,10,0.0
+Ikara,yam,Typical,4,0.0
+Ikara,yam,Wet,5,0.0
+Jaba,ginger,Dry spell,5,0.0
+Jaba,ginger,Late start,5,0.0
 Jaba,ginger,Typical,5,0.0
-Jaba,lablab,Dry spell,9,0.8888888888888888
-Jaba,lablab,Late start,4,0.0
-Jaba,lablab,Short and dry,7,0.0
-Jaba,lablab,Typical,5,0.8
-Jaba,rice,Dry spell,9,1.0
-Jaba,rice,Late start,4,1.0
-Jaba,rice,Short and dry,7,1.0
+Jaba,ginger,Wet,10,0.0
+Jaba,lablab,Dry spell,5,0.0
+Jaba,lablab,Late start,5,0.0
+Jaba,lablab,Typical,5,0.6
+Jaba,lablab,Wet,10,0.9
+Jaba,rice,Dry spell,5,1.0
+Jaba,rice,Late start,5,1.0
 Jaba,rice,Typical,5,1.0
-Jaba,stylosanthes,Dry spell,9,1.0
-Jaba,stylosanthes,Late start,4,1.0
-Jaba,stylosanthes,Short and dry,7,1.0
+Jaba,rice,Wet,10,1.0
+Jaba,stylosanthes,Dry spell,5,1.0
+Jaba,stylosanthes,Late start,5,1.0
 Jaba,stylosanthes,Typical,5,1.0
-Jaba,yam,Dry spell,9,0.0
-Jaba,yam,Late start,4,0.0
-Jaba,yam,Short and dry,7,0.0
+Jaba,stylosanthes,Wet,10,1.0
+Jaba,yam,Dry spell,5,0.0
+Jaba,yam,Late start,5,0.0
 Jaba,yam,Typical,5,0.0
-Jema'a,ginger,Dry spell,7,0.0
-Jema'a,ginger,Late start,4,0.0
-Jema'a,ginger,Short and dry,7,0.0
-Jema'a,ginger,Typical,7,0.0
-Jema'a,lablab,Dry spell,7,0.7142857142857143
-Jema'a,lablab,Late start,4,0.0
-Jema'a,lablab,Short and dry,7,0.0
-Jema'a,lablab,Typical,7,0.8571428571428571
-Jema'a,rice,Dry spell,7,1.0
-Jema'a,rice,Late start,4,1.0
-Jema'a,rice,Short and dry,7,1.0
-Jema'a,rice,Typical,7,1.0
-Jema'a,stylosanthes,Dry spell,7,1.0
-Jema'a,stylosanthes,Late start,4,1.0
-Jema'a,stylosanthes,Short and dry,7,1.0
-Jema'a,stylosanthes,Typical,7,1.0
-Jema'a,yam,Dry spell,7,0.0
-Jema'a,yam,Late start,4,0.0
-Jema'a,yam,Short and dry,7,0.0
-Jema'a,yam,Typical,7,0.0
-Kachia,ginger,Dry spell,9,0.0
-Kachia,ginger,Late start,3,0.0
-Kachia,ginger,Short and dry,7,0.0
-Kachia,ginger,Typical,6,0.0
-Kachia,lablab,Dry spell,9,0.6666666666666666
-Kachia,lablab,Late start,3,0.0
-Kachia,lablab,Short and dry,7,0.0
-Kachia,lablab,Typical,6,0.5
-Kachia,rice,Dry spell,9,1.0
-Kachia,rice,Late start,3,1.0
-Kachia,rice,Short and dry,7,1.0
-Kachia,rice,Typical,6,1.0
-Kachia,stylosanthes,Dry spell,9,1.0
-Kachia,stylosanthes,Late start,3,1.0
-Kachia,stylosanthes,Short and dry,7,1.0
-Kachia,stylosanthes,Typical,6,1.0
-Kachia,yam,Dry spell,9,0.0
-Kachia,yam,Late start,3,0.0
-Kachia,yam,Short and dry,7,0.0
-Kachia,yam,Typical,6,0.0
-Kaduna North,ginger,Dry spell,10,0.0
+Jaba,yam,Wet,10,0.0
+Jema'a,ginger,Dry spell,4,0.0
+Jema'a,ginger,Late start,6,0.0
+Jema'a,ginger,Typical,6,0.0
+Jema'a,ginger,Wet,9,0.0
+Jema'a,lablab,Dry spell,4,0.0
+Jema'a,lablab,Late start,6,0.0
+Jema'a,lablab,Typical,6,0.8333333333333334
+Jema'a,lablab,Wet,9,0.6666666666666666
+Jema'a,rice,Dry spell,4,1.0
+Jema'a,rice,Late start,6,1.0
+Jema'a,rice,Typical,6,1.0
+Jema'a,rice,Wet,9,1.0
+Jema'a,stylosanthes,Dry spell,4,1.0
+Jema'a,stylosanthes,Late start,6,1.0
+Jema'a,stylosanthes,Typical,6,1.0
+Jema'a,stylosanthes,Wet,9,1.0
+Jema'a,yam,Dry spell,4,0.0
+Jema'a,yam,Late start,6,0.0
+Jema'a,yam,Typical,6,0.0
+Jema'a,yam,Wet,9,0.0
+Kachia,ginger,Dry spell,4,0.0
+Kachia,ginger,Late start,6,0.0
+Kachia,ginger,Typical,5,0.0
+Kachia,ginger,Wet,10,0.0
+Kachia,lablab,Dry spell,4,0.0
+Kachia,lablab,Late start,6,0.0
+Kachia,lablab,Typical,5,0.4
+Kachia,lablab,Wet,10,0.7
+Kachia,rice,Dry spell,4,1.0
+Kachia,rice,Late start,6,1.0
+Kachia,rice,Typical,5,1.0
+Kachia,rice,Wet,10,1.0
+Kachia,stylosanthes,Dry spell,4,1.0
+Kachia,stylosanthes,Late start,6,1.0
+Kachia,stylosanthes,Typical,5,1.0
+Kachia,stylosanthes,Wet,10,1.0
+Kachia,yam,Dry spell,4,0.0
+Kachia,yam,Late start,6,0.0
+Kachia,yam,Typical,5,0.0
+Kachia,yam,Wet,10,0.0
+Kaduna North,ginger,Dry spell,8,0.0
 Kaduna North,ginger,Late start,5,0.0
-Kaduna North,ginger,Short and dry,6,0.0
-Kaduna North,ginger,Typical,4,0.0
-Kaduna North,lablab,Dry spell,10,0.1
+Kaduna North,ginger,Typical,6,0.0
+Kaduna North,ginger,Wet,6,0.0
+Kaduna North,lablab,Dry spell,8,0.0
 Kaduna North,lablab,Late start,5,0.0
-Kaduna North,lablab,Short and dry,6,0.0
-Kaduna North,lablab,Typical,4,0.0
-Kaduna North,rice,Dry spell,10,1.0
-Kaduna North,rice,Late start,5,0.8
-Kaduna North,rice,Short and dry,6,0.8333333333333334
-Kaduna North,rice,Typical,4,1.0
-Kaduna North,stylosanthes,Dry spell,10,1.0
-Kaduna North,stylosanthes,Late start,5,0.8
-Kaduna North,stylosanthes,Short and dry,6,0.8333333333333334
-Kaduna North,stylosanthes,Typical,4,1.0
-Kaduna North,yam,Dry spell,10,0.0
+Kaduna North,lablab,Typical,6,0.0
+Kaduna North,lablab,Wet,6,0.16666666666666666
+Kaduna North,rice,Dry spell,8,1.0
+Kaduna North,rice,Late start,5,0.6
+Kaduna North,rice,Typical,6,1.0
+Kaduna North,rice,Wet,6,1.0
+Kaduna North,stylosanthes,Dry spell,8,1.0
+Kaduna North,stylosanthes,Late start,5,0.6
+Kaduna North,stylosanthes,Typical,6,1.0
+Kaduna North,stylosanthes,Wet,6,1.0
+Kaduna North,yam,Dry spell,8,0.0
 Kaduna North,yam,Late start,5,0.0
-Kaduna North,yam,Short and dry,6,0.0
-Kaduna North,yam,Typical,4,0.0
-Kaduna South,ginger,Dry spell,7,0.0
+Kaduna North,yam,Typical,6,0.0
+Kaduna North,yam,Wet,6,0.0
+Kaduna South,ginger,Dry spell,6,0.0
 Kaduna South,ginger,Late start,5,0.0
-Kaduna South,ginger,Short and dry,5,0.0
-Kaduna South,ginger,Typical,8,0.0
-Kaduna South,lablab,Dry spell,7,0.14285714285714285
+Kaduna South,ginger,Typical,5,0.0
+Kaduna South,ginger,Wet,9,0.0
+Kaduna South,lablab,Dry spell,6,0.0
 Kaduna South,lablab,Late start,5,0.0
-Kaduna South,lablab,Short and dry,5,0.0
-Kaduna South,lablab,Typical,8,0.0
-Kaduna South,rice,Dry spell,7,1.0
-Kaduna South,rice,Late start,5,0.8
-Kaduna South,rice,Short and dry,5,0.8
-Kaduna South,rice,Typical,8,1.0
-Kaduna South,stylosanthes,Dry spell,7,1.0
-Kaduna South,stylosanthes,Late start,5,0.8
-Kaduna South,stylosanthes,Short and dry,5,0.8
-Kaduna South,stylosanthes,Typical,8,1.0
-Kaduna South,yam,Dry spell,7,0.0
+Kaduna South,lablab,Typical,5,0.0
+Kaduna South,lablab,Wet,9,0.1111111111111111
+Kaduna South,rice,Dry spell,6,1.0
+Kaduna South,rice,Late start,5,0.6
+Kaduna South,rice,Typical,5,1.0
+Kaduna South,rice,Wet,9,1.0
+Kaduna South,stylosanthes,Dry spell,6,1.0
+Kaduna South,stylosanthes,Late start,5,0.6
+Kaduna South,stylosanthes,Typical,5,1.0
+Kaduna South,stylosanthes,Wet,9,1.0
+Kaduna South,yam,Dry spell,6,0.0
 Kaduna South,yam,Late start,5,0.0
-Kaduna South,yam,Short and dry,5,0.0
-Kaduna South,yam,Typical,8,0.0
-Kagarko,ginger,Dry spell,8,0.0
-Kagarko,ginger,Late start,2,0.0
-Kagarko,ginger,Short and dry,8,0.0
-Kagarko,ginger,Typical,7,0.0
-Kagarko,lablab,Dry spell,8,0.875
-Kagarko,lablab,Late start,2,0.0
-Kagarko,lablab,Short and dry,8,0.0
-Kagarko,lablab,Typical,7,1.0
-Kagarko,rice,Dry spell,8,1.0
-Kagarko,rice,Late start,2,1.0
-Kagarko,rice,Short and dry,8,1.0
-Kagarko,rice,Typical,7,1.0
-Kagarko,stylosanthes,Dry spell,8,1.0
-Kagarko,stylosanthes,Late start,2,1.0
-Kagarko,stylosanthes,Short and dry,8,1.0
-Kagarko,stylosanthes,Typical,7,1.0
-Kagarko,yam,Dry spell,8,0.0
-Kagarko,yam,Late start,2,0.0
-Kagarko,yam,Short and dry,8,0.0
-Kagarko,yam,Typical,7,0.0
-Kajuru,ginger,Dry spell,9,0.0
-Kajuru,ginger,Late start,4,0.0
-Kajuru,ginger,Short and dry,7,0.0
-Kajuru,ginger,Typical,5,0.0
-Kajuru,lablab,Dry spell,9,0.4444444444444444
-Kajuru,lablab,Late start,4,0.0
-Kajuru,lablab,Short and dry,7,0.0
-Kajuru,lablab,Typical,5,0.2
-Kajuru,rice,Dry spell,9,1.0
-Kajuru,rice,Late start,4,1.0
-Kajuru,rice,Short and dry,7,1.0
-Kajuru,rice,Typical,5,1.0
-Kajuru,stylosanthes,Dry spell,9,1.0
-Kajuru,stylosanthes,Late start,4,1.0
-Kajuru,stylosanthes,Short and dry,7,1.0
-Kajuru,stylosanthes,Typical,5,1.0
-Kajuru,yam,Dry spell,9,0.0
-Kajuru,yam,Late start,4,0.0
-Kajuru,yam,Short and dry,7,0.0
-Kajuru,yam,Typical,5,0.0
-Kaura,ginger,Dry spell,9,0.0
-Kaura,ginger,Late start,3,0.0
-Kaura,ginger,Short and dry,6,0.0
+Kaduna South,yam,Typical,5,0.0
+Kaduna South,yam,Wet,9,0.0
+Kagarko,ginger,Dry spell,4,0.0
+Kagarko,ginger,Late start,4,0.0
+Kagarko,ginger,Typical,6,0.0
+Kagarko,ginger,Wet,11,0.0
+Kagarko,lablab,Dry spell,4,0.0
+Kagarko,lablab,Late start,4,0.0
+Kagarko,lablab,Typical,6,0.6666666666666666
+Kagarko,lablab,Wet,11,0.9090909090909091
+Kagarko,rice,Dry spell,4,1.0
+Kagarko,rice,Late start,4,1.0
+Kagarko,rice,Typical,6,1.0
+Kagarko,rice,Wet,11,1.0
+Kagarko,stylosanthes,Dry spell,4,1.0
+Kagarko,stylosanthes,Late start,4,1.0
+Kagarko,stylosanthes,Typical,6,1.0
+Kagarko,stylosanthes,Wet,11,1.0
+Kagarko,yam,Dry spell,4,0.0
+Kagarko,yam,Late start,4,0.0
+Kagarko,yam,Typical,6,0.0
+Kagarko,yam,Wet,11,0.0
+Kajuru,ginger,Dry spell,6,0.0
+Kajuru,ginger,Late start,6,0.0
+Kajuru,ginger,Typical,7,0.0
+Kajuru,ginger,Wet,6,0.0
+Kajuru,lablab,Dry spell,6,0.0
+Kajuru,lablab,Late start,6,0.0
+Kajuru,lablab,Typical,7,0.14285714285714285
+Kajuru,lablab,Wet,6,0.6666666666666666
+Kajuru,rice,Dry spell,6,1.0
+Kajuru,rice,Late start,6,1.0
+Kajuru,rice,Typical,7,1.0
+Kajuru,rice,Wet,6,1.0
+Kajuru,stylosanthes,Dry spell,6,1.0
+Kajuru,stylosanthes,Late start,6,1.0
+Kajuru,stylosanthes,Typical,7,1.0
+Kajuru,stylosanthes,Wet,6,1.0
+Kajuru,yam,Dry spell,6,0.0
+Kajuru,yam,Late start,6,0.0
+Kajuru,yam,Typical,7,0.0
+Kajuru,yam,Wet,6,0.0
+Kaura,ginger,Dry spell,6,0.0
+Kaura,ginger,Late start,6,0.0
 Kaura,ginger,Typical,7,0.0
-Kaura,lablab,Dry spell,9,0.4444444444444444
-Kaura,lablab,Late start,3,0.0
-Kaura,lablab,Short and dry,6,0.0
+Kaura,ginger,Wet,6,0.0
+Kaura,lablab,Dry spell,6,0.16666666666666666
+Kaura,lablab,Late start,6,0.0
 Kaura,lablab,Typical,7,0.2857142857142857
-Kaura,rice,Dry spell,9,1.0
-Kaura,rice,Late start,3,1.0
-Kaura,rice,Short and dry,6,1.0
+Kaura,lablab,Wet,6,0.5
+Kaura,rice,Dry spell,6,1.0
+Kaura,rice,Late start,6,1.0
 Kaura,rice,Typical,7,1.0
-Kaura,stylosanthes,Dry spell,9,1.0
-Kaura,stylosanthes,Late start,3,1.0
-Kaura,stylosanthes,Short and dry,6,1.0
+Kaura,rice,Wet,6,1.0
+Kaura,stylosanthes,Dry spell,6,1.0
+Kaura,stylosanthes,Late start,6,1.0
 Kaura,stylosanthes,Typical,7,1.0
-Kaura,yam,Dry spell,9,0.0
-Kaura,yam,Late start,3,0.0
-Kaura,yam,Short and dry,6,0.0
+Kaura,stylosanthes,Wet,6,1.0
+Kaura,yam,Dry spell,6,0.0
+Kaura,yam,Late start,6,0.0
 Kaura,yam,Typical,7,0.0
-Kauru,ginger,Dry spell,5,0.0
-Kauru,ginger,Late start,4,0.0
-Kauru,ginger,Short and dry,6,0.0
-Kauru,ginger,Typical,10,0.0
-Kauru,lablab,Dry spell,5,0.2
-Kauru,lablab,Late start,4,0.0
-Kauru,lablab,Short and dry,6,0.0
-Kauru,lablab,Typical,10,0.1
-Kauru,rice,Dry spell,5,1.0
-Kauru,rice,Late start,4,0.75
-Kauru,rice,Short and dry,6,1.0
-Kauru,rice,Typical,10,1.0
-Kauru,stylosanthes,Dry spell,5,1.0
-Kauru,stylosanthes,Late start,4,0.75
-Kauru,stylosanthes,Short and dry,6,1.0
-Kauru,stylosanthes,Typical,10,1.0
-Kauru,yam,Dry spell,5,0.0
-Kauru,yam,Late start,4,0.0
-Kauru,yam,Short and dry,6,0.0
-Kauru,yam,Typical,10,0.0
-Kubau,ginger,Dry spell,8,0.0
-Kubau,ginger,Late start,5,0.0
-Kubau,ginger,Short and dry,4,0.0
-Kubau,ginger,Typical,8,0.0
-Kubau,lablab,Dry spell,8,0.0
-Kubau,lablab,Late start,5,0.0
-Kubau,lablab,Short and dry,4,0.0
-Kubau,lablab,Typical,8,0.0
-Kubau,rice,Dry spell,8,1.0
-Kubau,rice,Late start,5,0.4
-Kubau,rice,Short and dry,4,0.75
-Kubau,rice,Typical,8,1.0
-Kubau,stylosanthes,Dry spell,8,1.0
-Kubau,stylosanthes,Late start,5,0.4
-Kubau,stylosanthes,Short and dry,4,0.75
-Kubau,stylosanthes,Typical,8,1.0
-Kubau,yam,Dry spell,8,0.0
-Kubau,yam,Late start,5,0.0
-Kubau,yam,Short and dry,4,0.0
-Kubau,yam,Typical,8,0.0
-Kudan,ginger,Dry spell,5,0.0
-Kudan,ginger,Late start,5,0.0
-Kudan,ginger,Short and dry,7,0.0
-Kudan,ginger,Typical,8,0.0
-Kudan,lablab,Dry spell,5,0.0
-Kudan,lablab,Late start,5,0.0
-Kudan,lablab,Short and dry,7,0.0
-Kudan,lablab,Typical,8,0.0
-Kudan,rice,Dry spell,5,1.0
-Kudan,rice,Late start,5,0.0
-Kudan,rice,Short and dry,7,0.14285714285714285
-Kudan,rice,Typical,8,1.0
-Kudan,stylosanthes,Dry spell,5,1.0
-Kudan,stylosanthes,Late start,5,0.0
-Kudan,stylosanthes,Short and dry,7,0.14285714285714285
-Kudan,stylosanthes,Typical,8,1.0
-Kudan,yam,Dry spell,5,0.0
-Kudan,yam,Late start,5,0.0
-Kudan,yam,Short and dry,7,0.0
-Kudan,yam,Typical,8,0.0
-Lere,ginger,Dry spell,6,0.0
-Lere,ginger,Late start,4,0.0
-Lere,ginger,Short and dry,5,0.0
-Lere,ginger,Typical,10,0.0
-Lere,lablab,Dry spell,6,0.16666666666666666
-Lere,lablab,Late start,4,0.0
-Lere,lablab,Short and dry,5,0.0
-Lere,lablab,Typical,10,0.1
-Lere,rice,Dry spell,6,1.0
-Lere,rice,Late start,4,0.75
-Lere,rice,Short and dry,5,1.0
-Lere,rice,Typical,10,1.0
-Lere,stylosanthes,Dry spell,6,1.0
-Lere,stylosanthes,Late start,4,0.75
-Lere,stylosanthes,Short and dry,5,1.0
-Lere,stylosanthes,Typical,10,1.0
-Lere,yam,Dry spell,6,0.0
-Lere,yam,Late start,4,0.0
-Lere,yam,Short and dry,5,0.0
-Lere,yam,Typical,10,0.0
-Makarfi,ginger,Dry spell,6,0.0
+Kaura,yam,Wet,6,0.0
+Kauru,ginger,Dry spell,6,0.0
+Kauru,ginger,Late start,6,0.0
+Kauru,ginger,Typical,7,0.0
+Kauru,ginger,Wet,6,0.0
+Kauru,lablab,Dry spell,6,0.0
+Kauru,lablab,Late start,6,0.0
+Kauru,lablab,Typical,7,0.14285714285714285
+Kauru,lablab,Wet,6,0.16666666666666666
+Kauru,rice,Dry spell,6,1.0
+Kauru,rice,Late start,6,0.8333333333333334
+Kauru,rice,Typical,7,1.0
+Kauru,rice,Wet,6,1.0
+Kauru,stylosanthes,Dry spell,6,1.0
+Kauru,stylosanthes,Late start,6,0.8333333333333334
+Kauru,stylosanthes,Typical,7,1.0
+Kauru,stylosanthes,Wet,6,1.0
+Kauru,yam,Dry spell,6,0.0
+Kauru,yam,Late start,6,0.0
+Kauru,yam,Typical,7,0.0
+Kauru,yam,Wet,6,0.0
+Kubau,ginger,Dry spell,4,0.0
+Kubau,ginger,Late start,6,0.0
+Kubau,ginger,Typical,6,0.0
+Kubau,ginger,Wet,9,0.0
+Kubau,lablab,Dry spell,4,0.0
+Kubau,lablab,Late start,6,0.0
+Kubau,lablab,Typical,6,0.0
+Kubau,lablab,Wet,9,0.0
+Kubau,rice,Dry spell,4,0.75
+Kubau,rice,Late start,6,0.5
+Kubau,rice,Typical,6,1.0
+Kubau,rice,Wet,9,1.0
+Kubau,stylosanthes,Dry spell,4,0.75
+Kubau,stylosanthes,Late start,6,0.5
+Kubau,stylosanthes,Typical,6,1.0
+Kubau,stylosanthes,Wet,9,1.0
+Kubau,yam,Dry spell,4,0.0
+Kubau,yam,Late start,6,0.0
+Kubau,yam,Typical,6,0.0
+Kubau,yam,Wet,9,0.0
+Kudan,ginger,Dry spell,6,0.0
+Kudan,ginger,Late start,7,0.0
+Kudan,ginger,Typical,6,0.0
+Kudan,ginger,Wet,6,0.0
+Kudan,lablab,Dry spell,6,0.0
+Kudan,lablab,Late start,7,0.0
+Kudan,lablab,Typical,6,0.0
+Kudan,lablab,Wet,6,0.0
+Kudan,rice,Dry spell,6,0.3333333333333333
+Kudan,rice,Late start,7,0.0
+Kudan,rice,Typical,6,1.0
+Kudan,rice,Wet,6,1.0
+Kudan,stylosanthes,Dry spell,6,0.3333333333333333
+Kudan,stylosanthes,Late start,7,0.0
+Kudan,stylosanthes,Typical,6,1.0
+Kudan,stylosanthes,Wet,6,1.0
+Kudan,yam,Dry spell,6,0.0
+Kudan,yam,Late start,7,0.0
+Kudan,yam,Typical,6,0.0
+Kudan,yam,Wet,6,0.0
+Lere,ginger,Dry spell,5,0.0
+Lere,ginger,Late start,7,0.0
+Lere,ginger,Typical,6,0.0
+Lere,ginger,Wet,7,0.0
+Lere,lablab,Dry spell,5,0.0
+Lere,lablab,Late start,7,0.0
+Lere,lablab,Typical,6,0.16666666666666666
+Lere,lablab,Wet,7,0.14285714285714285
+Lere,rice,Dry spell,5,1.0
+Lere,rice,Late start,7,0.8571428571428571
+Lere,rice,Typical,6,1.0
+Lere,rice,Wet,7,1.0
+Lere,stylosanthes,Dry spell,5,1.0
+Lere,stylosanthes,Late start,7,0.8571428571428571
+Lere,stylosanthes,Typical,6,1.0
+Lere,stylosanthes,Wet,7,1.0
+Lere,yam,Dry spell,5,0.0
+Lere,yam,Late start,7,0.0
+Lere,yam,Typical,6,0.0
+Lere,yam,Wet,7,0.0
+Makarfi,ginger,Dry spell,7,0.0
 Makarfi,ginger,Late start,7,0.0
-Makarfi,ginger,Short and dry,6,0.0
 Makarfi,ginger,Typical,6,0.0
-Makarfi,lablab,Dry spell,6,0.0
+Makarfi,ginger,Wet,5,0.0
+Makarfi,lablab,Dry spell,7,0.0
 Makarfi,lablab,Late start,7,0.0
-Makarfi,lablab,Short and dry,6,0.0
 Makarfi,lablab,Typical,6,0.0
-Makarfi,rice,Dry spell,6,0.8333333333333334
+Makarfi,lablab,Wet,5,0.0
+Makarfi,rice,Dry spell,7,0.14285714285714285
 Makarfi,rice,Late start,7,0.0
-Makarfi,rice,Short and dry,6,0.16666666666666666
 Makarfi,rice,Typical,6,1.0
-Makarfi,stylosanthes,Dry spell,6,0.8333333333333334
+Makarfi,rice,Wet,5,1.0
+Makarfi,stylosanthes,Dry spell,7,0.14285714285714285
 Makarfi,stylosanthes,Late start,7,0.0
-Makarfi,stylosanthes,Short and dry,6,0.16666666666666666
 Makarfi,stylosanthes,Typical,6,1.0
-Makarfi,yam,Dry spell,6,0.0
+Makarfi,stylosanthes,Wet,5,1.0
+Makarfi,yam,Dry spell,7,0.0
 Makarfi,yam,Late start,7,0.0
-Makarfi,yam,Short and dry,6,0.0
 Makarfi,yam,Typical,6,0.0
+Makarfi,yam,Wet,5,0.0
 Sabon Gari,ginger,Dry spell,5,0.0
-Sabon Gari,ginger,Late start,4,0.0
-Sabon Gari,ginger,Short and dry,6,0.0
-Sabon Gari,ginger,Typical,10,0.0
+Sabon Gari,ginger,Late start,5,0.0
+Sabon Gari,ginger,Typical,8,0.0
+Sabon Gari,ginger,Wet,7,0.0
 Sabon Gari,lablab,Dry spell,5,0.0
-Sabon Gari,lablab,Late start,4,0.0
-Sabon Gari,lablab,Short and dry,6,0.0
-Sabon Gari,lablab,Typical,10,0.0
-Sabon Gari,rice,Dry spell,5,1.0
-Sabon Gari,rice,Late start,4,0.0
-Sabon Gari,rice,Short and dry,6,0.3333333333333333
-Sabon Gari,rice,Typical,10,1.0
-Sabon Gari,stylosanthes,Dry spell,5,1.0
-Sabon Gari,stylosanthes,Late start,4,0.0
-Sabon Gari,stylosanthes,Short and dry,6,0.3333333333333333
-Sabon Gari,stylosanthes,Typical,10,1.0
+Sabon Gari,lablab,Late start,5,0.0
+Sabon Gari,lablab,Typical,8,0.0
+Sabon Gari,lablab,Wet,7,0.0
+Sabon Gari,rice,Dry spell,5,0.4
+Sabon Gari,rice,Late start,5,0.0
+Sabon Gari,rice,Typical,8,1.0
+Sabon Gari,rice,Wet,7,1.0
+Sabon Gari,stylosanthes,Dry spell,5,0.4
+Sabon Gari,stylosanthes,Late start,5,0.0
+Sabon Gari,stylosanthes,Typical,8,1.0
+Sabon Gari,stylosanthes,Wet,7,1.0
 Sabon Gari,yam,Dry spell,5,0.0
-Sabon Gari,yam,Late start,4,0.0
-Sabon Gari,yam,Short and dry,6,0.0
-Sabon Gari,yam,Typical,10,0.0
-Sanga,ginger,Dry spell,7,0.0
-Sanga,ginger,Late start,4,0.0
-Sanga,ginger,Short and dry,7,0.0
-Sanga,ginger,Typical,7,0.0
-Sanga,lablab,Dry spell,7,0.5714285714285714
-Sanga,lablab,Late start,4,0.0
-Sanga,lablab,Short and dry,7,0.0
-Sanga,lablab,Typical,7,0.5714285714285714
-Sanga,rice,Dry spell,7,1.0
-Sanga,rice,Late start,4,1.0
-Sanga,rice,Short and dry,7,0.8571428571428571
-Sanga,rice,Typical,7,1.0
-Sanga,stylosanthes,Dry spell,7,1.0
-Sanga,stylosanthes,Late start,4,1.0
-Sanga,stylosanthes,Short and dry,7,0.8571428571428571
-Sanga,stylosanthes,Typical,7,1.0
-Sanga,yam,Dry spell,7,0.0
-Sanga,yam,Late start,4,0.0
-Sanga,yam,Short and dry,7,0.0
-Sanga,yam,Typical,7,0.0
-Soba,ginger,Dry spell,7,0.0
-Soba,ginger,Late start,4,0.0
-Soba,ginger,Short and dry,6,0.0
-Soba,ginger,Typical,8,0.0
-Soba,lablab,Dry spell,7,0.0
-Soba,lablab,Late start,4,0.0
-Soba,lablab,Short and dry,6,0.0
-Soba,lablab,Typical,8,0.0
-Soba,rice,Dry spell,7,1.0
-Soba,rice,Late start,4,0.25
-Soba,rice,Short and dry,6,0.0
-Soba,rice,Typical,8,1.0
-Soba,stylosanthes,Dry spell,7,1.0
-Soba,stylosanthes,Late start,4,0.25
-Soba,stylosanthes,Short and dry,6,0.0
-Soba,stylosanthes,Typical,8,1.0
-Soba,yam,Dry spell,7,0.0
-Soba,yam,Late start,4,0.0
-Soba,yam,Short and dry,6,0.0
-Soba,yam,Typical,8,0.0
+Sabon Gari,yam,Late start,5,0.0
+Sabon Gari,yam,Typical,8,0.0
+Sabon Gari,yam,Wet,7,0.0
+Sanga,ginger,Dry spell,5,0.0
+Sanga,ginger,Late start,3,0.0
+Sanga,ginger,Typical,8,0.0
+Sanga,ginger,Wet,9,0.0
+Sanga,lablab,Dry spell,5,0.0
+Sanga,lablab,Late start,3,0.0
+Sanga,lablab,Typical,8,0.375
+Sanga,lablab,Wet,9,0.5555555555555556
+Sanga,rice,Dry spell,5,1.0
+Sanga,rice,Late start,3,0.6666666666666666
+Sanga,rice,Typical,8,1.0
+Sanga,rice,Wet,9,1.0
+Sanga,stylosanthes,Dry spell,5,1.0
+Sanga,stylosanthes,Late start,3,0.6666666666666666
+Sanga,stylosanthes,Typical,8,1.0
+Sanga,stylosanthes,Wet,9,1.0
+Sanga,yam,Dry spell,5,0.0
+Sanga,yam,Late start,3,0.0
+Sanga,yam,Typical,8,0.0
+Sanga,yam,Wet,9,0.0
+Soba,ginger,Dry spell,4,0.0
+Soba,ginger,Late start,8,0.0
+Soba,ginger,Typical,5,0.0
+Soba,ginger,Wet,8,0.0
+Soba,lablab,Dry spell,4,0.0
+Soba,lablab,Late start,8,0.0
+Soba,lablab,Typical,5,0.0
+Soba,lablab,Wet,8,0.0
+Soba,rice,Dry spell,4,0.5
+Soba,rice,Late start,8,0.125
+Soba,rice,Typical,5,1.0
+Soba,rice,Wet,8,1.0
+Soba,stylosanthes,Dry spell,4,0.5
+Soba,stylosanthes,Late start,8,0.125
+Soba,stylosanthes,Typical,5,1.0
+Soba,stylosanthes,Wet,8,1.0
+Soba,yam,Dry spell,4,0.0
+Soba,yam,Late start,8,0.0
+Soba,yam,Typical,5,0.0
+Soba,yam,Wet,8,0.0
 Zangon Kataf,ginger,Dry spell,6,0.0
-Zangon Kataf,ginger,Late start,5,0.0
-Zangon Kataf,ginger,Short and dry,7,0.0
-Zangon Kataf,ginger,Typical,7,0.0
-Zangon Kataf,lablab,Dry spell,6,0.6666666666666666
-Zangon Kataf,lablab,Late start,5,0.0
-Zangon Kataf,lablab,Short and dry,7,0.0
-Zangon Kataf,lablab,Typical,7,0.42857142857142855
+Zangon Kataf,ginger,Late start,7,0.0
+Zangon Kataf,ginger,Typical,6,0.0
+Zangon Kataf,ginger,Wet,6,0.0
+Zangon Kataf,lablab,Dry spell,6,0.0
+Zangon Kataf,lablab,Late start,7,0.0
+Zangon Kataf,lablab,Typical,6,0.3333333333333333
+Zangon Kataf,lablab,Wet,6,0.8333333333333334
 Zangon Kataf,rice,Dry spell,6,1.0
-Zangon Kataf,rice,Late start,5,1.0
-Zangon Kataf,rice,Short and dry,7,1.0
-Zangon Kataf,rice,Typical,7,1.0
+Zangon Kataf,rice,Late start,7,1.0
+Zangon Kataf,rice,Typical,6,1.0
+Zangon Kataf,rice,Wet,6,1.0
 Zangon Kataf,stylosanthes,Dry spell,6,1.0
-Zangon Kataf,stylosanthes,Late start,5,1.0
-Zangon Kataf,stylosanthes,Short and dry,7,1.0
-Zangon Kataf,stylosanthes,Typical,7,1.0
+Zangon Kataf,stylosanthes,Late start,7,1.0
+Zangon Kataf,stylosanthes,Typical,6,1.0
+Zangon Kataf,stylosanthes,Wet,6,1.0
 Zangon Kataf,yam,Dry spell,6,0.0
-Zangon Kataf,yam,Late start,5,0.0
-Zangon Kataf,yam,Short and dry,7,0.0
-Zangon Kataf,yam,Typical,7,0.0
+Zangon Kataf,yam,Late start,7,0.0
+Zangon Kataf,yam,Typical,6,0.0
+Zangon Kataf,yam,Wet,6,0.0
 Zaria,ginger,Dry spell,5,0.0
-Zaria,ginger,Late start,5,0.0
-Zaria,ginger,Short and dry,6,0.0
-Zaria,ginger,Typical,9,0.0
+Zaria,ginger,Late start,6,0.0
+Zaria,ginger,Typical,6,0.0
+Zaria,ginger,Wet,8,0.0
 Zaria,lablab,Dry spell,5,0.0
-Zaria,lablab,Late start,5,0.0
-Zaria,lablab,Short and dry,6,0.0
-Zaria,lablab,Typical,9,0.0
-Zaria,rice,Dry spell,5,1.0
-Zaria,rice,Late start,5,0.0
-Zaria,rice,Short and dry,6,0.3333333333333333
-Zaria,rice,Typical,9,1.0
-Zaria,stylosanthes,Dry spell,5,1.0
-Zaria,stylosanthes,Late start,5,0.0
-Zaria,stylosanthes,Short and dry,6,0.3333333333333333
-Zaria,stylosanthes,Typical,9,1.0
+Zaria,lablab,Late start,6,0.0
+Zaria,lablab,Typical,6,0.0
+Zaria,lablab,Wet,8,0.0
+Zaria,rice,Dry spell,5,0.4
+Zaria,rice,Late start,6,0.0
+Zaria,rice,Typical,6,1.0
+Zaria,rice,Wet,8,1.0
+Zaria,stylosanthes,Dry spell,5,0.4
+Zaria,stylosanthes,Late start,6,0.0
+Zaria,stylosanthes,Typical,6,1.0
+Zaria,stylosanthes,Wet,8,1.0
 Zaria,yam,Dry spell,5,0.0
-Zaria,yam,Late start,5,0.0
-Zaria,yam,Short and dry,6,0.0
-Zaria,yam,Typical,9,0.0
+Zaria,yam,Late start,6,0.0
+Zaria,yam,Typical,6,0.0
+Zaria,yam,Wet,8,0.0

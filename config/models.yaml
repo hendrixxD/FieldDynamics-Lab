@@ -29,8 +29,11 @@ season_types:
     a2_length_days: season length
     season_rain_mm: season rain (Apr-Oct)
     a2_longest_dry_spell_days: longest dry spell
-    a2_dry_spells_10plus: 10+ day dry spells
     season_power_heat_days: heat days
+  # The 10+ day dry-spell count is left out. Once A2 stopped counting the season's final dry-down
+  # and used a true 10-day threshold (it had been reusing the 7-day false-start test), such
+  # spells came in only 5% of LGA-years. Each rare one became a z of about 5 and K-means gave
+  # those years a cluster of their own (6% of rows). The longest dry spell carries the signal.
   k_candidates: [2, 3, 4, 5, 6]
   # Silhouette is 0.19 to 0.21 for every k from 2 to 6, below the 0.25 Kaufman and Rousseeuw
   # (1990) give as the floor for real structure, so no k is clearly natural. k = 4 scores within

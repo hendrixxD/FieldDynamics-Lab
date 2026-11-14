@@ -6,45 +6,44 @@ Rebuild with `python -m model.build`, which reads `data/processed/` and writes `
 
 **What it does.** It groups every LGA-year from 2000 to 2024 into one of four season types. These drive the season selector (PRD I8, F3c).
 
-**Inputs.** Seven weather features, each as an anomaly against the LGA's own average, so "late" means late for that LGA:
+**Inputs.** Six weather features, each as an anomaly against the LGA's own average, so "late" means late for that LGA:
 
 - onset day;
 - cessation day;
 - season length;
 - April to October rain;
-- longest dry spell;
-- count of 10+ day dry spells;
+- longest in-season dry spell;
 - heat days.
+
+The count of 10+ day dry spells was dropped on 14 Nov 2026. Once A2 was fixed (below), such spells came in only 5% of LGA-years. Each rare one became a z of about 5, and K-means gave those years a cluster of their own (6% of rows) instead of a season type.
 
 Peak cropland greenness is not an input. It is kept aside as an independent check. Kaduna North and South are left out of the fit (little cropland) and assigned afterwards.
 
 **Model.** K-means with k = 4, standardized inputs and a fixed seed.
 
-- The standards say to choose k by silhouette, which would give k = 2.
-- But silhouette sits between 0.19 and 0.21 for every k from 2 to 6. That is below the 0.25 Kaufman and Rousseeuw give as the floor for real structure: Kaduna seasons form a continuum, not natural groups.
-- At k = 4 the score is within 0.015 of the best, and it gives the selector its four scenarios.
+- Silhouette is 0.21 to 0.24 for every k from 2 to 6, below the 0.25 Kaufman and Rousseeuw give as the floor for real structure: Kaduna seasons form a continuum, not natural groups.
+- k = 4 gives the selector its four scenarios, and a Gaussian mixture now picks 4 components by BIC on its own.
 
 **Stability and the GMM check.**
 
-- Seed agreement: adjusted Rand index of at least 0.94 across 20 seeds.
-- Gaussian mixture: BIC picks 3 components, and at k = 4 it agrees with K-means on 59% of rows.
+- Seed agreement: adjusted Rand index of at least 0.91 across 20 seeds.
+- Davies-Bouldin 1.46 (1.62 before the A2 fix).
+- At k = 4 the Gaussian mixture agrees with K-means on 64% of rows.
 
 | Season type | Share of years | Rain starts | Rain ends | Season rain | Longest dry spell | Heat days | Stressed share |
 |---|---|---|---|---|---|---|---|
-| Typical | 29% | about 14 May | about 28 Oct | 1,245 mm | 6 days | 26 | 24% |
-| Dry spell | 28% | about 15 May | about 2 Nov | 1,275 mm | 11 days | 27 | 30% |
-| Short and dry | 24% | about 10 Jun | about 23 Oct | 1,155 mm | 8 days | 19 | 38% |
-| Late start | 18% | about 21 Jun | about 28 Oct | 1,188 mm | 6 days | 42 | 23% |
+| Wet | 29% | about 15 May | about 4 Nov | 1,320 mm | 4.5 days | 27 | 21% |
+| Late start | 25% | about 18 Jun | about 24 Oct | 1,140 mm | 3.8 days | 39 | 30% |
+| Typical | 24% | about 9 May | about 23 Oct | 1,180 mm | 5.1 days | 28 | 34% |
+| Dry spell | 22% | about 11 Jun | about 28 Oct | 1,220 mm | 6.4 days | 13 | 33% |
 
 "Stressed" means peak greenness more than 0.5 sd below the LGA's normal.
 
-**No Wet type emerges.** The fourth type is Short and dry: rain starts late, ends early, and the season is about 7% drier than Typical.
+**A Wet type now emerges** (the PRD's R39 already names it), and it has the fewest stressed years. Short and dry is absorbed into Late start, which starts about five weeks late, runs short and is the hottest.
 
-**Check against greenness.**
+**Read "Typical" with care.** The rule names the centroid nearest zero Typical, but at k = 4 every centroid is some way from average. This one starts and ends early with slightly less rain, and the three worst greenness years (2014, 2007, 2008) fall in it. Renaming it would change the selector's default and the PRD wording, so it is left for the team to decide.
 
-- The four worst greenness years statewide all fall in the two dry types: 2014 is a Dry spell year, and 2007, 2008 and 2017 are Short and dry.
-- But the gap between types (38% against 23% stressed) could arise by chance with 25 years (year-block permutation p = 0.38).
-- Treat it as consistent with the types, not proof of them.
+**Check against greenness.** The gap in stressed share between types (21% to 34%) could arise by chance with 25 years (year-block permutation p = 0.70). The types describe weather, not crop outcome, which is consistent with A6 finding no skill.
 
 ## A6. Crop stress model
 
@@ -64,9 +63,9 @@ Peak cropland greenness is not an input. It is kept aside as an independent chec
 | Model | RMSE, year folds | RMSE, zone folds | Skill vs normal (year / zone) |
 |---|---|---|---|
 | Climatology (predict the LGA's normal) | 0.980 | 0.980 | 0 / 0 |
-| Ridge (baseline) | 1.019 | 1.032 | -4.0% / -5.4% |
-| LightGBM (8 leaves, 20 rows per leaf, early stopping) | 1.042 | 1.004 | -6.4% / -2.5% |
-| LightGBM tuned by Optuna (40 trials)* | 0.988 | 0.976 | -0.9% / +0.4% |
+| Ridge (baseline) | 1.017 | 1.004 | -3.8% / -2.5% |
+| LightGBM (8 leaves, 20 rows per leaf, early stopping) | 1.032 | 1.016 | -5.3% / -3.7% |
+| LightGBM tuned by Optuna (40 trials)* | 0.988 | 0.976 | -0.8% / +0.4% |
 
 \* Tuned on the same years it is scored on, so this is an optimistic upper bound. It reached the climatology level by shrinking toward flat predictions (21 trees at a learning rate of 0.011).
 
@@ -74,9 +73,9 @@ Peak cropland greenness is not an input. It is kept aside as an independent chec
 
 | Interval | Year folds | Zone folds |
 |---|---|---|
-| LightGBM quantile (10th to 90th percentile) | 70% | 66% |
-| Ridge bootstrap (200 refits with resampled residuals) | 72% | 72% |
-| Ridge leave-one-year-out residuals | 80% | 80% |
+| LightGBM quantile (10th to 90th percentile) | 72% | 63% |
+| Ridge bootstrap (200 refits with resampled residuals) | 73% | 73% |
+| Ridge leave-one-year-out residuals | 80% | 81% |
 
 Only the residual ranges are calibrated, so those are the ranges written out.
 
@@ -103,7 +102,7 @@ Only the residual ranges are calibrated, so those are the ranges written out.
 - **Learn:** shows this comparison and the greenness-by-type record as weak evidence.
 - **A12:** scores vegetation stress as Low confidence.
 
-**Explanations.** SHAP is shown for both models: TreeExplainer for LightGBM, exact linear SHAP for Ridge. Permutation importance is the baseline. All three rank July-August heat first (Ridge SHAP 22%, LightGBM SHAP 25%, permutation 35%). With no skill behind them, the driver lists describe the fitted model, not crop physiology.
+**Explanations.** SHAP is shown for both models: TreeExplainer for LightGBM, exact linear SHAP for Ridge. Permutation importance is the baseline. All three rank July-August heat first (Ridge SHAP 25%, LightGBM SHAP 25%, permutation 40%). With no skill behind them, the driver lists describe the fitted model, not crop physiology.
 
 ## A9. Crop water balance (FAO-56)
 
@@ -143,7 +142,7 @@ Only the residual ranges are calibrated, so those are the ranges written out.
 - **Total rain is rarely the problem.** Planted at onset, every crop gets two to three times its season's need in rain, and whole-season shortfalls are rare. This holds even with FAO-56's shallow rooting depths: under 2% of seasons for every crop except groundnut (11%).
 - **Timing is the risk.** Whether the crop finishes before the rains end is what separates crops, places and season types:
   - **Groundnut in the north:** in Ikara, Makarfi, Kudan and Sabon Gari it runs short in 20 to 29% of years, with the loss concentrated in ripening, and fits the rainy season in only 40 to 62% of years.
-  - **Late-start and short-and-dry years:** groundnut runs short in 17% and 13% of them, against 0% in typical years. Maize and sorghum fit the season in only 61 to 66% of these years, against 97 to 100% in typical and dry-spell years.
+  - **Late-start and dry-spell years:** groundnut runs short in 18% and 10% of them, against 0% in typical and wet years. Maize and sorghum fit the season in only 56% of late-start years and 78% of dry-spell years, against 99 to 100% in typical and wet years.
   - **Short crops:** cowpea and soybean fit in at least 84% of seasons in every LGA, millet in at least 76%.
 
 **Water use row and season-length rule.** The card's water use row should come from `fits_season_share` and `short_share` under the chosen season type, plus the riskiest stage. The PRD season-length rule uses `fits_season_share` directly.
@@ -173,6 +172,15 @@ Only the residual ranges are calibrated, so those are the ranges written out.
 | `a9/a9_lga_crop_summary.csv` | Per LGA and crop over 1981 to 2025: medians, share of seasons short, share that fit, riskiest stage, Hargreaves baseline |
 | `a9/a9_lga_crop_season_type.csv` | The same per LGA, crop and A5 season type (2000 to 2024) |
 | `a9/a9_smap_check.csv`, `a9_summary.json` | SMAP agreement per LGA; run summary |
+
+## A2 fix, 14 Nov 2026
+
+Two bugs in `data/onset_a2.py`, both fixed with tests (`tests/test_onset_a2.py`):
+
+- **The 10+ day count counted 7+ day spells.** It reused the false-start threshold, which was calibrated from 10 down to 7 days for onset. It now has its own 10-day threshold.
+- **The season's end was counted as a dry spell.** Cessation is when the soil bucket drains dry, so the days before it are dry by definition. That final run made up the longest dry spell in 47% of LGA-years and 67% of years with a "10+ day" spell. Only runs that end in rain inside the season count now.
+
+After the fix, 10+ day dry spells come in 5% of LGA-years (about half before) and the median longest spell is 5 days. That is partly real and partly the data: a day counts as dry only when the LGA-average rain is under 1 mm, and CHIRPS spreads rain over more light days than a gauge, so LGA averages hide local dry spells. NiMet's July 10 to 25 dry-spell window does not show at this scale (7+ day spells start in July in 0.2% of years). Resolving it needs dry spells counted per CHIRPS pixel in Earth Engine, then averaged. A5, A6, A7, A9, A10, A13 and A14 were rerun.
 
 ## A5 and A6 outputs
 

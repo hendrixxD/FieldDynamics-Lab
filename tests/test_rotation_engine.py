@@ -40,7 +40,7 @@ def test_deterministic() -> None:
         {"soil": "Not sure"},
         {"past_seasons": [["maize"], ["soybean"]]},
         {"sell": "Mostly home use"},
-        {"season_type": "Short and dry"},
+        {"season_type": "Late start"},
         {"priorities": ["feed_animals", "extra_income"]},
     ],
 )
@@ -149,3 +149,18 @@ def test_crop_without_water_balance_still_meets_the_season_rule() -> None:
     result = run(lga="Ikara", season_type="Late start")
     assert all("yam" not in c["key"] for c in result["cards"][1:])
     assert "rainy season" in result["dropped"]["yam>lablab"]
+
+
+def test_season_types_come_from_a5_and_unknown_ones_are_refused() -> None:
+    import pandas as pd
+
+    a5 = pd.read_csv("data/processed/models/a5/a5_lga_type_share.csv")
+    assert set(DATA.season_types) == set(a5.columns) - {"lga"}
+    with pytest.raises(ValueError, match="season type"):
+        run(season_type="Not a type")
+
+
+def test_no_risk_line_ever_reports_zero_of_ten() -> None:
+    for lga in sorted(DATA.zone_of):
+        for card in run(lga=lga)["cards"]:
+            assert not any(" 0 of 10" in line for line in card["risks"]), (lga, card["risks"])
