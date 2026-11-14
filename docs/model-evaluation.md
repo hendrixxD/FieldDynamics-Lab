@@ -9,7 +9,7 @@
 | Uncertainty on that model | Check that prediction intervals actually contain the true values at the stated rate | Interval coverage (an 80% interval should contain about 80% of results) |
 | Water balance (FAO-56) | Compare computed soil water trend against SMAP soil moisture over the same seasons | Correlation, bias |
 | Rotation scoring (rules) | Sensitivity analysis: nudge weights and inputs, confirm rankings don't flip wildly; check outputs against IAR Samaru trial findings | Rank stability, agreement with literature |
-| Whole system | Backtest: run the engine on a known bad season and show it would have flagged the risk | Pass or fail, shown as one chart |
+| Whole system | Backtest: run the engine on a known bad season and show it would have flagged the risk. Built as A16 (`notebooks/a16_backtest.ipynb`): leave-one-year-out over every LGA-year, against a no-season-type baseline; results in [model results](model-results.md#a16-whole-system-backtest-r33) | Hit rate, false alarms, lift; pass or fail per bad year, shown as one chart |
 
 ## Tools
 
