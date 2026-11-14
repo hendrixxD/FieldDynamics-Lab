@@ -1,6 +1,6 @@
 # Data Contract
 
-**Status: draft v1.** The iSDA soil grid below has been pulled and checked against real data. Everything else is still the agreed target: confirm each column at its first pull. Any schema change follows the versioning rule below and lands in the same pull request as the code that causes it.
+**Status: v1, checked against the data on 14 Nov 2026.** The feature tables, the iSDA soil grid, the model outputs and the contract files below all describe what the pipeline writes today. Any schema change follows the versioning rule below and lands in the same pull request as the code that causes it.
 
 This contract defines what the data track hands to the modeling, API, and frontend tracks. See also [engineering standards](engineering-standards.md), [map architecture](map-architecture.md), and [sources](sources.md).
 
@@ -15,68 +15,21 @@ This contract defines what the data track hands to the modeling, API, and fronte
 - **Filled values:** gap-filled values are flagged, and flags lower confidence on the strategy cards.
 - **Thresholds:** values such as the heat-day limit live in `config/`, with a cited source.
 
-## Feature table
+## Feature tables
 
-- **Path:** `data/processed/features_v1.parquet`
-- **Built by:** `python -m data.build`
-- **Grain:** one row per grid cell per year, with `cell_id` and `year` as the unique key
+The common analysis grid is **LGA by month** (PRD R29): every source is averaged per LGA, over cropland where it matters, before any model sees it. A cell-by-year table (`features_v1.parquet`, 1 km cells) was the first plan; it was not built, because every model and card works at LGA level and the 1 km grid exists only for iSDA soil (below).
 
-Ranges for rainfall, soil moisture, and NDVI come from the engineering standards. All other ranges are proposed and need checking at first pull.
+- **Built by:** `python -m data.build` (runs A2 and the feature join on the processed source tables; the Earth Engine pulls are separate, see `docs/sources.md`).
+- **Path:** `data/processed/features/`, as Parquet with a CSV copy of each.
+- **Columns:** `data_dictionary.csv` lists every column with its table, dtype, non-null share, source, unit and meaning. It is written by the same run, so it cannot drift from the tables.
 
-### Keys and location
-
-| Column | Type | Unit | Valid range | Source |
+| Table | Grain | Rows | Columns | Holds |
 | --- | --- | --- | --- | --- |
-| `cell_id` | string | none | not null, unique per year | Pipeline |
-| `lga` | categorical | none | Kaduna LGA names | geoBoundaries |
-| `lat_deg` | float32 | degrees | Within Kaduna | Pipeline |
-| `lon_deg` | float32 | degrees | Within Kaduna | Pipeline |
-| `year` | int16 | year | Within the study period | Pipeline |
+| `lga_month_features.parquet` | LGA, month, 1981 to latest | 12,673 | 62 | Rain (CHIRPS), IMERG intensity and extremes, POWER temperature, heat and frost days and ET0, water balance, SMAP, cropland NDVI and bare flag, VIIRS, GLDAS, MODIS ET and LST, ERA5-Land checks, and their gap flags |
+| `lga_year_features.parquet` | LGA, year | 1,058 | 39 | A2 onset, cessation, length and dry spells; April to October aggregates of the monthly columns; the A6 target and its flags |
+| `lga_static.parquet` | LGA | 23 | 56 | Cropland share, terrain (SRTM), soil water and erodibility (iSDA, A8), rain climatology, A2 normals, bare probability by month |
 
-### Season and climate
-
-| Column | Type | Unit | Valid range | Source |
-| --- | --- | --- | --- | --- |
-| `onset_doy` | int16 | day of year | 91 to 366, nullable | GPM, rule in engineering standards |
-| `cessation_doy` | int16 | day of year | 91 to 366, nullable | GPM |
-| `season_length_days` | int16 | days | 0 to 275 | Derived |
-| `rain_season_mm` | float32 | mm | 0 or more | GPM |
-| `rain_extreme_days` | int16 | days | 0 to 366 | GPM |
-| `dry_spell_max_days` | int16 | days | 0 to 366 | GPM |
-| `temp_mean_c` | float32 | °C | -10 to 55 | NASA POWER |
-| `temp_max_c` | float32 | °C | -10 to 60 | NASA POWER |
-| `temp_min_c` | float32 | °C | -15 to 45 | NASA POWER, used for frost risk |
-| `heat_days` | int16 | days | 0 to 366 | NASA POWER |
-| `lst_c` | float32 | °C | -10 to 80, nullable | ECOSTRESS |
-| `et0_season_mm` | float32 | mm | 0 or more | FAO-56 from NASA POWER |
-| `season_type` | categorical | none | Cluster names | K-means output |
-
-### Soil moisture, vegetation, and water
-
-| Column | Type | Unit | Valid range | Source |
-| --- | --- | --- | --- | --- |
-| `soil_moisture_m3_m3` | float32 | m³/m³ | 0 to 0.6 | SMAP |
-| `soil_moisture_anomaly_z` | float32 | standard deviations | -6 to 6 | Derived from SMAP |
-| `soil_moisture_filled` | bool | none | true or false | Pipeline |
-| `ndvi_peak` | float32 | none | -1 to 1 | MODIS, Landsat |
-| `ndvi_mean` | float32 | none | -1 to 1 | MODIS, Landsat |
-| `ndvi_filled` | bool | none | true or false | Pipeline |
-| `bare_days` | int16 | days | 0 to 366 | Derived from NDVI |
-| `water_storage_anomaly_cm` | float32 | cm | -100 to 100, nullable | GRACE-FO |
-| `biomass_mg_ha` | float32 | Mg/ha | 0 or more, nullable | GEDI |
-
-### Land and soil
-
-| Column | Type | Unit | Valid range | Source |
-| --- | --- | --- | --- | --- |
-| `elevation_m` | float32 | m | 0 to 2000 | SRTM |
-| `slope_deg` | float32 | degrees | 0 to 90 | SRTM |
-| `clay_pct_0_20cm` | float32 | % | 0 to 100 | iSDAsoil grid |
-| `sand_pct_0_20cm` | float32 | % | 0 to 100 | iSDAsoil grid |
-| `organic_carbon_g_kg_0_20cm` | float32 | g/kg | 0 or more | iSDAsoil grid |
-| `soil_ph_0_20cm` | float32 | pH | 3 to 11 | iSDAsoil grid |
-
-The feature table can take any other column from the iSDA soil grid below as the models need it.
+Flags in the tables: `urban_lga` and `low_cropland` (Kaduna North and South), `imerg_suspect`, `imerg_trmm_era`, `smap_model_only_days` (2019 and 2022 outages), `power_rs_filled_days` (solar radiation filled, 1981 to 1983), `ndvi_interpolated_share` (cloud-filled composites), `target_suspect` (MODIS Terra drift from 2025). Checked on every join (`data/features_join.py`, `check`) and by `tests/test_features.py`: 23 LGAs, no duplicate LGA-months, no zero ET0, rain 0 to 1,200 mm a month, Tmax 20 to 45 C, SMAP root zone 0.02 to 0.6, cropland NDVI -0.2 to 1; every column is in the data dictionary.
 
 ## iSDA soil grid
 

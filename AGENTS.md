@@ -13,6 +13,7 @@ The tool supports farmer judgment and local expertise. It never replaces them, a
 ## Rules that always apply
 
 - **Attribution:** never add a `Co-Authored-By: Claude` trailer, a "Generated with" line, or any other AI attribution to commits, PRs, or repo content.
+- **Commit authors:** every commit's author and committer must be a human team member. Never commit as `Claude <noreply@anthropic.com>` or any AI identity, even when a tool or environment presets it. Check `git config user.name` and `git config user.email` before the first commit, and `git log --format='%an <%ae>'` before every push. See [Check before you commit](#check-before-you-commit).
 - **Branches:** never commit directly to `main` or `staging`, and never merge a PR. See [Git workflow](#git-workflow).
 - **Data:** never use placeholder or made-up data. Leave a value blank until it comes from a real source.
 - **Secrets:** keep secrets in `.env` only. Never commit them.
@@ -45,6 +46,7 @@ Treat "you may" and "consider" as expected deliverables, not optional extras. Do
 | [Map architecture](docs/map-architecture.md) | Map layers, formats, and endpoints |
 | [Experiment log](docs/experiments.csv) | Every model run and its held-out results |
 | [Model results](docs/model-results.md) | What each model found, and what ships |
+| [Rotation engine](docs/rotation-engine.md) | How the engine decides, what each card carries, and its study check |
 
 ## Repository structure
 
@@ -99,6 +101,13 @@ git log --all --oneline -- .env
 
 # Whether a file is really ignored, and by which rule
 git check-ignore -v .env
+```
+
+Then check who the commits are by. Every name must be a human team member, never an AI identity:
+
+```bash
+git config user.name && git config user.email
+git log --format='%an <%ae> | %cn <%ce>' origin/staging..HEAD
 ```
 
 Run them for `.env` and for any file that could hold secrets or raw data. Only say a file is not committed after these checks confirm it.
@@ -201,7 +210,7 @@ If a scan flags something you did not expect, stop and tell Hendrixx. Do not edi
 
 ## Data pipeline
 
-- `python -m data.build` produces the feature table.
+- `python -m data.build` rebuilds A2 and the feature tables from the processed source tables. The pulls that fill `data/processed/` need network access and credentials and run on their own (`docs/sources.md`).
 - `python -m model.build` runs the training notebooks in order (`config/models.yaml`, `build.notebooks`), each in a fresh kernel, and saves them executed. Each notebook writes its model outputs to `data/processed/models/` and logs its run.
 - If a result cannot be rebuilt from scratch, it does not exist.
 - Raw pulls go to `data/raw/`, which is git-ignored, and are never edited. Transformations write new files to `data/processed/`.
@@ -283,3 +292,7 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 - The data contract is a draft. Confirm it against real data at first pull.
 - Decide whether `data/processed/` stays in git if the files get large.
 - Check the Resources tab of the challenge page, which the first principle validative measure does not cover.
+- A8, A12 and A15 read files in `data/raw/` that are git-ignored and not in the repo (`isda/isda_lga_stats_cropland.csv`, `ecocrop/ecocrop_kaduna_crops.csv`), so they cannot be rebuilt from a clean clone. Commit their processed inputs, or document the pull that recreates them.
+- Mid-season dry spells (NiMet's July window) need dry spells counted per CHIRPS pixel in Earth Engine; LGA-average rain hides them (docs/model-results.md, A2 fix).
+- A bad season from official records for the backtest (A16 uses the worst MODIS greenness years).
+- The crop baseline per LGA (R37): `zone_crops` in `config/rotations.yaml` is unverified and unused until a source is in the repo.
