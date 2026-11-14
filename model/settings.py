@@ -156,6 +156,7 @@ class Paths(BaseModel):
     kdbs_prices: Path
     risk_lines: Path
     suitability: Path
+    engine_bundle: Path
     notebooks: Path
     annual_features: Path
     monthly_features: Path

@@ -1,0 +1,24 @@
+lga,srtm_slope_pct_crop,imerg_p95_wet_mm,soil_erodibility_rel,soil_ksat_min_mm_h,soil_hydrologic_group,imerg_suspect,low_cropland,erosion_raw,erosion_index,erosion_band,driver_share_slope,driver_share_rain_intensity,driver_share_erodibility,infiltration
+Birnin Gwari,4.3655,27.4025,1.0004,27.0978,B,False,False,119.6724,0.3123,Low,0.0389,0.8748,0.0863,Moderate
+Chikun,4.3688,27.0775,0.9914,26.2542,B,False,False,117.2793,0.2563,Low,0.0,0.7991,0.2009,Moderate
+Giwa,4.1947,28.9114,1.0403,22.7921,B,False,False,126.1626,0.4643,Medium,0.3451,0.3085,0.3463,Moderate
+Igabi,4.0453,28.5567,1.0147,25.7586,B,False,False,117.2175,0.2548,Low,0.6585,0.2055,0.136,Moderate
+Ikara,3.6959,30.6472,1.032,16.4743,B,False,False,116.8928,0.2472,Low,0.5675,0.3212,0.1113,Moderate
+Jaba,5.0955,27.8929,0.9683,25.6036,B,False,False,137.6221,0.7326,High,0.8305,0.0026,0.1669,Moderate
+Jema'a,5.5545,26.2533,0.9679,25.5834,B,False,False,141.1428,0.815,High,0.7243,0.1812,0.0945,Moderate
+Kachia,4.7719,25.8258,0.9641,24.8712,B,False,False,118.8126,0.2922,Low,0.4412,0.3825,0.1763,Moderate
+Kaduna North,5.0556,29.1974,1.0097,28.0391,B,True,True,149.0417,1.0,High,0.7187,0.2274,0.0539,Moderate
+Kaduna South,5.2031,26.8177,0.9881,27.5307,B,True,True,137.8758,0.7385,High,0.7793,0.1731,0.0476,Moderate
+Kagarko,5.1208,26.6952,0.9613,26.8287,B,False,False,131.4094,0.5871,Medium,0.6607,0.1805,0.1588,Moderate
+Kajuru,5.0096,27.8792,0.9782,22.3563,B,False,False,136.6184,0.7091,High,0.8684,0.0,0.1316,Moderate
+Kaura,5.0694,26.5541,0.9479,17.8968,B,False,False,127.5997,0.4979,Medium,0.5958,0.1951,0.2091,Moderate
+Kauru,4.9366,24.0412,0.9879,20.6057,B,False,False,117.2445,0.2555,Low,0.4345,0.5268,0.0387,Moderate
+Kubau,3.9832,29.1687,1.0172,18.4832,B,False,False,118.1826,0.2774,Low,0.5925,0.2899,0.1177,Moderate
+Kudan,3.7445,31.3831,1.0501,20.9886,B,False,False,123.4023,0.3996,Medium,0.4777,0.3668,0.1555,Moderate
+Lere,4.195,25.9537,0.9987,21.0159,B,False,False,108.7337,0.0562,Low,0.362,0.638,0.0,Moderate
+Makarfi,3.5343,31.8016,1.0453,17.4095,B,False,False,117.4879,0.2612,Low,0.5446,0.3382,0.1172,Moderate
+Sabon Gari,4.1896,31.7753,1.0476,21.4199,B,False,False,139.4616,0.7757,High,0.19,0.5932,0.2168,Moderate
+Sanga,5.2239,25.6199,0.9632,25.5607,B,False,False,128.9103,0.5286,Medium,0.5969,0.2822,0.1209,Moderate
+Soba,4.2904,29.4798,1.0356,20.9139,B,False,False,130.9829,0.5771,Medium,0.1643,0.5065,0.3292,Moderate
+Zangon Kataf,4.8252,23.1947,0.9501,21.0056,B,False,False,106.3349,0.0,Low,0.2982,0.5521,0.1497,Moderate
+Zaria,3.9873,31.5726,1.0401,21.6703,B,False,False,130.9365,0.5761,Medium,0.3564,0.4852,0.1584,Moderate

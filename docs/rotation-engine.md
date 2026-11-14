@@ -134,3 +134,13 @@ ECOCROP (FAO, read from the Recocrop R package) gives every crop its temperature
 **Field checks of the risk lines:**
 - GBIF holds only 144 Striga hermonthica records for all of Nigeria (7 in Kaduna) and 89 fall armyworm records with no state, checked 14 Nov 2026. That is too few to test LGA cut-offs.
 - No open Kaduna aflatoxin or crop-disease survey found. The humid-spell and late-dry-spell thresholds stay design choices until our own survey (or an extension-office record) gives field points.
+
+## Serving it (`POST /api/score`)
+
+The deployed app does not read `data/` (`.vercelignore` drops it, and `data/raw/` is not in git). `python -m model.build` ends by writing the engine's tables to `api/engine_inputs/` (nine CSVs, about 150 KB), and the app reads only those. `python -m model.engine_data` rewrites them alone. Two tests guard the copy: the bundle must score all 23 LGAs exactly as the pipeline outputs do, and the committed bundle must match the current outputs.
+
+- Body: the engine's `Request` (LGA, soil, water, equipment, last one or two seasons, up to three priorities, where the farmer sells, season type).
+- Response: `ScoreResponse` in `api/schemas.py`: Current, Option A and Option B cards, the Striga risk, the weights, whether the top two are a close call, and why each other rotation was dropped.
+- An unknown LGA or priority returns 422.
+- The bundle loads once per process (about 0.1 s); a request then takes about 40 ms.
+- The app now imports numpy, pandas and pyyaml. Installed with fastapi, jinja2, pydantic and uvicorn they take about 150 MB, under Vercel's 250 MB function limit. No pyarrow: the bundle is CSV.

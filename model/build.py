@@ -17,6 +17,7 @@ from pathlib import Path
 import nbformat
 from nbclient import NotebookClient
 
+from model.engine_data import export_bundle
 from model.settings import load_model_config
 
 log = logging.getLogger(__name__)
@@ -53,6 +54,7 @@ def main() -> None:
         log.info("Running %s", name)
         seconds = run_notebook(cfg.paths.notebooks / f"{name}.ipynb", cfg.build.timeout_s)
         log.info("  done in %.0f s", seconds)
+    log.info("Engine bundle for the app written to %s", export_bundle(cfg))
 
 
 if __name__ == "__main__":

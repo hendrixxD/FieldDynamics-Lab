@@ -1,6 +1,15 @@
+import json
+from pathlib import Path
+
 import pytest
 
-from model.engine_data import load_engine_data, striga_soil_base, tercile_score
+from model.engine_data import (
+    export_bundle,
+    load_bundle,
+    load_engine_data,
+    striga_soil_base,
+    tercile_score,
+)
 from model.rotation_engine import DIMENSIONS, PRIORITIES, Request, score_request
 
 DATA = load_engine_data()
@@ -96,3 +105,20 @@ def test_scoring_is_fast() -> None:
     start = time.perf_counter()
     run(priorities=["fewer_pests"])
     assert time.perf_counter() - start < 0.2  # PRD: under 200 ms
+
+
+def test_bundle_scores_like_the_pipeline(tmp_path: Path) -> None:
+    """The deployed app reads the CSV bundle; it must score exactly as the pipeline outputs do."""
+    bundled = load_bundle(dest=export_bundle(dest=tmp_path))
+    for lga in sorted(DATA.zone_of):
+        req = Request(lga=lga, past_seasons=[["maize"], ["maize"]], season_type="Late start")
+        as_json = [json.dumps(score_request(req, d), sort_keys=True) for d in (bundled, DATA)]
+        assert as_json[0] == as_json[1]
+
+
+def test_committed_bundle_is_current() -> None:
+    """api/engine_inputs must be re-exported whenever a pipeline output changes."""
+    committed = load_bundle()
+    req = Request(lga="Kachia", past_seasons=[["maize"]], season_type="Typical")
+    as_json = [json.dumps(score_request(req, d), sort_keys=True) for d in (committed, DATA)]
+    assert as_json[0] == as_json[1], "run: python -m model.engine_data"
