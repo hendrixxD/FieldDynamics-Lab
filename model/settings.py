@@ -352,6 +352,8 @@ class OtherCrop(BaseModel):
     label: str
     why_no_water_balance: str
     rules: CropRules
+    # False for a crop that stays in the ground past the rains (perennial forage), like cassava.
+    must_fit_season: bool = True
 
 
 class CropConfig(BaseModel):

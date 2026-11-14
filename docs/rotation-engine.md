@@ -37,6 +37,8 @@ One request takes about 0.1 s.
 2. **Filters from the LGA's own record.**
    - A9 under the chosen season type: a crop short of water in more than half the seasons (rain only) is dropped.
    - A crop that fits the rainy season in half the years or fewer is dropped. Below 8 in 10 years, it stays with a risk line.
+   - Crops A9 cannot run (rice, ginger, yam, lablab, stylosanthes) meet the same season rule: the share of the LGA's years of the chosen type whose A2 rainy season (onset to cessation) is at least as long as the crop's ECOCROP growing period (`season_fit` table). Before this, a missing water balance let yam past the rule, and yam then lablab ranked first in Ikara's late-start years.
+   - Stylosanthes is a perennial fodder bank (`must_fit_season: false` in `config/crops.yaml`), so like cassava it carries a risk line instead.
    - Cassava is allowed into the dry season; its dry-season shortfall is a risk line.
    - If fewer than two candidates survive, the water rule is relaxed and the card says so.
 3. **Seven rows, 0 to 1.** A row is scored only when every crop in the rotation has data for it. Otherwise it reads "not enough information".
@@ -81,17 +83,17 @@ The engine ranked every candidate (now drawn from 14 crops, filtered by A15 suit
 | Studied sequence | Study | Mean percentile in the data's ranking |
 |---|---|---|
 | Sorghum then cowpea | RT05, Shuaibu et al. 2015 (Bauchi); Bado et al. 2006 | 1.00 |
-| Maize then cowpea | RT03 | 0.98 |
-| Sorghum then groundnut | RT06a, Bado et al. 2006; Bagayoko et al. 2000 | 0.96 |
-| Millet then groundnut | RT06b, Bationo and Ntare 2000 | 0.95 |
-| Maize then groundnut | RT04, Kermah et al. 2018; N Ghana 11-year trial | 0.95 |
-| Maize then soybean | RT02 | 0.90 |
-| Cassava then maize | RT09, N Ghana 11-year trial | 0.65 |
-| Lablab then maize | RT08, Franke et al. 2008 | 0.62 |
+| Maize then cowpea | RT03 | 0.96 |
+| Sorghum then groundnut | RT06a, Bado et al. 2006; Bagayoko et al. 2000 | 0.94 |
+| Millet then groundnut | RT06b, Bationo and Ntare 2000 | 0.92 |
+| Maize then groundnut | RT04, Kermah et al. 2018; N Ghana 11-year trial | 0.91 |
+| Maize then soybean | RT02 | 0.85 |
+| Cassava then maize | RT09, N Ghana 11-year trial | 0.54 |
+| Lablab then maize | RT08, Franke et al. 2008 | 0.50 |
 
-Together the eight studied sequences average the 88th percentile, against 50% for eight random sequences (permutation test, 10,000 draws, p = 0.0001). The six cereal and grain-legume sequences sit at the 90th to 100th percentile.
+Together the eight studied sequences average the 83rd percentile, against 47% for eight random sequences (permutation test, 10,000 draws, p = 0.0001). The six cereal and grain-legume sequences sit at the 85th to 100th percentile. A scenario keeps a median of 110 candidates once the season rule applies to every crop.
 
-Cassava then maize and lablab then maize sit lower because the data on those crops is thinner: no KDBS price by the mudu for cassava, no market price for lablab, and no share-eaten figure for either. Their rows are skipped and the coverage multiplier pulls the total down. This is the engine being honest about missing data, not the data disagreeing with the trials.
+Cassava then maize and lablab then maize sit lower because the data on those crops is thinner: no KDBS price by the mudu for cassava, no market price for lablab, and no share-eaten figure for either. Their rows are skipped and the coverage multiplier pulls the total down. This is the engine being honest about missing data, not the data disagreeing with the trials. Lablab is also dropped in 88% of scenarios: ECOCROP's typical growing period for it (about 6 months) is longer than most Kaduna rainy seasons. If Kaduna farmers grow lablab on into the dry season as forage, a source saying so lets it carry `must_fit_season: false` like stylosanthes.
 
 RT07 (maize with cowpea, then soybean) is confirmed (Kureh, Kamara and Tarfa, northern Guinea savanna of Nigeria) but is not tested here: the engine does not generate intercrops yet.
 

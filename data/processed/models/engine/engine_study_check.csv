@@ -1,9 +1,9 @@
 study,sequence,status,mean_percentile,mean_percentile_home_zones,top2_share,dropped_share
-RT02,maize>soybean,confirmed,0.903,0.9072,0.0,0.163
-RT03,maize>cowpea,confirmed,0.9756,0.9747,0.0,0.163
-RT04,maize>groundnut,confirmed,0.9459,0.9465,0.0,0.1848
+RT02,maize>soybean,confirmed,0.8445,0.8437,0.0,0.163
+RT03,maize>cowpea,confirmed,0.9608,0.9588,0.0,0.163
+RT04,maize>groundnut,confirmed,0.9136,0.9132,0.0,0.1848
 RT05,sorghum>cowpea,confirmed,1.0,1.0,1.0,0.163
-RT06a,sorghum>groundnut,confirmed,0.9637,0.9596,0.0,0.1848
-RT06b,millet>groundnut,confirmed,0.9458,0.9356,0.0,0.1848
-RT08,lablab>maize,confirmed,0.6197,0.6197,0.0,0.163
-RT09,cassava>maize,confirmed,0.6563,0.6966,0.0,0.163
+RT06a,sorghum>groundnut,confirmed,0.942,0.9371,0.0,0.1848
+RT06b,millet>groundnut,confirmed,0.9135,0.8999,0.0,0.1848
+RT08,lablab>maize,confirmed,0.4948,0.4948,0.0,0.8804
+RT09,cassava>maize,confirmed,0.5406,0.5719,0.0,0.163
