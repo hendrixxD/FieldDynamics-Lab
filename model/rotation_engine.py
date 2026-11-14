@@ -505,10 +505,11 @@ def risk_lines(rot: Rotation, req: Request, data: EngineData, striga: tuple[str,
     if striga[0] != "Low" and groups & {"striga_hermonthica_host", "striga_main_seed_producer"}:
         lines.append(striga[1])
         share = float(data.dry_spell_share.loc[req.lga])
-        lines.append(
-            f"Long dry spells (10+ days) came in {round(share * 10)} of 10 seasons here; "
-            "they make Striga damage worse"
-        )
+        if round(share * 10) >= 1:  # a line that would say "0 of 10" tells the farmer nothing
+            lines.append(
+                f"Long dry spells (10+ days) came in {round(share * 10)} of 10 seasons here; "
+                "they make Striga damage worse"
+            )
     if "striga_gesnerioides_host" in groups and striga[0] == "High":
         lines.append("Cowpea has its own Striga: ask for a resistant variety")
     lines += [e.scouting[g] for g in e.scouting if g in groups]

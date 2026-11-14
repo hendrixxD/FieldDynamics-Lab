@@ -131,3 +131,9 @@ def test_season_types_come_from_a5_and_unknown_ones_are_refused() -> None:
     assert set(DATA.season_types) == set(a5.columns) - {"lga"}
     with pytest.raises(ValueError, match="season type"):
         run(season_type="Not a type")
+
+
+def test_no_risk_line_ever_reports_zero_of_ten() -> None:
+    for lga in sorted(DATA.zone_of):
+        for card in run(lga=lga)["cards"]:
+            assert not any(" 0 of 10" in line for line in card["risks"]), (lga, card["risks"])
