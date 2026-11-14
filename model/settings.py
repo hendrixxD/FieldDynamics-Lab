@@ -153,11 +153,32 @@ class Paths(BaseModel):
     openlandmap: Path
     openlandmap_cropland_fc: Path
     kdbs_prices: Path
+    risk_lines: Path
     notebooks: Path
     annual_features: Path
     monthly_features: Path
     static_features: Path
     ndvi_composites: Path
+
+
+class HumidLine(BaseModel):
+    crops: list[str]
+    rh_quantile: float = Field(gt=0, lt=1)
+    t_mean_c: tuple[float, float]
+    min_days: PositiveInt
+
+
+class LateDryLine(BaseModel):
+    crops: list[str]
+    weeks_before_harvest: PositiveInt
+    dry_day_mm: float
+    min_days: PositiveInt
+
+
+class RiskLineConfig(BaseModel):
+    humid: HumidLine
+    late_dry: LateDryLine
+    min_share: float
 
 
 class ModelConfig(BaseModel):
@@ -176,6 +197,7 @@ class ModelConfig(BaseModel):
     confidence: ConfidenceConfig
     build: BuildConfig
     paths: Paths
+    risk_lines: RiskLineConfig
 
     @property
     def lga_zone(self) -> dict[str, str]:
