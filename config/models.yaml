@@ -215,6 +215,8 @@ paths:
   # A9 reads the soil water chosen by A8.
   soil: data/processed/models/a8/a8_lga_soil_water.csv
   isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
+  # The rotation engine's soil inputs, from python -m data.soil_hydro (no raw data needed).
+  engine_soil: data/processed/soil/lga_soil_hydro.csv
   # KDBS retail prices per LGA (python -m data.kdbs_prices)
   kdbs_prices: data/processed/extras/kdbs/kdbs_lga_prices.csv
   risk_lines: data/processed/models/a14/a14_lga_crop_risk_lines.csv
@@ -274,3 +276,36 @@ risk_lines:
     dry_day_mm: 1.0                 # ETCCDI: a dry day has under 1 mm (CDD index)
     min_days: 10                    # same length as A2's long dry spells
   min_share: 0.3                    # design: a line shows when it happened in 3 of 10 seasons
+
+engine:
+  # Rotation engine (PRD section 7). Values marked "PRD" come from the PRD; values marked
+  # "design" are our own choices, kept here so they can be argued with and changed.
+  priority_weight: 3          # PRD Step 4: a chosen priority counts 3 times
+  max_priorities: 3           # PRD I6
+  water:
+    max_short_share: 0.5      # PRD Step 2: rain-only crops short in more than half the seasons go
+    min_fit_share: 0.5        # PRD Step 2: crops that fit the season in at most half the years go
+    risk_fit_share: 0.8       # design: below this the crop stays with a risk line
+    irrigation_relief: 0.5    # design: irrigation halves the counted shortfall
+  nitrogen:
+    base_credit: 0.5          # design: any N-fixing season earns half credit
+    full_credit_kg_ha: 40     # design: the other half scales with net N left, full at 40 kg N/ha
+  organic_matter: {cover_weight: 0.7, legume_weight: 0.3}   # design
+  erosion: {cover_weight: 0.5, root_weight: 0.5}            # design
+  pests:
+    striga_repeat_penalty: 0.5   # design: a Striga host in back-to-back seasons
+    trap_crop_credit: 0.2        # design: a Striga trap crop in the rotation
+  market:
+    home_use_cash_factor: 0.5   # PRD I7: "home use" lowers the weight of cash crops
+  striga:
+    sorghum_season_weight: 1.5  # docs/pest-risk.md: sorghum is the main Striga seed producer
+    high_seasons: 2             # design: 2+ cereal seasons in a row is High
+    medium_seasons: 1
+    high_soil_base: 2           # design: 1+ cereal season on the worst soil base is High
+    pests_weight_bonus: 2       # design: High Striga risk adds weight to the Pests row
+  levels: {high: 0.67, medium: 0.34}   # design: score cut-offs for Low / Medium / High
+  sensitivity: {runs: 200, max_nudge: 0.2, swap_share: 0.3}  # PRD Step 6
+  scouting:                   # docs/pest-risk.md: standing lines, no weather needed
+    fall_armyworm_host: "Check maize and sorghum for fall armyworm 2 to 6 weeks after planting"
+    cowpea_flowering_pests: "Check cowpea for thrips and pod borers at flowering"
+    ginger_blight: "Ginger blight spreads in wet, poorly drained fields: rotate and drain"

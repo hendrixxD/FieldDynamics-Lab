@@ -1,0 +1,17 @@
+# Above-ground crop residue from grain yield (IPCC 2006 Guidelines, Vol. 4, Ch. 11, Table 11.2).
+# Fetched 14 Nov 2026 from
+# https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/4_Volume4/V4_11_Ch11_N2O&CO2.pdf
+#   residue dry matter (t/ha) = slope * harvested yield (t/ha, dry) + intercept
+#   dry yield = fresh yield * dry
+# Not used by the engine yet: it needs LGA yields, which no source in the repo gives (gap).
+# Rows left out (cowpea as "beans and pulses", cassava, yam, ginger, tomato, sesame, lablab,
+# stylosanthes) wait for the table to be read by hand: the fetched text for those rows was not
+# clean enough to trust.
+source: ipcc_2006_v4_t11_2
+crops:
+  maize: {ipcc_class: Maize, dry: 0.87, slope: 1.03, intercept: 0.61, below_ground_ratio: 0.22}
+  sorghum: {ipcc_class: Sorghum, dry: 0.89, slope: 0.88, intercept: 1.33}
+  millet: {ipcc_class: Millet, dry: 0.90, slope: 1.43, intercept: 0.14}
+  rice: {ipcc_class: Rice, dry: 0.89, slope: 0.95, intercept: 2.46, below_ground_ratio: 0.16}
+  soybean: {ipcc_class: Soyabean, dry: 0.91, slope: 0.93, intercept: 1.35, below_ground_ratio: 0.19}
+  groundnut: {ipcc_class: "Peanut (w/pod)", dry: 0.94, slope: 1.07, intercept: 1.54}
