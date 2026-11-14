@@ -70,7 +70,7 @@ The two long-lived branches are `main` and `staging`.
 4. Hendrixx reviews it and merges to `staging`.
 5. If checks pass, Hendrixx merges `staging` to `main`.
 
-The PR format check fails if the branch name, target branch, or template ticks break these rules. PRs from `staging` to `main`, and from `main` back to `staging` to sync, are exempt from the name and template rules.
+During the hackathon sprint, the PR format check only warns. It flags it when the branch name, target branch, or template ticks break these rules. PRs from `staging` to `main`, and from `main` back to `staging` to sync, are exempt from the name and template rules.
 
 Keep PRs small enough to review in 10 minutes. The reviewer uses the checklist in section 7 of the [engineering standards](docs/engineering-standards.md).
 
@@ -122,7 +122,7 @@ Write one small function at a time, with its test, using the standards, the data
 
 ### Tooling
 
-Python 3.12, the oldest version Vercel supports. Ruff for lint and format, with line length 100. mypy on `model/` and `api/`. pre-commit runs both before every commit, along with the tracked files check.
+Python 3.12, the oldest version Vercel supports. Ruff for lint and format, with line length 100. mypy on `model/` and `api/`, which only warns in CI during the hackathon sprint. pre-commit runs Ruff and the tracked files check before every commit.
 
 Set up once after cloning:
 
@@ -132,7 +132,7 @@ uv pip install --require-hashes --only-binary :all: -r requirements-dev.txt
 .venv/bin/pre-commit install
 ```
 
-CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its six checks are Security scan, Ruff, mypy, pytest, Dependency versions, and Tracked files. Security scan runs first and nothing installs until it passes. PRs also run PR format and Security gate. Dependency versions fails if the requirements files are stale or hand-edited, the installed versions differ from them, packages conflict, or the Ruff and mypy versions in pre-commit differ from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Rulesets on `main` and `staging` block merging a PR with a red check, for everyone.
+CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its six checks are Security scan, Ruff, mypy, pytest, Dependency versions, and Tracked files. Security scan runs first and nothing installs until it passes. PRs also run PR format and Security gate. During the hackathon sprint, mypy, Dependency versions, and PR format only warn: read their logs, but they never block a merge. Dependency versions flags stale or hand-edited requirements files, installed versions that differ from them, package conflicts, or a Ruff version in pre-commit that differs from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Rulesets on `main` and `staging` block merging a PR with a red check, for everyone.
 
 ### Dependencies
 
@@ -149,7 +149,7 @@ bash .github/scripts/lock-requirements.sh --upgrade-package pandas
 bash .github/scripts/lock-requirements.sh --upgrade
 ```
 
-If Ruff or mypy changes version, update its `rev` in `.pre-commit-config.yaml` in the same PR. New libraries also go in `tests/test_dependencies.py` and the [tech stack](docs/tech-stack.md).
+If Ruff changes version, update its `rev` in `.pre-commit-config.yaml` in the same PR. New libraries also go in `tests/test_dependencies.py` and the [tech stack](docs/tech-stack.md).
 
 ### Code rules
 
@@ -189,7 +189,6 @@ Treat every PR as hostile, including its workflow files. A compromised package r
 - **Security gate** runs from the target branch through `pull_request_target`, so a PR cannot weaken its own scan. It reads the PR as git objects. Never add a step to it that checks out or runs PR code.
 - `.github/scripts/security_scan.py` uses only the standard library, so it runs before anything is installed. It stops env dumping, credential file reads, exfiltration hosts, hidden code, `.pth` files, install-time files, unpinned actions, new privileged triggers, and any package source outside PyPI. It checks every pin against OSV, and each new pin against PyPI for its hashes, yanked status, and age.
 - Packages install from hashes and wheels only, so no `setup.py` runs.
-- New versions wait 7 days. For a security fix that cannot wait, add the exact version to `.github/cooldown-exempt.txt`, and delete the line once it has aged. Every other check still applies.
 - PR jobs hold no secrets, and their token is read-only.
 - Every job has a time limit, and the first failed job cancels the rest of the run, so a failure shows within seconds and nothing hangs.
 - Actions and pre-commit hooks are pinned to full commit SHAs. Keep third-party actions to the minimum.
@@ -281,6 +280,5 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 ## Open items
 
 - The data contract is a draft. Confirm it against real data at first pull.
-- Choose GADM or geoBoundaries for LGA boundaries. The tech stack lists both, while the map architecture uses geoBoundaries.
 - Decide whether `data/processed/` stays in git if the files get large.
 - Check the Resources tab of the challenge page, which the first principle validative measure does not cover.

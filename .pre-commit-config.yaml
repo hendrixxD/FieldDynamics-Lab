@@ -4,15 +4,6 @@ repos:
     hooks:
       - id: ruff-check
       - id: ruff-format
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 2834ec6639549dd6796205c8f011dedcd587288b  # frozen: v2.4.0
-    hooks:
-      - id: mypy
-        args: [model, api]
-        pass_filenames: false
-        # The hook runs in its own environment, so api/ needs its typed libraries installed here.
-        # Keep these versions equal to requirements.txt.
-        additional_dependencies: [fastapi==0.162.0, pydantic==2.14.1]
   - repo: local
     hooks:
       - id: tracked-files

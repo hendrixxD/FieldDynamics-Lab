@@ -1,0 +1,10 @@
+# geoBoundaries gbOpen for Nigeria, pinned to release commit 9469f09 so every rebuild gets the
+# same shapes. Source: https://www.geoboundaries.org/api/current/gbOpen/NGA/ADM2/
+# ADM2 is NGA-ADM2-59680162 (GRID3, 2022, built 2023-12-12, CC BY 4.0).
+# ADM1 is NGA-ADM1-27671186.
+state_url: https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/NGA/ADM1/geoBoundaries-NGA-ADM1.geojson
+lga_url: https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/NGA/ADM2/geoBoundaries-NGA-ADM2.geojson
+
+state_name: Kaduna
+# Kaduna State has 23 Local Government Areas (Kaduna State Government).
+expected_lga_count: 23

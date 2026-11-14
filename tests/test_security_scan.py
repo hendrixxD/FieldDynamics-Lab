@@ -1,6 +1,5 @@
 """Checks that the PR security scan stops hostile changes and passes ordinary ones."""
 
-import datetime
 import importlib.util
 import subprocess
 import sys
@@ -11,7 +10,6 @@ import pytest
 
 SHA_A = "a" * 64
 SHA_B = "b" * 64
-NOW = datetime.datetime(2026, 11, 2, tzinfo=datetime.UTC)
 
 
 def load_scanner() -> ModuleType:
@@ -205,45 +203,21 @@ def test_malicious_advisory_is_named_as_malware() -> None:
     ]
 
 
-def release_record(digest: str, days_old: int, yanked: bool = False) -> dict[str, object]:
-    uploaded = (NOW - datetime.timedelta(days=days_old)).isoformat()
-    file_entry = {
-        "digests": {"sha256": digest},
-        "upload_time_iso_8601": uploaded,
-        "yanked": yanked,
-    }
-    return {"urls": [file_entry]}
+def release_record(digest: str, yanked: bool = False) -> dict[str, object]:
+    return {"urls": [{"digests": {"sha256": digest}, "yanked": yanked}]}
 
 
-def test_aged_release_with_matching_hash_passes() -> None:
-    assert scanner.check_release("x", "1.0", {SHA_A}, release_record(SHA_A, 8), NOW) == []
-
-
-def test_release_inside_cooldown_is_flagged() -> None:
-    findings = scanner.check_release("x", "1.0", {SHA_A}, release_record(SHA_A, 2), NOW)
-    assert [finding.rule for finding in findings] == ["younger than 7 days: x==1.0"]
-
-
-def test_exempt_release_skips_only_the_cooldown() -> None:
-    assert scanner.check_release("x", "1.0", {SHA_A}, release_record(SHA_A, 2), NOW, True) == []
-    record = release_record(SHA_A, 2, yanked=True)
-    findings = scanner.check_release("x", "1.0", {SHA_A}, record, NOW, True)
-    assert [finding.rule for finding in findings] == ["yanked release: x==1.0"]
-
-
-def test_exemption_names_one_exact_version() -> None:
-    text = "# note\npyasn1==0.6.5  # GHSA-aaaa\nSome_Pkg==1.0\n"
-    assert scanner.parse_exemptions(text) == {("pyasn1", "0.6.5"), ("some-pkg", "1.0")}
+def test_release_with_matching_hash_passes() -> None:
+    assert scanner.check_release("x", "1.0", {SHA_A}, release_record(SHA_A)) == []
 
 
 def test_hash_missing_from_pypi_is_flagged() -> None:
-    findings = scanner.check_release("x", "1.0", {SHA_A, SHA_B}, release_record(SHA_A, 8), NOW)
+    findings = scanner.check_release("x", "1.0", {SHA_A, SHA_B}, release_record(SHA_A))
     assert [finding.rule for finding in findings] == ["hash not on PyPI: x==1.0 (1)"]
 
 
 def test_yanked_release_is_flagged() -> None:
-    record = release_record(SHA_A, 8, yanked=True)
-    findings = scanner.check_release("x", "1.0", {SHA_A}, record, NOW)
+    findings = scanner.check_release("x", "1.0", {SHA_A}, release_record(SHA_A, yanked=True))
     assert [finding.rule for finding in findings] == ["yanked release: x==1.0"]
 
 

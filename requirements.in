@@ -2,6 +2,8 @@
 # generated from this file: after editing, run bash .github/scripts/lock-requirements.sh
 
 # Data acquisition
+# earthaccess logs in to NASA Earthdata and opens SMAP granules remotely.
+earthaccess
 earthengine-api
 geemap
 requests
@@ -10,6 +12,8 @@ requests
 # dask backs the lazy chunks= raster loading in docs/engineering-standards.md.
 dask
 geopandas
+# h5py reads the Kaduna window out of SMAP HDF5 granules.
+h5py
 numpy
 pandas
 pillow

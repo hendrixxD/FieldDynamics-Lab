@@ -10,7 +10,8 @@ All Python code runs on Python 3.12.
 | Climate and agroclimate | NASA POWER API (requests) |
 | ECOSTRESS and awkward extracts | NASA AppEEARS |
 | Soil | iSDAsoil (via Earth Engine) |
-| Study area boundaries | GADM or geoBoundaries (Kaduna LGAs) |
+| Study area boundaries | geoBoundaries gbOpen (Kaduna LGAs, GRID3 2022) |
+| SMAP L4 soil moisture | earthaccess opens SPL4SMGP granules remotely, h5py reads the Kaduna window |
 | Accounts | NASA Earthdata login, Earth Engine noncommercial |
 
 ## 2. Data processing and harmonization
@@ -71,7 +72,7 @@ All Python code runs on Python 3.12.
 | Data checks (no nulls, ranges sane) | pandera or plain pytest asserts |
 | Linting and formatting | Ruff |
 | Type checking | mypy on `model/` and `api/` |
-| Pre-commit checks | pre-commit, running Ruff and mypy |
+| Pre-commit checks | pre-commit, running Ruff |
 | Dependency pinning | uv, `requirements.in` compiled to `requirements.txt` |
 | CI | GitHub Actions, running Ruff, mypy, pytest, Dependency versions, and Tracked files |
 | Profiling | py-spy, `time.perf_counter`, `%timeit` |

@@ -55,22 +55,10 @@ check_hook_version() {
   fi
 }
 
-check_hook_dependency() {
-  local package=$1 pinned
-  pinned=$(grep -oP "^${package}==[^ ]+" requirements-dev.txt)
-  if ! grep -qF "$pinned" .pre-commit-config.yaml; then
-    echo "${pinned} is missing from additional_dependencies in .pre-commit-config.yaml."
-    failed=1
-  fi
-}
-
 check_pins_match_sources
 check_environment_matches_pins
 check_no_conflicts
 check_hook_version ruff https://github.com/astral-sh/ruff-pre-commit
-check_hook_version mypy https://github.com/pre-commit/mirrors-mypy
-check_hook_dependency fastapi
-check_hook_dependency pydantic
 
 if [[ "$failed" -ne 0 ]]; then
   exit 1

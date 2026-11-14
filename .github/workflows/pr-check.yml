@@ -17,7 +17,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      # Warn only during the hackathon sprint, so branch names and template ticks never block.
       - run: bash .github/scripts/check-pr.sh
+        continue-on-error: true
         env:
           PR_HEAD: ${{ github.head_ref }}
           PR_BASE: ${{ github.base_ref }}

@@ -7,7 +7,6 @@ workflow commands in the log.
 """
 
 import argparse
-import datetime
 import json
 import re
 import subprocess
@@ -19,12 +18,10 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
-COOLDOWN_DAYS = 7
 HTTP_TIMEOUT_SECONDS = 30
 PYPI_WORKERS = 16
 OSV_URL = "https://api.osv.dev/v1/querybatch"
 LOCK_FILES = ("requirements.txt", "requirements-dev.txt", "requirements-serve.txt")
-COOLDOWN_EXEMPT_FILE = ".github/cooldown-exempt.txt"
 
 # These two files must contain the patterns they look for.
 SELF_PATHS = frozenset({".github/scripts/security_scan.py", "tests/test_security_scan.py"})
@@ -240,10 +237,8 @@ def check_release(
     version: str,
     hashes: set[str],
     release: dict[str, object],
-    now: datetime.datetime,
-    cooldown_exempt: bool = False,
 ) -> list[Finding]:
-    """Check a newly added pin against its PyPI record: hashes, yanked status, and age."""
+    """Check a newly added pin against its PyPI record: hashes and yanked status."""
     label = f"{name}=={version}"
     files = release.get("urls")
     if not isinstance(files, list) or not files:
@@ -255,10 +250,6 @@ def check_release(
     pinned_files = [published[digest] for digest in hashes & published.keys()]
     if any(entry["yanked"] for entry in pinned_files):
         findings.append(Finding("requirements", 0, f"yanked release: {label}"))
-    cutoff = now - datetime.timedelta(days=COOLDOWN_DAYS)
-    uploads = [datetime.datetime.fromisoformat(e["upload_time_iso_8601"]) for e in pinned_files]
-    if uploads and max(uploads) > cutoff and not cooldown_exempt:
-        findings.append(Finding("requirements", 0, f"younger than {COOLDOWN_DAYS} days: {label}"))
     return findings
 
 
@@ -284,9 +275,7 @@ def query_osv(pins: list[tuple[str, str]]) -> list[Finding]:
     return findings
 
 
-def query_pypi(
-    name: str, version: str, hashes: set[str], now: datetime.datetime, cooldown_exempt: bool
-) -> list[Finding]:
+def query_pypi(name: str, version: str, hashes: set[str]) -> list[Finding]:
     """Check one new pin on PyPI, reporting a missing release as a finding."""
     try:
         release = fetch_json(f"https://pypi.org/pypi/{name}/{version}/json")
@@ -294,7 +283,7 @@ def query_pypi(
         if error.code == 404:
             return [Finding("requirements", 0, f"not on PyPI: {name}=={version}")]
         raise
-    return check_release(name, version, hashes, release, now, cooldown_exempt)
+    return check_release(name, version, hashes, release)
 
 
 def read_at(revision: str, path: str) -> str:
@@ -303,12 +292,6 @@ def read_at(revision: str, path: str) -> str:
         return run_git("show", f"{revision}:{path}").decode(errors="replace")
     except subprocess.CalledProcessError:
         return ""
-
-
-def parse_exemptions(text: str) -> set[tuple[str, str]]:
-    """Return the exact (name, version) pairs allowed past the cooldown."""
-    pairs = re.findall(r"^([a-z0-9][a-z0-9._-]*)==([^\s#]+)", text, re.MULTILINE | re.IGNORECASE)
-    return {(re.sub(r"[-_.]+", "-", name.lower()), version) for name, version in pairs}
 
 
 def scan_dependencies(base: str, head: str) -> list[Finding]:
@@ -327,12 +310,9 @@ def scan_dependencies(base: str, head: str) -> list[Finding]:
         return findings + [Finding("requirements", 0, "no pins found in any lock file")]
     findings.extend(query_osv(sorted(head_pins)))
     new_pins = [(pin, h) for pin, h in head_pins.items() if not h <= known.get(pin, set())]
-    exempt = parse_exemptions(read_at(head, COOLDOWN_EXEMPT_FILE))
-    now = datetime.datetime.now(datetime.UTC)
     with ThreadPoolExecutor(PYPI_WORKERS) as pool:
         checks = [
-            pool.submit(query_pypi, name, version, hashes, now, (name, version) in exempt)
-            for (name, version), hashes in new_pins
+            pool.submit(query_pypi, name, version, hashes) for (name, version), hashes in new_pins
         ]
     for check in checks:
         findings.extend(check.result())

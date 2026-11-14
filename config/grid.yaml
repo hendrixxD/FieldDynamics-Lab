@@ -1,0 +1,9 @@
+# The shared analysis grid. Every dataset is aggregated onto these cells so they join on cell_id.
+
+# UTM zone 32N covers 6 to 12 degrees east, which holds all of Kaduna (about 6.0 to 8.9 E).
+# Area and distance maths use it, per docs/engineering-standards.md section 5.
+projected_crs: EPSG:32632
+storage_crs: EPSG:4326
+
+# 1 km is the LGA view grid in docs/map-architecture.md: close to field scale for smallholders.
+cell_size_m: 1000

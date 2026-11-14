@@ -1,13 +1,15 @@
 # Data Contract
 
-**Status: draft v1.** No data has been pulled yet, so this is the agreed target. Confirm every column against the real data at first pull. Any schema change follows the versioning rule below and lands in the same pull request as the code that causes it.
+**Status: draft v1.** The iSDA soil grid below has been pulled and checked against real data. Everything else is still the agreed target: confirm each column at its first pull. Any schema change follows the versioning rule below and lands in the same pull request as the code that causes it.
 
 This contract defines what the data track hands to the modeling, API, and frontend tracks. See also [engineering standards](engineering-standards.md), [map architecture](map-architecture.md), and [sources](sources.md).
 
 ## Conventions
 
 - **Coordinates:** stored in EPSG:4326. Area and distance maths use UTM zone 32N, then convert back.
-- **Grids:** 5 km for the state view and 1 km for the LGA view.
+- **Grids:** 5 km for the state view and 1 km for the LGA view. The grid is defined in UTM zone 32N with edges on whole kilometres (`config/grid.yaml`), so every dataset lands on the same cells.
+- **Cell ids:** `cell_id` is the cell's south-west corner in UTM 32N metres, such as `E302000_N1150000`. It stays the same whatever area a pull covers, so tables join on it.
+- **LGAs:** from geoBoundaries (`config/boundaries.yaml`). A cell belongs to the LGA holding its centre, and cells whose centre is outside Kaduna are dropped.
 - **Naming:** column names carry units where the value has one, such as `rain_mm` or `slope_deg`.
 - **Types:** `float32` for measurements and categorical dtype for labels.
 - **Filled values:** gap-filled values are flagged, and flags lower confidence on the strategy cards.
@@ -69,10 +71,36 @@ Ranges for rainfall, soil moisture, and NDVI come from the engineering standards
 | --- | --- | --- | --- | --- |
 | `elevation_m` | float32 | m | 0 to 2000 | SRTM |
 | `slope_deg` | float32 | degrees | 0 to 90 | SRTM |
-| `clay_pct` | float32 | % | 0 to 100 | iSDAsoil |
-| `sand_pct` | float32 | % | 0 to 100 | iSDAsoil |
-| `organic_carbon_g_kg` | float32 | g/kg | 0 or more | iSDAsoil |
-| `soil_ph` | float32 | pH | 3 to 11 | iSDAsoil |
+| `clay_pct_0_20cm` | float32 | % | 0 to 100 | iSDAsoil grid |
+| `sand_pct_0_20cm` | float32 | % | 0 to 100 | iSDAsoil grid |
+| `organic_carbon_g_kg_0_20cm` | float32 | g/kg | 0 or more | iSDAsoil grid |
+| `soil_ph_0_20cm` | float32 | pH | 3 to 11 | iSDAsoil grid |
+
+The feature table can take any other column from the iSDA soil grid below as the models need it.
+
+## iSDA soil grid
+
+- **Path:** `data/processed/isda_kaduna_1000m.parquet`, plus `data/processed/kaduna_lgas.geojson`
+- **Built by:** `python -m data.isda`, which keeps its raw tiles in `data/raw/isda/grid_1000m/`
+- **Grain:** one row per 1 km cell, with `cell_id` unique. iSDA has no time dimension, so there is no `year`.
+- **Method:** Earth Engine back-transforms each 30 m layer to real units, then averages it into the cell. Texture class and FCC take the most common class instead. Ranges are set in `config/isda.yaml`.
+
+| Column | Type | Unit | Valid range | Notes |
+| --- | --- | --- | --- | --- |
+| `cell_id`, `lga`, `lat_deg`, `lon_deg` | as above | | not null | Keys, as in the feature table |
+| `{property}_{depth}` | float32 | in the name | per property | 18 properties at `0_20cm` and `20_50cm`, listed below |
+| `{property}_{depth}_lower`, `_upper` | float32 | in the name | lower ≤ value ≤ upper | iSDA's ±1 standard deviation, back-transformed |
+| `bedrock_depth_cm`, `_lower`, `_upper` | float32 | cm | 0 to 200 | Depth to bedrock, capped at 200 |
+| `texture_class_{depth}` | Int8 | none | 1 to 12 | USDA texture class code |
+| `texture_name_{depth}` | categorical | none | 12 USDA names | Such as Sandy Loam |
+| `fcc_code` | Int16 | none | 0 to 2999 | Fertility Capability Classification code |
+| `cropland_fraction` | float32 | 0 to 1 | 0 to 1 | Share of the cell that ESA WorldCover 2021 maps as cropland |
+
+The 18 properties, with units in the name: `clay_pct`, `sand_pct`, `silt_pct`, `stone_pct`, `bulk_density_g_cm3`, `soil_ph`, `organic_carbon_g_kg`, `total_carbon_g_kg`, `total_nitrogen_g_kg`, `cec_cmolc_kg`, and extractable `phosphorus_ppm`, `potassium_ppm`, `calcium_ppm`, `magnesium_ppm`, `sulphur_ppm`, `zinc_ppm`, `iron_ppm`, `aluminium_ppm`.
+
+Soil values can be null where iSDA has no data, such as water and some built-up areas. Keys are never null.
+
+iSDA is modelled at 30 m from sparse soil samples. Averaging to 1 km does not add detail, and the map legend should say so.
 
 ## Map outputs
 
