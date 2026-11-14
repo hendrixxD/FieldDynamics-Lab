@@ -68,6 +68,7 @@ log = logging.getLogger("soil_hydro")
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEPTHS = ["0_20", "20_50"]
 OC_TO_OM = 1.724
+ENGINE_TOPSOIL = ("sand_content", "nitrogen_total", "carbon_organic")
 
 
 def col(prop, depth, stat):
@@ -219,6 +220,10 @@ def build(stats, bedrock_stat_col):
     # spread inside one LGA, and stretching that to 0-1 would let soil dominate the
     # A10 index. Slope (SRTM) and rain intensity (IMERG) should carry most of A10.
     out["erodibility_rel"] = out["k_factor"] / out["k_factor"].mean()
+    # Topsoil means the rotation engine reads for Striga risk and LGA need. Carried through
+    # under their iSDA names so the engine never reads data/raw, which CI does not have.
+    for prop in ENGINE_TOPSOIL:
+        out[col(prop, "0_20", "mean")] = stats[col(prop, "0_20", "mean")]
     return out
 
 
@@ -236,7 +241,7 @@ def main():
         for p in ("sand_content", "silt_content", "clay_content", "carbon_organic", "bulk_density")
         for d in DEPTHS
         for s in ("mean", "p10", "p50", "p90")
-    ]
+    ] + [col(p, "0_20", "mean") for p in ENGINE_TOPSOIL]
     missing = [c for c in need if c not in stats.columns]
     if missing:
         sys.exit(f"Missing columns in {args.stats}: {missing[:6]}...")

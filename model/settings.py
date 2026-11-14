@@ -150,6 +150,7 @@ class Paths(BaseModel):
     soil: Path
     smap_daily: Path
     isda_stats: Path
+    engine_soil: Path
     openlandmap: Path
     openlandmap_cropland_fc: Path
     kdbs_prices: Path

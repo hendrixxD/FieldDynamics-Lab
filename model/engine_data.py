@@ -119,7 +119,7 @@ def lga_table(isda: pd.DataFrame, land: pd.DataFrame, year: pd.DataFrame) -> pd.
 def pipeline_tables(cfg: ModelConfig) -> dict[str, pd.DataFrame]:
     """Read the engine's tables from the pipeline outputs (A3 to A15, iSDA, KDBS)."""
     out, lgas = cfg.paths.output_dir, sorted(cfg.lga_zone)
-    isda = _indexed(cfg.paths.isda_stats, lgas).set_index("lga")
+    isda = _indexed(cfg.paths.engine_soil, lgas).set_index("lga")
     year = pd.read_parquet(cfg.paths.annual_features)
     year = year.assign(lga=canonical_lga(year["lga"], lgas))
     land = _indexed(out / "a10" / "a10_lga_land_risk.csv", lgas).set_index("lga")

@@ -215,6 +215,8 @@ paths:
   # A9 reads the soil water chosen by A8.
   soil: data/processed/models/a8/a8_lga_soil_water.csv
   isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
+  # The rotation engine's soil inputs, from python -m data.soil_hydro (no raw data needed).
+  engine_soil: data/processed/soil/lga_soil_hydro.csv
   # KDBS retail prices per LGA (python -m data.kdbs_prices)
   kdbs_prices: data/processed/extras/kdbs/kdbs_lga_prices.csv
   risk_lines: data/processed/models/a14/a14_lga_crop_risk_lines.csv
