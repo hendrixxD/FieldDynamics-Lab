@@ -74,6 +74,29 @@ One request takes about 0.1 s.
 
 Weights and cut-offs marked "design" in `config/models.yaml` are our choices.
 
+## How the studies check it (notebook a13)
+
+The engine ranked every candidate (now drawn from 14 crops, filtered by A15 suitability and the A9 water rules) for every LGA, all four season types and two typical farms (continuous maize, continuous sorghum). Studies played no part in this ranking. All study statuses were checked against their papers on 14 Nov 2026 (`config/rotations.yaml` names each paper).
+
+| Studied sequence | Study | Mean percentile in the data's ranking |
+|---|---|---|
+| Sorghum then cowpea | RT05, Shuaibu et al. 2015 (Bauchi); Bado et al. 2006 | 1.00 |
+| Maize then cowpea | RT03 | 0.98 |
+| Sorghum then groundnut | RT06a, Bado et al. 2006; Bagayoko et al. 2000 | 0.96 |
+| Millet then groundnut | RT06b, Bationo and Ntare 2000 | 0.95 |
+| Maize then groundnut | RT04, Kermah et al. 2018; N Ghana 11-year trial | 0.95 |
+| Maize then soybean | RT02 | 0.90 |
+| Cassava then maize | RT09, N Ghana 11-year trial | 0.65 |
+| Lablab then maize | RT08, Franke et al. 2008 | 0.62 |
+
+Together the eight studied sequences average the 88th percentile, against 50% for eight random sequences (permutation test, 10,000 draws, p = 0.0001). The six cereal and grain-legume sequences sit at the 90th to 100th percentile.
+
+Cassava then maize and lablab then maize sit lower because the data on those crops is thinner: no KDBS price by the mudu for cassava, no market price for lablab, and no share-eaten figure for either. Their rows are skipped and the coverage multiplier pulls the total down. This is the engine being honest about missing data, not the data disagreeing with the trials.
+
+RT07 (maize with cowpea, then soybean) is confirmed (Kureh, Kamara and Tarfa, northern Guinea savanna of Nigeria) but is not tested here: the engine does not generate intercrops yet.
+
+**Limit.** The check is not fully independent. The engine's pest and nutrient rules come from the same agronomy the studies tested. The data's own part (which crops fit each LGA's climate, water, season length, soil and Striga risk) was not told the answer.
+
 ## What A15 answered from data
 
 ECOCROP (FAO, read from the Recocrop R package) gives every crop its temperature, rain, pH and texture ranges. Notebook a15 scores them against POWER and CHIRPS monthly climate (1981 to 2025) and iSDA soil for all 23 LGAs:
