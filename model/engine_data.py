@@ -17,7 +17,6 @@ from config import CONFIG_DIR
 from model.settings import CropConfig, ModelConfig, load_crop_config, load_model_config
 from model.water_pipeline import canonical_lga
 
-SEASON_TYPES = ("Typical", "Late start", "Dry spell", "Short and dry")
 STRIGA_SOIL = {  # iSDA 0-20 cm column -> True when a higher value means more Striga risk
     "sand_content__0_20__value_mean": True,
     "nitrogen_total__0_20__value_mean": False,
@@ -60,6 +59,11 @@ class EngineData:
     suit_lookup: dict[tuple[str, str], dict]  # fast A15 access
     season_days: dict[str, float]  # days in the ground per crop (FAO-56, else ECOCROP)
     type_share_lookup: dict[str, dict[str, float]]  # A5 shares as plain dicts
+
+    @property
+    def season_types(self) -> list[str]:
+        """A5's season type names, in its output's order: the data names them, not the code."""
+        return list(self.type_share.columns)
 
 
 def load_rotations(path: Path = CONFIG_DIR / "rotations.yaml") -> RotationConfig:

@@ -76,6 +76,14 @@ def test_clusters_are_named_from_their_centroids() -> None:
     }
 
 
+def test_naming_works_without_the_dry_spell_count() -> None:
+    c = centroids({"typical": {}, "dry spell": {"a2_longest_dry_spell_days": 1.0}})
+    assert name_clusters(c.drop(columns="a2_dry_spells_10plus"), 0.3) == {
+        0: "Typical",
+        1: "Dry spell",
+    }
+
+
 def test_a_cluster_too_close_to_normal_is_not_given_a_trait_name() -> None:
     c = centroids({"typical": {}, "faint": {"season_rain_mm": 0.2}})
     assert name_clusters(c, 0.3) == {0: "Typical", 1: "Type 1"}

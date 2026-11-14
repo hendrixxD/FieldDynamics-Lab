@@ -63,7 +63,7 @@ def name_clusters(centroids: pd.DataFrame, min_z: float) -> dict[int, str]:
     c = centroids
     traits = {
         "Late start": c["a2_onset_doy"] - 0.5 * c["a2_length_days"],
-        "Dry spell": c["a2_longest_dry_spell_days"] + c["a2_dry_spells_10plus"],
+        "Dry spell": c["a2_longest_dry_spell_days"] + c.get("a2_dry_spells_10plus", 0.0),
         "Wet": c["season_rain_mm"],
         "Short and dry": -c["a2_length_days"] - c["season_rain_mm"],
         "Early start": -c["a2_onset_doy"] + 0.5 * c["a2_length_days"],

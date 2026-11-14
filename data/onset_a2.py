@@ -24,11 +24,19 @@ Definitions (PRD A2, standard West African agronomic rules)
   cessation  : first day on or after 1 September when a 70 mm soil-water bucket,
                filled by rain from onset and drained by 5 mm/day evaporation,
                runs empty (Stern et al. water-balance definition)
-  dry spell  : run of consecutive dry days between onset and cessation; we
-               report the longest, its start date, and the count of 10+ day runs
+  dry spell  : run of consecutive dry days between onset and cessation that
+               ends in rain before cessation; we report the longest, its start
+               date, and the count of 10+ day runs. The run that reaches
+               cessation is the season ending (the bucket drains dry), not a
+               dry spell inside the season, so it is left out. The 10-day
+               count has its own threshold, separate from the 7-day
+               false-start test.
 
 Outputs, in data/processed/a2/:
   a2_lga_year.csv      one row per LGA-year
+  a2_dry_spells.csv    every mid-season dry spell of FALSE_START_DAYS (7) or more
+                       days: LGA, year, start date, length (the season strip's
+                       dry-spell window)
   a2_lga_summary.csv   per LGA: median onset/cessation/length, 20th and 80th
                        percentile onset (an "early" and "late" year), share of
                        years with a 10+ day dry spell, and a 1981-2025 trend in
@@ -56,6 +64,9 @@ log = logging.getLogger("onset_a2")
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WET_MM, ONSET_3DAY_MM, FALSE_START_DAYS, LOOKAHEAD = 1.0, 25.0, 7, 30
+# Long dry spell: 10+ dry days, the agronomic threshold the PRD (A2) and A5 use. Kept apart from
+# FALSE_START_DAYS, which was calibrated to 7 for onset only.
+DRY_SPELL_DAYS = 10
 BUCKET_MM, EVAP_MM = 70.0, 5.0
 ONSET_FROM, CESSATION_FROM = (4, 1), (9, 1)
 NORMAL = (1991, 2020)
@@ -88,6 +99,15 @@ def runs_of_dry(series):
     if start is not None:
         out.append((start, len(series) - start))
     return out
+
+
+def mid_season_dry_runs(series):
+    """Dry runs inside the season: every run except one that reaches the season's last day.
+
+    The season ends when the soil bucket drains dry, so its final days are dry by definition;
+    counting that run would report the season ending as a dry spell.
+    """
+    return [(i, n) for i, n in runs_of_dry(series) if i + n < len(series)]
 
 
 def season(r, year):
@@ -130,7 +150,7 @@ def season(r, year):
     series = [day(x) for x in days]
     if None in series:
         return None
-    dry = runs_of_dry(series)
+    dry = mid_season_dry_runs(series)
     longest = max(dry, key=lambda x: x[1], default=(None, 0))
     return {
         "year": year,
@@ -140,7 +160,8 @@ def season(r, year):
         "season_rain_mm": round(sum(series), 1),
         "longest_dry_spell_days": longest[1],
         "longest_dry_spell_start": days[longest[0]] if longest[0] is not None else None,
-        "dry_spells_10plus": sum(1 for _, n in dry if n >= FALSE_START_DAYS),
+        "dry_spells_10plus": sum(1 for _, n in dry if n >= DRY_SPELL_DAYS),
+        "spells": [(days[i], n) for i, n in dry if n >= FALSE_START_DAYS],
     }
 
 
@@ -252,6 +273,13 @@ def main():
                     "cessation_doy": doy(r.get("cessation")),
                 }
             )
+
+    with open(out / "a2_dry_spells.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["lga", "year", "start", "days"])
+        for r in rows:
+            for start, n in r.get("spells", []):
+                w.writerow([r["lga"], r["year"], start, n])
 
     by = defaultdict(list)
     for r in rows:

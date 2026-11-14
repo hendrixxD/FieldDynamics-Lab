@@ -39,7 +39,7 @@ def test_deterministic() -> None:
         {"soil": "Not sure"},
         {"past_seasons": [["maize"], ["soybean"]]},
         {"sell": "Mostly home use"},
-        {"season_type": "Short and dry"},
+        {"season_type": "Late start"},
         {"priorities": ["feed_animals", "extra_income"]},
     ],
 )
@@ -122,3 +122,12 @@ def test_committed_bundle_is_current() -> None:
     req = Request(lga="Kachia", past_seasons=[["maize"]], season_type="Typical")
     as_json = [json.dumps(score_request(req, d), sort_keys=True) for d in (committed, DATA)]
     assert as_json[0] == as_json[1], "run: python -m model.engine_data"
+
+
+def test_season_types_come_from_a5_and_unknown_ones_are_refused() -> None:
+    import pandas as pd
+
+    a5 = pd.read_csv("data/processed/models/a5/a5_lga_type_share.csv")
+    assert set(DATA.season_types) == set(a5.columns) - {"lga"}
+    with pytest.raises(ValueError, match="season type"):
+        run(season_type="Not a type")

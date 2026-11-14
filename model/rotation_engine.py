@@ -42,7 +42,7 @@ class Request(BaseModel):
     sell: Literal["Local market", "Buyer, processor or feed mill", "Mostly home use"] = (
         "Local market"
     )
-    season_type: Literal["Typical", "Late start", "Dry spell", "Short and dry"] = "Typical"
+    season_type: str = "Typical"  # an A5 type name; checked against the data in score_request
 
     @field_validator("priorities")
     @classmethod
@@ -633,6 +633,8 @@ def score_request(req: Request, data: EngineData) -> dict:
     """The PRD's /api/score result: Current plus Options A and B, with what was dropped."""
     if req.lga not in data.zone_of:
         raise ValueError(f"unknown LGA {req.lga!r}")
+    if req.season_type not in data.season_types:
+        raise ValueError(f"unknown season type {req.season_type!r}: one of {data.season_types}")
     striga = striga_risk(req, data)
     w = weights(req, data, striga[0])
     current = current_rotation(req, data)

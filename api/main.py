@@ -49,4 +49,6 @@ def score(body: ScoreRequest) -> ScoreResponse:
     data = engine_data()
     if body.lga not in data.zone_of:
         raise HTTPException(status_code=422, detail=f"Unknown LGA: {body.lga}")
+    if body.season_type not in data.season_types:
+        raise HTTPException(status_code=422, detail=f"Unknown season type: {body.season_type}")
     return ScoreResponse.model_validate(score_request(body, data))
