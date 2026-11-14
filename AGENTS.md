@@ -13,7 +13,7 @@ The tool supports farmer judgment and local expertise. It never replaces them, a
 ## Rules that always apply
 
 - **Attribution:** never add a `Co-Authored-By: Claude` trailer, a "Generated with" line, or any other AI attribution to commits, PRs, or repo content.
-- **Branches:** never commit directly to `main` or `staging`, and never merge a PR. See [Git workflow](#git-workflow).
+- **Branches:** anyone on the team may push directly to `main` or `staging`, and anyone may merge a PR into either. A short-lived branch and a PR is still the default for work worth a review. See [Git workflow](#git-workflow).
 - **Data:** never use placeholder or made-up data. Leave a value blank until it comes from a real source.
 - **Secrets:** keep secrets in `.env` only. Never commit them.
 - **Supply chain:** never weaken a security check to get a PR through. See [Supply chain security](#supply-chain-security).
@@ -67,8 +67,8 @@ The two long-lived branches are `main` and `staging`.
 1. Cut a short-lived branch from `staging`, named `feat-name_of_feat` or `fix-name_of_fix`. Use lowercase letters and digits, separated by underscores or hyphens.
 2. Open a PR from it into `staging` and fill in the PR template, which loads automatically. Tick whether it is a fix or a new feature, and its level of impact.
 3. Once every check passes, the Deploy workflow posts a preview link on the PR.
-4. Hendrixx reviews it and merges to `staging`.
-5. If checks pass, Hendrixx merges `staging` to `main`.
+4. Anyone on the team may review it and merge it to `staging`. Small changes may also be pushed straight to `staging`.
+5. Anyone on the team may merge `staging` to `main`, or push to `main` directly. A push or merge to `main` deploys to production, so check that CI is green first.
 
 During the hackathon sprint, the PR format check only warns. It flags it when the branch name, target branch, or template ticks break these rules. PRs from `staging` to `main`, and from `main` back to `staging` to sync, are exempt from the name and template rules.
 
@@ -132,7 +132,7 @@ uv pip install --require-hashes --only-binary :all: -r requirements-dev.txt
 .venv/bin/pre-commit install
 ```
 
-CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its six checks are Security scan, Ruff, mypy, pytest, Dependency versions, and Tracked files. Security scan runs first and nothing installs until it passes. PRs also run PR format and Security gate. During the hackathon sprint, mypy, Dependency versions, and PR format only warn: read their logs, but they never block a merge. Dependency versions flags stale or hand-edited requirements files, installed versions that differ from them, package conflicts, or a Ruff version in pre-commit that differs from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Rulesets on `main` and `staging` block merging a PR with a red check, for everyone.
+CI on GitHub Actions runs on every PR and on pushes to `main` and `staging`. Its six checks are Security scan, Ruff, mypy, pytest, Dependency versions, and Tracked files. Security scan runs first and nothing installs until it passes. PRs also run PR format and Security gate. During the hackathon sprint, mypy, Dependency versions, and PR format only warn: read their logs, but they never block a merge. Dependency versions flags stale or hand-edited requirements files, installed versions that differ from them, package conflicts, or a Ruff version in pre-commit that differs from them. Tracked files fails if env files or raw data are tracked or anywhere in history. Anyone may push or merge to `main` and `staging`. CI still runs on every push to them, so read the run afterwards and fix a red check straight away.
 
 ### Dependencies
 
