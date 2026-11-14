@@ -164,14 +164,34 @@ bare_fields:
 
 # A7 long-term trends, 1981 to the last complete year: Mann-Kendall with Sen's slope, against OLS.
 # Hamed and Rao (1998) corrects the Mann-Kendall variance for autocorrelation; Benjamini and
-# Hochberg (1995) controls false discoveries across the 23 LGAs x 4 series tested together.
+# Hochberg (1995) controls false discoveries across every LGA x series tested together.
+# The three water series answer "long-term water trends" from data we hold. GRACE-FO is not used
+# (PRD section 4: its ~300 km footprint covers Kaduna in a handful of pixels). GLDAS starts in
+# 2000, so its test has 26 years; the others have 45.
 trends:
   years: {start: 1981, end: 2025}
   series:
     season_rain_mm: April to October rain (CHIRPS)
     onset_doy: rain start day (A2)
     dry_spells_10plus: 10+ day dry spells (A2)
+    longest_dry_spell_days: longest in-season dry spell (A2)
     heat_days: heat days, Tmax >= 35 C (POWER)
+    season_water_balance_mm: April to October rain minus reference ET0 (CHIRPS, POWER FAO-56)
+    season_gldas_rootzone_mm: April to October root-zone soil water, 0-100 cm (GLDAS-2.1 Noah)
+  # Card wording: label, unit, word for a rising and a falling series.
+  words:
+    season_rain_mm: {label: Season rain, unit: mm, up: more, down: less}
+    onset_doy: {label: Rain start, unit: days, up: later, down: earlier}
+    dry_spells_10plus: {label: Long dry spells, unit: spells, up: more, down: fewer}
+    longest_dry_spell_days: {label: Longest dry spell, unit: days, up: longer, down: shorter}
+    heat_days: {label: Heat days, unit: days, up: more, down: fewer}
+    season_water_balance_mm: {label: Season water balance, unit: mm, up: wetter, down: drier}
+    season_gldas_rootzone_mm: {label: Root-zone soil water, unit: mm, up: wetter, down: drier}
+  # Series whose trend may reach a card or the season strip. GLDAS is left off: its drying since
+  # 2015 is not confirmed by ERA5-Land soil water or explained by rain (a7_trends.ipynb, section 4),
+  # so it is shown on Learn as an unconfirmed model signal only.
+  card_series: [season_rain_mm, onset_doy, dry_spells_10plus, longest_dry_spell_days, heat_days,
+                season_water_balance_mm]
   alpha: 0.05
 
 # A10 erosion and infiltration per LGA. Erosion risk = cropland slope x rain intensity x relative
