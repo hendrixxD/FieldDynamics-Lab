@@ -1,4 +1,4 @@
-# Model results: A3, A4, A5, A6, A7, A9, A10 and A12
+# Model results: A3 to A16
 
 Rebuild with `python -m model.build`, which reads `data/processed/` and writes `data/processed/models/a5/`, `a6/` and `a9/`. Settings, with their sources, are in `config/models.yaml` and `config/crops.yaml`. Each run is logged in [the experiment log](experiments.csv). The evaluation notebooks are `notebooks/a5_season_types.ipynb`, `notebooks/a6_stress_model.ipynb` and `notebooks/a9_water_balance.ipynb`.
 
@@ -290,3 +290,29 @@ The flag alone reproduces all of the apparent skill on the early-season targets,
 One data-quality note: the share of cloud-filled June to July composites rises over time (+0.13 per decade), but controlling for it does not remove the trend.
 
 Decision: the early-season greenness trend does not go on any card. It describes land conversion, not crop condition.
+
+## A16. Whole-system backtest (R33)
+
+Notebook `notebooks/a16_backtest.ipynb`, formulas `model/backtest.py`. For every LGA-year from 2000 to 2024, the card's season warning is rebuilt for that year's season type from the other years only (leave one year out): the card warns when the crop fits the rainy season in under 8 of 10 years of that type. It is compared with what happened, against a baseline with no season type.
+
+| Outcome (maize, 2000 to 2024) | Warning | Hit rate | False alarms | Lift |
+|---|---|---|---|---|
+| Did not finish inside the rains (A9, that year's rain) | with season type | 85% | 10% | 18.7x |
+| Did not finish inside the rains | no season type | 81% | 29% | 7.1x |
+| Cropland greenness stressed (MODIS) | with season type | 22% | 23% | 0.94x |
+
+- **Season risk: the selector works.** It keeps the hits and cuts false alarms by two thirds. This outcome is partly circular (a year's type is built from its own onset and season length), so it shows the card carries the type's risk, not that a type can be forecast; in use the advisor picks the type from the NiMet seasonal forecast.
+- **Crop stress: no signal.** A stressed year is no likelier when the card warned. Same finding as A6.
+
+**Bad years.** The PRD asks for a bad season documented in records; none is in the repo, so the four worst years of the MODIS greenness record are tested. Pass condition (PRD section 13): the Current continuous maize card shows the risk, read here as warning in at least half the LGAs.
+
+| Year | Main type | Card warned | Maize failed to fit | Greenness stressed | Pass |
+|---|---|---|---|---|---|
+| 2007 | Typical | 5% of LGAs | 5% | 71% | No |
+| 2008 | Typical | 5% | 5% | 71% | No |
+| 2014 | Typical | 10% | 10% | 76% | No |
+| 2017 | Late start | 52% | 38% | 62% | Yes |
+
+One of four passes. In 2007, 2008 and 2014 the rains were normal enough for maize to finish, yet greenness fell in about three quarters of LGAs: the cause lies outside season length and water (pests, prices, planted area, or cloud in the composites). The tool says so on Learn rather than claiming it would have flagged those years. Still open: a bad season from official records (PRD open questions).
+
+Outputs: `a16/a16_lga_year_crop.csv`, `a16/a16_hit_rates.csv`, `a16/a16_bad_years.csv`, `a16/a16_summary.json`.
