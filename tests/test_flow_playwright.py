@@ -185,7 +185,7 @@ def test_core_flow_fastapi_client() -> None:
 
 
 PHONE_WIDTHS_PX = (320, 360, 390, 430)
-PHONE_PAGES = ("/start", "/farm", "/compare", "/season", "/share", "/map")
+PHONE_PAGES = ("/", "/start", "/farm", "/compare", "/season", "/share", "/map")
 
 
 def test_phone_layout_stacks_and_does_not_scroll_sideways(live_server: str) -> None:

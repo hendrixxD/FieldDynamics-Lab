@@ -173,3 +173,26 @@ def test_static_state_layer_pngs_and_jemaa_queries() -> None:
     pt_res = client.get("/api/point?lat=9.488&lon=8.261")
     assert pt_res.status_code == 200
     assert pt_res.json()["lga"] == "Jema'a"
+
+
+def test_home_mobile_showcase_assets_and_budget() -> None:
+    home_res = client.get("/")
+    assert home_res.status_code == 200
+    assert "supports farmer judgment" in home_res.text
+
+    total_bytes = len(home_res.content)
+    for asset in ("/static/css/app.css", "/static/img/logo-mark.png"):
+        res = client.get(asset)
+        assert res.status_code == 200
+        total_bytes += len(res.content)
+
+    for screen in ("compare", "season", "map", "farm", "share"):
+        path = f"/static/img/mobile/mobile-{screen}.webp"
+        assert path in home_res.text
+        img_res = client.get(path)
+        assert img_res.status_code == 200
+        assert len(img_res.content) > 0
+        total_bytes += len(img_res.content)
+
+    msg = f"First-load homepage asset budget exceeded: {total_bytes} bytes"
+    assert total_bytes < 1_000_000, msg

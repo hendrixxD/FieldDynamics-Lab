@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_svg %}
 {% set title = "FieldDynamics — Kaduna Crop Rotation Advisor" %}
+{% set rec = benchmark.cards[1] if benchmark.cards|length > 1 else benchmark.cards[0] %}
 
 {% block head_extra %}
 <style>
@@ -12,52 +14,12 @@
   }
   @media (min-width: 1024px) {
     .fd-hero {
-      grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
-      gap: 36px;
-      padding-top: 18px;
+      grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+      gap: 34px;
+      padding-top: 16px;
     }
   }
 
-  .fd-hero-brand-lockup {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
-  }
-  .fd-hero-logo-row {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 12px 4px 5px;
-    border-radius: 12px;
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-xs);
-  }
-  @media (min-width: 768px) {
-    .fd-hero-logo-row {
-      display: inline-flex;
-    }
-  }
-  .fd-hero-logo-img {
-    width: 38px;
-    height: 38px;
-    border-radius: 9px;
-    display: block;
-    flex-shrink: 0;
-  }
-  .fd-hero-brand-copy {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.15;
-  }
-  .fd-hero-brand-title {
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-  }
   .fd-hero-tag-group {
     display: inline-flex;
     flex-wrap: wrap;
@@ -171,24 +133,23 @@
     color: var(--muted);
     font-weight: 600;
   }
-  .fd-trust-note {
-    margin: 18px 0 0;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--muted);
-    max-width: 540px;
-  }
 
-  .fd-preview-shell {
-    background: var(--bg-card);
+  /* Interactive 3-Phone Hero Showcase */
+  .fd-showcase-shell {
+    position: relative;
+    background: linear-gradient(155deg, #fffdf9 0%, #eef4ee 100%);
     border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 18px;
+    border-radius: 22px;
+    padding: 16px;
     box-shadow: var(--shadow-sm);
+    overflow: hidden;
   }
-  .fd-preview-head {
+  @media (min-width: 640px) {
+    .fd-showcase-shell {
+      padding: 18px 20px;
+    }
+  }
+  .fd-showcase-head {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -196,6 +157,11 @@
     gap: 10px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--line);
+  }
+  .fd-showcase-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
   .fd-preview-kicker {
     display: inline-flex;
@@ -205,7 +171,34 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--green);
+  }
+  .fd-screen-tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .fd-screen-tab {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+    min-height: 36px;
+    cursor: pointer;
+    transition: background-color 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+  }
+  .fd-screen-tab:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .fd-screen-tab.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #ffffff;
   }
   .fd-preview-select {
     font: inherit;
@@ -214,99 +207,226 @@
     padding: 8px 12px;
     border-radius: 10px;
     border: 1px solid var(--line-strong);
-    background: var(--bg-canvas);
+    background: var(--bg-card);
     color: var(--ink);
     min-height: 40px;
     max-width: 100%;
     cursor: pointer;
   }
-  .fd-preview-season {
-    margin: 12px 0 14px;
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    line-height: 1.45;
+
+  /* Layered 3-Phone Stage */
+  .fd-phone-stage-wrap {
+    position: relative;
+    margin-top: 14px;
+  }
+  .fd-phone-stage {
+    position: relative;
+    height: 344px;
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 48%, rgba(30, 77, 40, 0.12) 0%, rgba(250, 248, 245, 0.25) 68%);
+    overflow: hidden;
+  }
+  @media (min-width: 640px) {
+    .fd-phone-stage {
+      height: 422px;
+    }
+  }
+  .fd-stage-topo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.45;
+  }
+  .fd-phone-frame {
+    position: absolute;
+    left: 50%;
+    top: 16px;
+    width: 146px;
+    padding: 6px;
+    margin: 0;
+    border: 1.5px solid #2b3830;
+    border-radius: 22px;
+    background: #141c17;
+    box-shadow: 0 18px 34px rgba(18, 28, 22, 0.22);
+    cursor: pointer;
+    transform-origin: center center;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease, box-shadow 0.24s ease;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  @media (min-width: 640px) {
+    .fd-phone-frame {
+      top: 18px;
+      width: 182px;
+      padding: 7px;
+      border-radius: 26px;
+    }
+  }
+  .fd-phone-notch {
+    width: 44px;
+    height: 5px;
+    border-radius: 999px;
+    background: #2f3e34;
+    margin: 1px auto 5px;
+  }
+  .fd-phone-screen {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #faf8f5;
+    aspect-ratio: 540 / 1168;
+  }
+  @media (min-width: 640px) {
+    .fd-phone-screen {
+      border-radius: 19px;
+    }
+  }
+  .fd-phone-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
   }
 
-  .fd-preview-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  /* Active slot rotations across the 3 screens */
+  .fd-phone-stage[data-active-screen="compare"] .fd-phone-frame[data-screen="compare"],
+  .fd-phone-stage[data-active-screen="season"] .fd-phone-frame[data-screen="season"],
+  .fd-phone-stage[data-active-screen="map"] .fd-phone-frame[data-screen="map"] {
+    transform: translateX(-50%) translateY(0) scale(1) rotate(0deg);
+    z-index: 4;
+    opacity: 1;
+    box-shadow: 0 24px 48px rgba(18, 28, 22, 0.30);
   }
-  .fd-preview-card {
-    display: block;
+  .fd-phone-stage[data-active-screen="compare"] .fd-phone-frame[data-screen="season"],
+  .fd-phone-stage[data-active-screen="season"] .fd-phone-frame[data-screen="map"],
+  .fd-phone-stage[data-active-screen="map"] .fd-phone-frame[data-screen="compare"] {
+    transform: translateX(-92%) translateY(16px) scale(0.82) rotate(-6deg);
+    z-index: 2;
+    opacity: 0.92;
+  }
+  .fd-phone-stage[data-active-screen="compare"] .fd-phone-frame[data-screen="map"],
+  .fd-phone-stage[data-active-screen="season"] .fd-phone-frame[data-screen="compare"],
+  .fd-phone-stage[data-active-screen="map"] .fd-phone-frame[data-screen="season"] {
+    transform: translateX(-8%) translateY(16px) scale(0.82) rotate(6deg);
+    z-index: 2;
+    opacity: 0.92;
+  }
+  @media (min-width: 640px) {
+    .fd-phone-stage[data-active-screen="compare"] .fd-phone-frame[data-screen="season"],
+    .fd-phone-stage[data-active-screen="season"] .fd-phone-frame[data-screen="map"],
+    .fd-phone-stage[data-active-screen="map"] .fd-phone-frame[data-screen="compare"] {
+      transform: translateX(-110%) translateY(20px) scale(0.84) rotate(-6.5deg);
+    }
+    .fd-phone-stage[data-active-screen="compare"] .fd-phone-frame[data-screen="map"],
+    .fd-phone-stage[data-active-screen="season"] .fd-phone-frame[data-screen="compare"],
+    .fd-phone-stage[data-active-screen="map"] .fd-phone-frame[data-screen="season"] {
+      transform: translateX(10%) translateY(20px) scale(0.84) rotate(6.5deg);
+    }
+  }
+
+  /* Live Data Floating Cards */
+  .fd-float-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .fd-float-badge {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-shadow: 0 10px 24px rgba(24, 32, 27, 0.12);
     text-decoration: none;
     color: inherit;
-    background: var(--bg-canvas);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 14px 15px;
-    transition: border-color 0.14s ease, transform 0.14s ease, background-color 0.14s ease;
+    display: block;
   }
-  .fd-preview-card:hover {
+  a.fd-float-badge:hover {
     border-color: var(--green);
-    transform: translateY(-1px);
   }
-  .fd-preview-card.is-recommended {
-    background: var(--green-soft);
-    border: 1.5px solid var(--green);
+  @media (min-width: 640px) {
+    .fd-float-cards {
+      margin-top: 0;
+    }
+    .fd-float-badge {
+      position: absolute;
+      z-index: 6;
+      max-width: 224px;
+    }
+    .fd-float-badge.is-top-left {
+      top: 14px;
+      left: 12px;
+    }
+    .fd-float-badge.is-bottom-right {
+      bottom: 14px;
+      right: 12px;
+    }
   }
-  .fd-preview-card-top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .fd-preview-seq {
+  .fd-float-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    flex-wrap: wrap;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green);
   }
-  .fd-crop-chip {
+  .fd-float-main {
+    margin: 4px 0 0;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .fd-float-sub {
+    margin: 3px 0 0;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+  .fd-float-crops {
     display: inline-flex;
     align-items: center;
-    padding: 3px 9px;
+    gap: 4px;
+    margin-top: 5px;
+    padding: 3px 8px;
     border-radius: 999px;
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--ink);
-    text-transform: capitalize;
+    background: var(--green-soft);
+    border: 1px solid var(--green-border);
   }
   .fd-crop-arrow {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     font-weight: 700;
   }
-  .fd-preview-title {
-    margin: 8px 0 4px;
-    font-size: 15.5px;
-    font-weight: 800;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .fd-preview-summary {
-    margin: 0;
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--ink-soft);
-  }
-  .fd-preview-card-cta {
-    margin-top: 8px;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--green);
-  }
-  .fd-preview-foot {
+
+  .fd-showcase-foot {
     margin-top: 14px;
     padding-top: 12px;
     border-top: 1px solid var(--line);
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+  }
+  .fd-showcase-caption {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    flex: 1 1 220px;
+  }
+  .fd-showcase-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
   }
   .fd-preview-foot-link {
     font-size: 13.5px;
@@ -318,14 +438,15 @@
     text-decoration: underline;
   }
 
+  /* Illustrated 3-Step Strip */
   .fd-steps-section {
     margin-top: 48px;
     padding-top: 32px;
     border-top: 1px solid var(--line);
   }
   .fd-steps-head {
-    max-width: 560px;
-    margin-bottom: 20px;
+    max-width: 580px;
+    margin-bottom: 22px;
   }
   .fd-steps-kicker {
     font-size: 11px;
@@ -357,20 +478,79 @@
     color: inherit;
     background: var(--bg-card);
     border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
-    transition: border-color 0.14s ease, transform 0.14s ease;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: border-color 0.14s ease, transform 0.14s ease, box-shadow 0.14s ease;
   }
   .fd-step-card:hover {
     border-color: var(--green);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .fd-step-visual {
+    position: relative;
+    height: 178px;
+    background: linear-gradient(165deg, #f3f0e7 0%, #e4efe6 100%);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 16px 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .fd-mini-phone {
+    width: 190px;
+    background: #141c17;
+    border: 1.5px solid #2b3830;
+    border-bottom: 0;
+    border-radius: 20px 20px 0 0;
+    padding: 6px 6px 0;
+    box-shadow: 0 12px 26px rgba(18, 28, 22, 0.18);
+  }
+  .fd-mini-phone-notch {
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: #2f3e34;
+    margin: 1px auto 5px;
+  }
+  .fd-mini-phone-img {
+    width: 100%;
+    height: 152px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 14px 14px 0 0;
+    display: block;
+    background: #faf8f5;
+  }
+  .fd-step-pill {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid var(--line-strong);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--green);
+    box-shadow: 0 4px 10px rgba(24, 32, 27, 0.08);
+  }
+  .fd-step-copy {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
   }
   .fd-step-num {
     display: inline-block;
     font-size: 12px;
     font-weight: 800;
     color: var(--green);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     letter-spacing: 0.02em;
   }
   .fd-step-heading {
@@ -384,6 +564,12 @@
     font-size: 13.5px;
     line-height: 1.52;
     color: var(--ink-soft);
+  }
+  .fd-step-cta {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
   }
   .sr-only {
     position: absolute;
@@ -466,9 +652,38 @@
     </div>
   </div>
 
-  <div class="fd-preview-shell">
-    <div class="fd-preview-head">
-      <span class="fd-preview-kicker" data-lang-ha="MISALIN DUBAN GONA">SAMPLE FARM PREVIEW</span>
+  <div class="fd-showcase-shell" id="mobileShowcase">
+    <div class="fd-showcase-head">
+      <div class="fd-showcase-controls">
+        <span class="fd-preview-kicker" data-lang-ha="GWADAN MANHAJAR WAYA">MOBILE FIELD APP · {{ benchmark.lga|upper }}</span>
+        <div class="fd-screen-tabs" role="tablist" aria-label="Switch preview mobile screen">
+          <button
+            type="button"
+            class="fd-screen-tab is-active"
+            role="tab"
+            aria-selected="true"
+            data-screen-target="compare"
+            data-lang-ha="Kwatanta Shuka"
+          >Compare Plans</button>
+          <button
+            type="button"
+            class="fd-screen-tab"
+            role="tab"
+            aria-selected="false"
+            data-screen-target="season"
+            data-lang-ha="Ruwan Sama"
+          >Rain &amp; Season</button>
+          <button
+            type="button"
+            class="fd-screen-tab"
+            role="tab"
+            aria-selected="false"
+            data-screen-target="map"
+            data-lang-ha="Taswirar LGA 23"
+          >23-LGA Map</button>
+        </div>
+      </div>
+
       <form method="get" action="/">
         <label class="sr-only" for="landingLgaSelect">Switch Kaduna LGA</label>
         <select id="landingLgaSelect" name="lga" class="fd-preview-select" aria-label="Switch Kaduna LGA" onchange="this.form.submit()">
@@ -479,57 +694,117 @@
       </form>
     </div>
 
-    <p class="fd-preview-season" data-lang-ha="Ruwan sama yakan fara ~{{ sv.onset_label }} · Damina mai kwana {{ sv.length_days }} · Kasa: {{ sv.soil_default }}">
-      Rain starts ~{{ sv.onset_label }} · {{ sv.length_days }}-day season · {{ sv.soil_default }} soil
-    </p>
+    <div class="fd-phone-stage-wrap">
+      <div class="fd-phone-stage" id="phoneStage" data-active-screen="compare">
+        <svg class="fd-stage-topo" viewBox="0 0 600 420" fill="none" aria-hidden="true">
+          <path d="M-30 95 C110 35, 220 140, 360 88 C470 46, 540 90, 640 52" stroke="#1e4d28" stroke-width="1.2" stroke-dasharray="4 6"/>
+          <path d="M-20 190 C130 135, 250 245, 390 185 C490 142, 560 195, 640 162" stroke="#1e4d28" stroke-width="1.1"/>
+          <path d="M-30 295 C120 250, 260 340, 410 278 C510 236, 570 282, 640 250" stroke="#a84e1d" stroke-width="1.0" stroke-dasharray="3 5"/>
+          <circle cx="118" cy="336" r="46" stroke="#1e4d28" stroke-width="0.9" stroke-dasharray="3 4"/>
+          <circle cx="486" cy="96" r="58" stroke="#1e4d28" stroke-width="0.9"/>
+        </svg>
 
-    <div class="fd-preview-cards">
-      {% for c in benchmark.cards %}
-      {% set is_rec = (loop.index0 == 1) %}
-      {% set card_href = "/compare?" ~ query_string if loop.index0 == 0 else ("/card/a?" ~ query_string if loop.index0 == 1 else "/card/b?" ~ query_string) %}
-      <a href="{{ card_href }}" class="fd-preview-card{% if is_rec %} is-recommended{% endif %}">
-        <div class="fd-preview-card-top">
-          <div class="fd-preview-seq">
-            {% for crop in c.seasons %}
-            <span class="fd-crop-chip">{{ (crop | join(' + ')) if (crop is iterable and crop is not string) else crop }}</span>
-            {% if not loop.last %}<span class="fd-crop-arrow" aria-hidden="true">→</span>{% endif %}
-            {% endfor %}
+        <button
+          type="button"
+          class="fd-phone-frame"
+          data-screen="season"
+          aria-label="Preview mobile rain and season calendar screen"
+          aria-pressed="false"
+        >
+          <div class="fd-phone-notch" aria-hidden="true"></div>
+          <div class="fd-phone-screen">
+            <img
+              src="/static/img/mobile/mobile-season.webp"
+              alt="FieldDynamics mobile screen showing Zaria 45-year climate shift and 12-month season calendar"
+              width="270"
+              height="584"
+              loading="lazy"
+            >
           </div>
+        </button>
 
-          {% if loop.index0 == 0 %}
-          <span class="fd-badge fd-badge-muted" data-lang-ha="Shukar yanzu">Current crop</span>
-          {% elif loop.index0 == 1 %}
-          <span class="fd-badge fd-badge-green" data-lang-ha="Zabi mafi dacewa">Top match</span>
-          {% else %}
-          <span class="fd-badge fd-badge-amber" data-lang-ha="Zabi na biyu">Second option</span>
-          {% endif %}
+        <button
+          type="button"
+          class="fd-phone-frame"
+          data-screen="compare"
+          aria-label="Preview mobile planting plan comparison screen"
+          aria-pressed="true"
+        >
+          <div class="fd-phone-notch" aria-hidden="true"></div>
+          <div class="fd-phone-screen">
+            <img
+              src="/static/img/mobile/mobile-compare.webp"
+              alt="FieldDynamics mobile screen comparing maize and rotation crop plans in Zaria"
+              width="270"
+              height="584"
+              loading="eager"
+            >
+          </div>
+        </button>
+
+        <button
+          type="button"
+          class="fd-phone-frame"
+          data-screen="map"
+          aria-label="Preview mobile interactive 23-LGA Kaduna climate map screen"
+          aria-pressed="false"
+        >
+          <div class="fd-phone-notch" aria-hidden="true"></div>
+          <div class="fd-phone-screen">
+            <img
+              src="/static/img/mobile/mobile-map.webp"
+              alt="FieldDynamics mobile screen showing interactive satellite climate map of Kaduna State 23 LGAs"
+              width="270"
+              height="584"
+              loading="lazy"
+            >
+          </div>
+        </button>
+      </div>
+
+      <div class="fd-float-cards">
+        <div class="fd-float-badge is-top-left">
+          <div class="fd-float-eyebrow">
+            <span class="fd-loc-dot" aria-hidden="true"></span>
+            <span data-lang-ha="Damina ta {{ benchmark.lga }}">{{ benchmark.lga }} · 45-yr NASA/CHIRPS</span>
+          </div>
+          <div class="fd-float-main" data-lang-ha="Fara ruwa ~{{ sv.onset_label }} · Kwana {{ sv.length_days }}">
+            Rain ~{{ sv.onset_label }} · {{ sv.length_days }}-day season
+          </div>
+          <div class="fd-float-sub" data-lang-ha="Kasa: {{ sv.soil_default }} · iSDAsoil 30m">
+            Default soil: {{ sv.soil_default }} · iSDAsoil 30m
+          </div>
         </div>
 
-        <h2 class="fd-preview-title">{{ c.title }}</h2>
-
-        {% if loop.index0 == 0 %}
-        <p class="fd-preview-summary">
-          {{ c.water_line }}.{% if c.seasons|length > 1 and c.seasons[0] == c.seasons[-1] %} Repeating the same crop drains soil nitrogen and increases Striga risk.{% elif c.why %} {{ c.why }}{% endif %}
-        </p>
-        {% elif loop.index0 == 1 %}
-        <p class="fd-preview-summary">
-          {{ c.water_line }}. {% if c.benefits %}{{ c.benefits[0] }}.{% else %}{{ c.why }}{% endif %}
-        </p>
-        {% else %}
-        <p class="fd-preview-summary">
-          {{ c.water_line }}. {{ c.why }}
-        </p>
-        {% endif %}
-
-        <div class="fd-preview-card-cta" data-lang-ha="Duba cikakken bayani →">View details →</div>
-      </a>
-      {% endfor %}
+        <a class="fd-float-badge is-bottom-right" href="/card/a?{{ query_string }}">
+          <div class="fd-float-eyebrow" data-lang-ha="ZABI MAFI DACEWA A {{ benchmark.lga|upper }}">
+            TOP MATCH · {{ benchmark.lga|upper }}
+          </div>
+          <div class="fd-float-crops">
+            {% for step_crop in rec.seasons %}
+              {% set cid = step_crop[0] if (step_crop is iterable and step_crop is not string) else step_crop %}
+              {{ crop_svg(cid, 22) }}
+              {% if not loop.last %}<span class="fd-crop-arrow" aria-hidden="true">→</span>{% endif %}
+            {% endfor %}
+          </div>
+          <div class="fd-float-main">{{ rec.title }}</div>
+          <div class="fd-float-sub">{{ rec.water_line }}</div>
+        </a>
+      </div>
     </div>
 
-    <div class="fd-preview-foot">
-      <a class="fd-preview-foot-link" href="/farm?{{ query_string }}" data-lang-ha="Tsara wannan gona a {{ benchmark.lga }} →">
-        Customise this farm in {{ benchmark.lga }} →
-      </a>
+    <div class="fd-showcase-foot">
+      <p id="showcaseCaption" class="fd-showcase-caption" data-lang-ha="Kwatanta shukar yanzu da zabukan juyin shuka a {{ benchmark.lga }} a fadin ma'auni 7.">
+        Compare current crops against two locally suited rotations in {{ benchmark.lga }} across 7 field checks.
+      </p>
+      <div class="fd-showcase-actions">
+        <a id="showcaseScreenLink" class="fd-preview-foot-link" href="/compare?{{ query_string }}" data-lang-ha="Bude Kwatancin →">
+          Open Compare Plans →
+        </a>
+        <a class="fd-preview-foot-link" href="/farm?{{ query_string }}" data-lang-ha="Tsara gona a {{ benchmark.lga }} →">
+          Customise {{ benchmark.lga }} →
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -539,38 +814,89 @@
     <p class="fd-steps-kicker" data-lang-ha="TSARIN ZIYARA">HOW A VISIT WORKS</p>
     <h2 class="fd-steps-title" data-lang-ha="Yadda ziyarar gona ke aiki">How a visit works</h2>
     <p class="fd-steps-sub" data-lang-ha="Matakai uku masu sauki a kowace waya — ko da babu karfin intanet.">
-      Three quick steps on any phone — even with weak signal.
+      Three quick steps on any phone — built for field extension visits even on weak signal.
     </p>
   </div>
 
   <div class="fd-grid-3">
     <a class="fd-step-card" href="/farm?{{ query_string }}">
-      <div>
-        <span class="fd-step-num" data-lang-ha="1 · Shigar da bayanin gona">1 · Enter the farm</span>
-        <h3 class="fd-step-heading" data-lang-ha="Zabi karamar hukuma da shuka">Pick LGA, past crop, and priorities</h3>
-        <p class="fd-step-body" data-lang-ha="Zabi karamar hukumar manomi, abin da aka shuka bara, nau'in kasa, da abin da aka fi bukata.">
-          Pick the farmer's LGA, what they planted last season, their soil, and what matters most for the farm.
-        </p>
+      <div class="fd-step-visual">
+        <div class="fd-mini-phone">
+          <div class="fd-mini-phone-notch" aria-hidden="true"></div>
+          <img
+            class="fd-mini-phone-img"
+            src="/static/img/mobile/mobile-farm.webp"
+            alt="Step 1 mobile screen showing LGA, soil texture, water access, and past crop profile"
+            width="180"
+            height="152"
+            loading="lazy"
+          >
+        </div>
+        <span class="fd-step-pill" data-lang-ha="Mataki 1 · Shigar da Gona">Step 1 · Farm Setup</span>
+      </div>
+      <div class="fd-step-copy">
+        <div>
+          <span class="fd-step-num" data-lang-ha="1 · Shigar da bayanin gona">1 · Enter the farm</span>
+          <h3 class="fd-step-heading" data-lang-ha="Zabi karamar hukuma da shuka">Pick LGA, past crop, and priorities</h3>
+          <p class="fd-step-body" data-lang-ha="Zabi karamar hukumar manomi, abin da aka shuka bara, nau'in kasa, da abin da aka fi bukata.">
+            Pick the farmer's LGA, what they planted last season, their soil, and what matters most for the farm.
+          </p>
+        </div>
+        <span class="fd-step-cta" data-lang-ha="Bude Shafin Gona →">Open Farm Setup →</span>
       </div>
     </a>
 
     <a class="fd-step-card" href="/compare?{{ query_string }}">
-      <div>
-        <span class="fd-step-num" data-lang-ha="2 · Duba damina da kwatanci">2 · Check the season &amp; compare</span>
-        <h3 class="fd-step-heading" data-lang-ha="Gwada ruwan sama da zabin juyin shuka">Check water fit and compare options</h3>
-        <p class="fd-step-body" data-lang-ha="Duba lokacin fara ruwan sama, shin amfanin gona na da isasshen ruwa, sannan a kwatanta da sababbin zabuka biyu.">
-          See local rain onset and length, check if crops have enough water, and compare the current plan against two rotations.
-        </p>
+      <div class="fd-step-visual">
+        <div class="fd-mini-phone">
+          <div class="fd-mini-phone-notch" aria-hidden="true"></div>
+          <img
+            class="fd-mini-phone-img"
+            src="/static/img/mobile/mobile-compare.webp"
+            alt="Step 2 mobile screen showing side-by-side rotation comparison across rainfall scenarios"
+            width="180"
+            height="152"
+            loading="lazy"
+          >
+        </div>
+        <span class="fd-step-pill" data-lang-ha="Mataki 2 · Kwatanta Zabuka">Step 2 · Compare Plans</span>
+      </div>
+      <div class="fd-step-copy">
+        <div>
+          <span class="fd-step-num" data-lang-ha="2 · Duba damina da kwatanci">2 · Check the season &amp; compare</span>
+          <h3 class="fd-step-heading" data-lang-ha="Gwada ruwan sama da zabin juyin shuka">Check water fit and compare options</h3>
+          <p class="fd-step-body" data-lang-ha="Duba lokacin fara ruwan sama, shin amfanin gona na da isasshen ruwa, sannan a kwatanta da sababbin zabuka biyu.">
+            See local rain onset and length, check if crops have enough water, and compare the current plan against two rotations.
+          </p>
+        </div>
+        <span class="fd-step-cta" data-lang-ha="Kwatanta Zabuka →">Compare Rotations →</span>
       </div>
     </a>
 
     <a class="fd-step-card" href="/share?{{ query_string }}">
-      <div>
-        <span class="fd-step-num" data-lang-ha="3 · Raba shawara da manomi">3 · Share with the farmer</span>
-        <h3 class="fd-step-heading" data-lang-ha="Fitar da takarda ko ajiye a waya">Print a field card or save offline</h3>
-        <p class="fd-step-body" data-lang-ha="Buga takardar shawarar gona mai shafi daya, kwafi takaitaccen bayani, ko ajiye bayanan ziyara a wayarka.">
-          Print a one-page extension card, copy a plain-language summary, or save the visit log right on your phone.
-        </p>
+      <div class="fd-step-visual">
+        <div class="fd-mini-phone">
+          <div class="fd-mini-phone-notch" aria-hidden="true"></div>
+          <img
+            class="fd-mini-phone-img"
+            src="/static/img/mobile/mobile-share.webp"
+            alt="Step 3 mobile screen showing printable field card and WhatsApp farmer handoff summary"
+            width="180"
+            height="152"
+            loading="lazy"
+          >
+        </div>
+        <span class="fd-step-pill" data-lang-ha="Mataki 3 · Raba Shawara">Step 3 · Share Advice</span>
+      </div>
+      <div class="fd-step-copy">
+        <div>
+          <span class="fd-step-num" data-lang-ha="3 · Raba shawara da manomi">3 · Share with the farmer</span>
+          <h3 class="fd-step-heading" data-lang-ha="Fitar da takarda ko ajiye a waya">Print a field card or save offline</h3>
+          <p class="fd-step-body" data-lang-ha="Buga takardar shawarar gona mai shafi daya, kwafi takaitaccen bayani, ko ajiye bayanan ziyara a wayarka.">
+            Print a one-page extension card, copy a plain-language summary, or save the visit log right on your phone.
+          </p>
+        </div>
+        <span class="fd-step-cta" data-lang-ha="Bude Shafin Rabawa →">Open Share Handoff →</span>
       </div>
     </a>
   </div>
@@ -581,14 +907,85 @@
 <script>
   (function () {
     const resumeBtn = document.getElementById("landingResumeBtn");
-    if (!resumeBtn || !window.FDStore) return;
-    const saved = window.FDStore.load();
-    if (saved && saved.savedAt) {
-      const qs = window.FDStore.toQuery(saved);
-      resumeBtn.href = "/compare?" + qs;
-      resumeBtn.textContent = "Resume last visit (" + saved.lga + ") →";
-      resumeBtn.setAttribute("data-lang-ha", "Ci gaba da ziyarar baya (" + saved.lga + ") →");
+    if (resumeBtn && window.FDStore) {
+      const saved = window.FDStore.load();
+      if (saved && saved.savedAt) {
+        const qs = window.FDStore.toQuery(saved);
+        resumeBtn.href = "/compare?" + qs;
+        resumeBtn.textContent = "Resume last visit (" + saved.lga + ") →";
+        resumeBtn.setAttribute("data-lang-ha", "Ci gaba da ziyarar baya (" + saved.lga + ") →");
+      }
     }
+
+    const stage = document.getElementById("phoneStage");
+    const captionEl = document.getElementById("showcaseCaption");
+    const actionEl = document.getElementById("showcaseScreenLink");
+    const lgaName = {{ benchmark.lga|tojson }};
+    const qs = {{ query_string|tojson }};
+    if (!stage || !captionEl || !actionEl) return;
+
+    const SCREEN_META = {
+      compare: {
+        en: "Compare current crops against two locally suited rotations in " + lgaName + " across 7 field checks.",
+        ha: "Kwatanta shukar yanzu da zabukan juyin shuka a " + lgaName + " a fadin ma'auni 7.",
+        linkEn: "Open Compare Plans →",
+        linkHa: "Bude Kwatancin →",
+        href: "/compare?" + qs
+      },
+      season: {
+        en: "Inspect 45 years of rain onset, heat shifts, and month-by-month water fit for " + lgaName + ".",
+        ha: "Duba tarihin shekaru 45 na fara ruwan sama, zafi, da ruwan kowane wata a " + lgaName + ".",
+        linkEn: "Open Rain & Season →",
+        linkHa: "Duba Ruwan Sama →",
+        href: "/season?" + qs
+      },
+      map: {
+        en: "Explore all 23 Kaduna LGAs on satellite tiles, 5 km state layers, and clickable 1 km cells.",
+        ha: "Bincika dukkan kananan hukumomi 23 na Kaduna da taswirar tauraron dan adam mai fadin kilomita 1.",
+        linkEn: "Open 23-LGA Map →",
+        linkHa: "Bude Taswirar LGA 23 →",
+        href: "/map?" + qs
+      }
+    };
+
+    const tabs = Array.prototype.slice.call(document.querySelectorAll(".fd-screen-tab"));
+    const phones = Array.prototype.slice.call(document.querySelectorAll(".fd-phone-frame"));
+
+    function setActiveScreen(screenKey) {
+      const meta = SCREEN_META[screenKey];
+      if (!meta) return;
+      stage.setAttribute("data-active-screen", screenKey);
+
+      tabs.forEach(function (tab) {
+        const active = tab.getAttribute("data-screen-target") === screenKey;
+        tab.classList.toggle("is-active", active);
+        tab.setAttribute("aria-selected", active ? "true" : "false");
+      });
+
+      phones.forEach(function (phone) {
+        const active = phone.getAttribute("data-screen") === screenKey;
+        phone.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+
+      const isHa = document.documentElement.getAttribute("data-lang") === "ha";
+      captionEl.setAttribute("data-lang-ha", meta.ha);
+      captionEl.textContent = isHa ? meta.ha : meta.en;
+      actionEl.setAttribute("data-lang-ha", meta.linkHa);
+      actionEl.textContent = isHa ? meta.linkHa : meta.linkEn;
+      actionEl.href = meta.href;
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        setActiveScreen(tab.getAttribute("data-screen-target"));
+      });
+    });
+
+    phones.forEach(function (phone) {
+      phone.addEventListener("click", function () {
+        setActiveScreen(phone.getAttribute("data-screen"));
+      });
+    });
   })();
 </script>
 {% endblock %}

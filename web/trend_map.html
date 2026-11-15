@@ -845,8 +845,8 @@
     if (!leafletMap) {
       leafletMap = window.L.map(host, { scrollWheelZoom: false }).setView([10.52, 7.75], 8);
       basemapLayers.streets = window.L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        { attribution: "&copy; OpenStreetMap &copy; CARTO", maxZoom: 18 }
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+        { attribution: "Tiles &copy; Esri", maxZoom: 18 }
       ).addTo(leafletMap);
       basemapLayers.satellite = window.L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
