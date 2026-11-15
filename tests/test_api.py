@@ -179,6 +179,7 @@ def test_home_mobile_showcase_assets_and_budget() -> None:
     home_res = client.get("/")
     assert home_res.status_code == 200
     assert "supports farmer judgment" in home_res.text
+    assert home_res.text.count("/static/img/logo-mark.png") == 2
 
     total_bytes = len(home_res.content)
     for asset in ("/static/css/app.css", "/static/img/logo-mark.png"):
