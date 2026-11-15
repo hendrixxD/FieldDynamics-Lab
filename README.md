@@ -1,5 +1,5 @@
 # FieldDynamics-Lab
-Product URL: 
+Product URL: https://fielddynamics-lab.vercel.app/
 
 Our entry for the **2026 NASA Space Apps Challenge**, **Field Shift: Adapting Farms with NASA Data** (FieldShift).
 
