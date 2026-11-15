@@ -92,7 +92,7 @@ a {
 }
 
 .fd-topbar-inner {
-  max-width: 1360px;
+  max-width: 1240px;
   height: 64px;
   margin: 0 auto;
   padding: 0 20px;
@@ -246,6 +246,8 @@ a {
   display: none;
   align-items: center;
   gap: 4px;
+  border-left: 1px solid var(--line);
+  padding-left: 10px;
 }
 
 .fd-util-link {
@@ -655,9 +657,10 @@ a {
 
 .fd-chip.is-selected,
 .fd-chip[aria-pressed="true"] {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: #faf8f5;
+  background: var(--green);
+  border-color: var(--green);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(30, 77, 40, 0.2);
 }
 
 /* Dual-Encoded 12-Month Agroclimatological Strip (Color + Pattern + Label) */
@@ -821,37 +824,82 @@ a {
 }
 
 .fd-crop-tile {
+  position: relative;
   border-radius: 12px;
   border: 1.5px solid var(--line);
   background: var(--bg-card);
-  padding: 6px;
+  padding: 8px 8px 10px;
   cursor: pointer;
   text-align: center;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
 }
 
 .fd-crop-tile:hover {
   border-color: var(--line-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 32, 27, 0.06);
 }
 
 .fd-crop-tile.is-selected,
 .fd-crop-tile[aria-pressed="true"] {
-  border: 2px solid var(--ink);
-  background: var(--bg-warm);
+  border: 2px solid var(--green);
+  background: #f4f9f5;
+  box-shadow: 0 0 0 1px var(--green), 0 4px 12px rgba(30, 77, 40, 0.12);
+}
+
+.fd-crop-selected-badge {
+  display: none;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(30, 77, 40, 0.3);
+}
+
+.fd-crop-tile.is-selected .fd-crop-selected-badge,
+.fd-crop-tile[aria-pressed="true"] .fd-crop-selected-badge {
+  display: inline-flex;
 }
 
 .fd-crop-art {
-  height: 58px;
-  border-radius: 8px;
+  height: 64px;
+  border-radius: 9px;
   display: grid;
   place-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .fd-crop-tile-name {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.fd-crop-tile-family {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 0.02em;
+}
+
+.fd-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 /* Tap-for-Meaning Bottom Sheet / Modal */
@@ -1022,7 +1070,7 @@ a {
   }
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1120px) {
   .fd-util-links {
     display: flex;
   }

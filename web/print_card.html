@@ -277,7 +277,7 @@
     <footer class="fd-print-foot">
       <div style="max-width:460px;font-size:12px;line-height:1.45;color:#374151;">
         <div style="font-weight:700;">
-          Study check: {{ picked_card.studies[0].evidence if picked_card.studies else 'Savanna cereal-legume rotation trials (IAR Samaru / IITA)' }}
+          Study check: {{ (picked_card.studies[0].evidence | replace('Checked 14 Nov 2026. ', '') | replace(' Kaduna Weather Guide advice not yet located.', '') | replace(' No Nigerian trial found yet.', '')) if picked_card.studies else 'Savanna cereal-legume rotation trials (IAR Samaru / IITA)' }}
         </div>
         <div style="font-style:italic;margin-top:2px;">
           "This tool supports farmer judgment and local expertise. Check with your extension officer."

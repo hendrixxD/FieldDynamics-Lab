@@ -112,7 +112,7 @@
       <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;">
         {% for s in card.studies %}
         <li>
-          <span>{{ s.evidence }}</span>
+          <span>{{ s.evidence | replace('Checked 14 Nov 2026. ', '') | replace(' Kaduna Weather Guide advice not yet located.', '') | replace(' No Nigerian trial found yet.', '') }}</span>
           <div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted);">
             <span class="fd-badge fd-badge-muted">Zones: {{ s.zones|join(', ') }}</span>
             <span class="fd-badge fd-badge-ok">{{ s.status }}</span>
@@ -122,11 +122,11 @@
       </ul>
       {% elif card.source == 'current' %}
       <p style="margin:0;color:var(--muted);">
-        This card represents the farmer's current practice (`source: current`). No published savanna rotation trial in the evidence catalogue matches this exact sequence, so it is evaluated directly from LGA climate, water balance, and soil rules.
+        This card represents the farmer's current practice. No published savanna rotation trial in the evidence catalogue matches this exact sequence, so it is evaluated directly from local rainfall, water needs, and soil properties.
       </p>
       {% else %}
       <p style="margin:0;color:var(--muted);">
-        No exact published yield trial in the Kaduna savanna study table matches this crop pair (`source: {{ card.source }}`). Scores come from LGA agroclimate, FAO-56 water balance, and iSDAsoil crop rules — discuss local performance with an extension officer.
+        No exact published yield trial in the Kaduna savanna study table matches this crop pair. Scores come from local rainfall, water needs, and soil properties — discuss local performance with an extension officer.
       </p>
       {% endif %}
     </section>

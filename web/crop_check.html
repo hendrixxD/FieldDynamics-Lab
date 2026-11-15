@@ -14,14 +14,14 @@ lga={{ advisor_req.lga | urlencode }}&water={{ advisor_req.water | urlencode }}&
     <div style="display:flex;align-items:flex-start;gap:12px;">
       {{ crop_badge(cw.crop) }}
       <div>
-        <span class="fd-kicker is-blue" data-lang-ha="BINCIKEN RUWAN SHUKA · FAO-56">F3d · FAO-56 Water Diagnostic</span>
+        <span class="fd-kicker is-blue" data-lang-ha="BINCIKEN RUWAN SHUKA">Crop Water Check</span>
         <h1
           class="fd-h1"
           style="margin-top:4px;"
           data-lang-ha="Ma'aunin Ruwan Shuka · {{ cw.crop_label }} ({{ cw.lga }} LGA)"
         >Crop Water Balance · {{ cw.crop_label }} ({{ cw.lga }} LGA)</h1>
         <p class="fd-sub">
-          FAO-56 Penman-Monteith crop water demand (ETc) vs CHIRPS seasonal rainfall under {{ cw.season_type }} years.
+          Comparing {{ cw.crop_label }} water needs against local rainfall in {{ cw.season_type }} years.
         </p>
       </div>
     </div>

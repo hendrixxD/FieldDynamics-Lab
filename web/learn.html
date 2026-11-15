@@ -120,13 +120,13 @@
   <aside class="fd-card fd-learn-toc" aria-label="Scientific documentation sections">
     <p class="fd-section-label" data-lang-ha="Sassan Kimiyya">Methodology Index</p>
     <ul class="fd-toc-list" id="learnTocList">
-      <li><a class="fd-toc-link is-active" href="#sat-vs-ground">1. Satellite vs Ground Data (R24)</a></li>
-      <li><a class="fd-toc-link" href="#decision-logic">2. 4-Step Decision Engine (R16, R31)</a></li>
-      <li><a class="fd-toc-link" href="#si-models">3. Statistical &amp; SI Models (R27, R28)</a></li>
-      <li><a class="fd-toc-link" href="#datasets">4. NASA Datasets Used &amp; Excluded (R2, R34)</a></li>
-      <li><a class="fd-toc-link" href="#soil-health">5. How Crops Build Soil Health (R30)</a></li>
-      <li><a class="fd-toc-link" href="#uncertainty">6. Uncertainty &amp; Limits (R11, R21, R22)</a></li>
-      <li><a class="fd-toc-link" href="#glossary">7. Plain-Language Glossary (R23)</a></li>
+      <li><a class="fd-toc-link is-active" href="#sat-vs-ground">1. Satellite vs Ground Data</a></li>
+      <li><a class="fd-toc-link" href="#decision-logic">2. 4-Step Decision Engine</a></li>
+      <li><a class="fd-toc-link" href="#si-models">3. Statistical &amp; SI Models</a></li>
+      <li><a class="fd-toc-link" href="#datasets">4. NASA Datasets Used &amp; Excluded</a></li>
+      <li><a class="fd-toc-link" href="#soil-health">5. How Crops Build Soil Health</a></li>
+      <li><a class="fd-toc-link" href="#uncertainty">6. Uncertainty &amp; Limits</a></li>
+      <li><a class="fd-toc-link" href="#glossary">7. Plain-Language Glossary</a></li>
     </ul>
 
     <div class="fd-card-soft" style="margin-top:14px;">
@@ -163,8 +163,8 @@
     </div>
 
     <section id="sat-vs-ground" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-blue">Section 1 · Requirement R24</p>
-      <h2 class="fd-learn-h2" data-lang-ha="1. Bayanan Tauraron Dan Adam da Gaskiyar Kasa (R24)">1. Satellite Observations vs Ground Measurements</h2>
+      <p class="fd-learn-eyebrow is-blue">Section 1</p>
+      <h2 class="fd-learn-h2" data-lang-ha="1. Bayanan Tauraron Dan Adam da Gaskiyar Kasa">1. Satellite Observations vs Ground Measurements</h2>
       <p class="fd-learn-lead">
         Remote sensing provides consistent multi-decade coverage across all 23 Kaduna Local Government Areas, while field measurements capture plot-level chemistry and biological history invisible from orbit.
       </p>
@@ -227,14 +227,14 @@
     </section>
 
     <section id="decision-logic" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-green">Section 2 · Requirements R16, R29, R31, R43</p>
-      <h2 class="fd-learn-h2" data-lang-ha="2. Tsarin Yanke Shawara Mataki 4 da Jadawalin LGA (R16, R31)">2. Harmonized LGA × Month Grid &amp; 4-Step Decision Engine</h2>
+      <p class="fd-learn-eyebrow is-green">Section 2</p>
+      <h2 class="fd-learn-h2" data-lang-ha="2. Tsarin Yanke Shawara Mataki 4 da Jadawalin LGA">2. Harmonized LGA × Month Grid &amp; 4-Step Decision Engine</h2>
       <p class="fd-learn-lead">
         Data decides; published savanna agronomy checks the decision. Every sensor is harmonized onto a common cropland-masked <strong>LGA × Month</strong> and <strong>LGA × Year</strong> grid in <span class="fd-mono-pill">EPSG:4326</span> (area and slope maths in <span class="fd-mono-pill">UTM Zone 32N</span>).
       </p>
 
       <div class="fd-alert fd-alert-green" style="margin-bottom:16px;">
-        <strong>Cropland Masking &amp; Resampling (R29, R43):</strong> All vegetation, terrain, and soil layers are masked to
+        <strong>Cropland Masking &amp; Resampling:</strong> All vegetation, terrain, and soil layers are masked to
         <strong>ESA WorldCover v200 10 m cropland (class 40)</strong> before server-side aggregation in Google Earth Engine, preventing forest reserves and urban roofs from distorting farm indicators. Continuous fields use bilinear/area-mean reduction; categorical layers preserve class rules.
       </div>
 
@@ -272,8 +272,8 @@
     </section>
 
     <section id="si-models" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-terra">Section 3 · Requirements R27, R28, R33</p>
-      <h2 class="fd-learn-h2" data-lang-ha="3. Samfuran Kididdiga da SI da Gwaje-gwajen Gaskiya (R27, R28)">3. Statistical &amp; SI Models: Held-Out Evaluation &amp; Honesty Rule</h2>
+      <p class="fd-learn-eyebrow is-terra">Section 3</p>
+      <h2 class="fd-learn-h2" data-lang-ha="3. Samfuran Kididdiga da SI da Gwaje-gwajen Gaskiya">3. Statistical &amp; SI Models: Held-Out Evaluation &amp; Honesty Rule</h2>
       <p class="fd-learn-lead">
         Every statistical and SI method is tested on temporally or spatially grouped folds against a simpler baseline — never random splits — and negative results are reported transparently.
       </p>
@@ -365,7 +365,7 @@
               <td>Statewide groundnut shortfall is <strong>5.3%</strong> (Penman-Monteith) vs <strong>4.5%</strong> (Hargreaves); northern LGAs face <strong>20–29%</strong> groundnut ripening shortfall, and late-start years cut 125-day maize season fit to <strong>56%</strong> vs 84–100% for cowpea/soybean.</td>
             </tr>
             <tr>
-              <td><strong>A16 System Backtest</strong><br><small>LOO 2000–2024 (R33)</small></td>
+              <td><strong>A16 System Backtest</strong><br><small>LOO 2000–2024</small></td>
               <td>Card warning (&lt;80% season fit) conditioned on A5 season type</td>
               <td>Unconditioned LGA warning (no season type)</td>
               <td><strong>85% hit rate</strong> and <strong>10% false alarms</strong> (<span class="fd-mono-pill">18.7×</span> lift) on maize failing to finish in the rains vs 81% hits and <strong>29% false alarms</strong> (<span class="fd-mono-pill">7.1×</span> lift) without season type; flags 2017 Late-start bad year across 52% of LGAs.</td>
@@ -376,8 +376,8 @@
     </section>
 
     <section id="datasets" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-green">Section 4 · Requirements R2, R34</p>
-      <h2 class="fd-learn-h2" data-lang-ha="4. Bayanan NASA da Aka Yi Amfani da Su da Wanda Aka Cire (R2, R34)">4. NASA &amp; Partner Datasets Catalog (Used &amp; Excluded)</h2>
+      <p class="fd-learn-eyebrow is-green">Section 4</p>
+      <h2 class="fd-learn-h2" data-lang-ha="4. Bayanan NASA da Aka Yi Amfani da Su da Wanda Aka Cire">4. NASA &amp; Partner Datasets Catalog (Used &amp; Excluded)</h2>
       <p class="fd-learn-lead">
         Every ingested dataset is version-pinned and reduced server-side to Kaduna's 23 LGAs (<span class="fd-mono-pill">docs/sources.md</span>). Datasets whose spatial footprint or orbital sampling cannot support honest LGA rotation advice are explicitly excluded.
       </p>
@@ -446,7 +446,7 @@
               <td><strong>ESA WorldCover v200 &amp; geoBoundaries</strong><br><small>Class 40 Cropland + GRID3 NGA ADM2</small></td>
               <td>10 m / Vector</td>
               <td>2021 / 2022</td>
-              <td>10 m agricultural land mask (R43) and official 23-LGA polygon boundaries in EPSG:4326.</td>
+              <td>10 m agricultural land mask and official 23-LGA polygon boundaries in EPSG:4326.</td>
             </tr>
             <tr>
               <td><strong>FAO ECOCROP &amp; ERA5-Land</strong><br><small>Recocrop 0.4-2 + ECMWF 0.1° Reanalysis</small></td>
@@ -464,7 +464,7 @@
         </table>
       </div>
 
-      <p class="fd-section-label">(b) NASA Datasets Considered &amp; Excluded (Requirement R34)</p>
+      <p class="fd-section-label">(b) NASA Datasets Considered &amp; Excluded</p>
       <div class="fd-table-wrap">
         <table class="fd-table">
           <thead>
@@ -496,8 +496,8 @@
     </section>
 
     <section id="soil-health" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-green">Section 5 · Requirement R30</p>
-      <h2 class="fd-learn-h2" data-lang-ha="5. Yadda Amfanin Gona Daban-daban Ke Gina Lafiyar Kasa (R30)">5. How Different Functional Crop Groups Build Soil Health</h2>
+      <p class="fd-learn-eyebrow is-green">Section 5</p>
+      <h2 class="fd-learn-h2" data-lang-ha="5. Yadda Amfanin Gona Daban-daban Ke Gina Lafiyar Kasa">5. How Different Functional Crop Groups Build Soil Health</h2>
       <p class="fd-learn-lead">
         Rotating crops across botanical families repairs multiple soil and pest constraints simultaneously instead of relying on synthetic nitrogen alone.
       </p>
@@ -538,8 +538,8 @@
     </section>
 
     <section id="uncertainty" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-terra">Section 6 · Requirements R11, R21, R22</p>
-      <h2 class="fd-learn-h2" data-lang-ha="6. Rashin Tabbas, Iyakokin Tauraron Dan Adam da Hukuncin Manomi (R11, R21, R22)">6. Uncertainty Scoring, Spatial Limits &amp; Human Extension Role</h2>
+      <p class="fd-learn-eyebrow is-terra">Section 6</p>
+      <h2 class="fd-learn-h2" data-lang-ha="6. Rashin Tabbas, Iyakokin Tauraron Dan Adam da Hukuncin Manomi">6. Uncertainty Scoring, Spatial Limits &amp; Human Extension Role</h2>
       <p class="fd-learn-lead">
         Every recommendation carries an explicit <strong>A12 Confidence Score (0–8 points)</strong> and standing data-gap disclosures so uncertainty is never hidden behind a polished score.
       </p>
@@ -560,7 +560,7 @@
         <div class="fd-card-soft">
           <span class="fd-badge fd-badge-low">Low Confidence (&lt; 4 / 8 · Check First)</span>
           <p style="margin:8px 0 0;font-size:13px;color:var(--ink-soft);">
-            <strong>5 LGAs:</strong> Chikun, Jaba, Kachia, Kaduna North, Kaduna South. Wooded southern cloud cover or urban low-cropland share (&lt;15%) triggers <span class="fd-mono-pill">check_first = true</span> (R22).
+            <strong>5 LGAs:</strong> Chikun, Jaba, Kachia, Kaduna North, Kaduna South. Wooded southern cloud cover or urban low-cropland share (&lt;15%) triggers <span class="fd-mono-pill">check_first = true</span>.
           </p>
         </div>
       </div>
@@ -573,8 +573,8 @@
     </section>
 
     <section id="glossary" class="fd-card fd-learn-section">
-      <p class="fd-learn-eyebrow is-blue">Section 7 · Requirement R23 · Live Values for {{ sv.lga }} LGA</p>
-      <h2 class="fd-learn-h2" data-lang-ha="7. Kamus na Kalmomin Kimiyya cikin Sauki (R23)">7. Plain-Language Agro-Climate Glossary ({{ sv.lga }} LGA)</h2>
+      <p class="fd-learn-eyebrow is-blue">Section 7 · Live Values for {{ sv.lga }} LGA</p>
+      <h2 class="fd-learn-h2" data-lang-ha="7. Kamus na Kalmomin Kimiyya cikin Sauki">7. Plain-Language Agro-Climate Glossary ({{ sv.lga }} LGA)</h2>
       <p class="fd-learn-lead">
         Every technical indicator used across the season strip and rotation cards is translated below in plain language alongside its live reading in <strong>{{ sv.lga }}</strong>.
       </p>

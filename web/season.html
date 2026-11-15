@@ -20,7 +20,7 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
         data-lang-ha="Mataki na 3 · Yanayin Damina da Sauyin Yanayi na {{ sv.lga }} LGA"
       >Step 3 · {{ sv.lga }} LGA Season &amp; Long-Term Climate Shift</h1>
       <p class="fd-sub">
-        CHIRPS &amp; NASA POWER 45-year agroclimatology (1981–2025) &amp; MODIS 250m cropland greenness.
+        45 years of local rainfall, temperature, and field greenness records (1981–2025).
       </p>
 
       <div style="margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
@@ -73,7 +73,7 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
             </p>
           {% else %}
             <p style="margin:0;font-size:15px;font-weight:800;color:var(--ink);line-height:1.35;">
-              45-Year Record (1981–2025): No statistically significant Mann-Kendall shift (p &ge; 0.05) in {{ sv.lga }}
+              45-Year Record (1981–2025): Rain onset and seasonal totals have stayed broadly steady in {{ sv.lga }}
             </p>
           {% endif %}
 
@@ -82,11 +82,11 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
               {% if tr.series in ('heat_days', 'onset_doy', 'season_rain_mm') %}
                 <span>
                   <strong style="color:var(--ink-soft);">
-                    {% if tr.series == 'heat_days' %}Heat &ge;35°C:{% elif tr.series == 'onset_doy' %}Onset Sen slope:{% else %}Seasonal rain:{% endif %}
+                    {% if tr.series == 'heat_days' %}Heat &ge;35°C:{% elif tr.series == 'onset_doy' %}Rain onset shift:{% else %}Seasonal rain:{% endif %}
                   </strong>
                   {{ "%+.1f"|format(tr.sen_slope_per_decade) }}
                   {% if tr.series == 'season_rain_mm' %}mm/dec{% else %}d/dec{% endif %}
-                  ({% if tr.significant %}significant, p &lt; 0.05{% else %}not significant{% endif %})
+                  ({% if tr.significant %}clear long-term shift{% else %}steady{% endif %})
                 </span>
               {% endif %}
             {% endfor %}
@@ -210,11 +210,11 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
 
       <div class="fd-metrics-4" style="font-size:12.5px;">
         <div>
-          <span style="color:var(--muted);display:block;">Rain vs ET0 Demand</span>
+          <span style="color:var(--muted);display:block;">Rain vs Crop Need</span>
           <strong style="font-family:var(--font-mono);" id="fdDrawerRainEt0">{{ dc.rain_mm }} mm / {{ dc.et0_mm }} mm</strong>
         </div>
         <div>
-          <span style="color:var(--muted);display:block;">Water Balance (P − ET0)</span>
+          <span style="color:var(--muted);display:block;">Monthly Water Balance</span>
           <strong style="font-family:var(--font-mono);" id="fdDrawerWb">{{ "%+.1f"|format(dc.water_balance_mm) }} mm</strong>
         </div>
         <div>
@@ -222,20 +222,20 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
           <strong style="font-family:var(--font-mono);" id="fdDrawerTempHeat">{{ dc.tmax_c }}°C · {{ dc.heat_days }} d</strong>
         </div>
         <div>
-          <span style="color:var(--muted);display:block;">Cropland NDVI · Bare · SMAP z</span>
-          <strong style="font-family:var(--font-mono);" id="fdDrawerNdviSmap">NDVI {{ dc.ndvi }} · {{ dc.bare_pct }}% bare · z {{ "%+.2f"|format(dc.smap_z) }}</strong>
+          <span style="color:var(--muted);display:block;">Field Cover &amp; Soil Moisture</span>
+          <strong style="font-family:var(--font-mono);" id="fdDrawerNdviSmap">NDVI {{ dc.ndvi }} · {{ dc.bare_pct }}% bare</strong>
         </div>
       </div>
     </div>
   </section>
 
   <div class="fd-grid-2">
-    <section class="fd-card" aria-label="Rainfall scenario simulation">
+    <section class="fd-card" aria-label="Test different rainfall years">
       <h2
         class="fd-section-label"
         style="color:var(--ink);font-size:12px;"
-        data-lang-ha="KWAIKWAYON YANAYIN RUWAN SAMA (I8, R39)"
-      >RAINFALL SCENARIO SIMULATION (I8, R39)</h2>
+        data-lang-ha="GWADA YANAYIN DAMINA DABAN-DABAN"
+      >TEST DIFFERENT RAINFALL YEARS</h2>
 
       {% set preferred_order = ['Typical', 'Late start', 'Dry spell', 'Wet'] %}
       <div class="fd-chip-group" role="group" aria-label="Select weather scenario">
@@ -262,17 +262,17 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
       </div>
 
       <p style="margin:12px 0 0;font-size:13px;line-height:1.55;color:var(--muted);">
-        K-means clustering (model <code>A5</code>, 2000–2024 CHIRPS + MODIS seasons) groups historical years in {{ sv.lga }} into these 4 real weather profiles. Switching scenarios dynamically redraws the 12-month strip above and re-scores rotation cards in Step 4.
+        Past seasons in {{ sv.lga }} fall into these 4 real weather patterns. Tap any pattern to see how the calendar and crop options respond.
       </p>
     </section>
 
-    <section class="fd-card" aria-label="NASA climate patterns summary">
+    <section class="fd-card" aria-label="Local climate signals">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
         <h2
           class="fd-section-label"
           style="margin:0;color:var(--ink);font-size:12px;"
-          data-lang-ha="TAKAITACCEN BAYANAN NASA NA YANAYI (R20)"
-        >NASA CLIMATE PATTERNS SUMMARY (R20)</h2>
+          data-lang-ha="ALAMOMIN YANAYI NA YANKI"
+        >LOCAL CLIMATE SIGNALS</h2>
         <span style="font-size:11.5px;color:var(--muted);">Tap ⓘ for plain meaning</span>
       </div>
 
@@ -317,8 +317,8 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
         href="/season/patterns?{{ query_string }}"
         class="fd-btn fd-btn-outline fd-btn-block"
         style="margin-top:14px;"
-        data-lang-ha="Bude Dukkan Alamomin Yanayi 9 na NASA (F3e) →"
-      >Open All 9 NASA Patterns Diagnostic Grid (F3e) →</a>
+        data-lang-ha="Duba Dukkan Alamomin Yanayi 9 →"
+      >View All 9 Local Climate Signals →</a>
     </section>
   </div>
 {% endblock %}
@@ -395,8 +395,7 @@ lga={{ (lga_val or advisor_req.lga) | urlencode }}&water={{ advisor_req.water | 
             btn.getAttribute("data-ndvi") +
             " · " +
             btn.getAttribute("data-bare") +
-            "% bare · z " +
-            formatSigned(btn.getAttribute("data-smap"), 2);
+            "% bare";
         }
       });
     });

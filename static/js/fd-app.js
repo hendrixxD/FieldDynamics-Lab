@@ -30,9 +30,9 @@
     "nav.compare": "4 Kwatanta",
     "nav.decide": "5 Zabi",
     "nav.share": "Aika",
-    "nav.map": "Taswirar LGA 23",
+    "nav.map": "Taswira",
     "nav.learn": "Kimiyya",
-    "nav.logs": "Tarihin Ziyara",
+    "nav.logs": "Tarihi",
     "nav.screens": "Dukkan Shafi",
     "footer.judgment": "Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonarku."
   };
@@ -47,9 +47,9 @@
     "nav.compare": "4 Compare",
     "nav.decide": "5 Decide",
     "nav.share": "Share",
-    "nav.map": "LGA Trend Map",
-    "nav.learn": "Learn Science",
-    "nav.logs": "Field Logs",
+    "nav.map": "Map",
+    "nav.learn": "Science",
+    "nav.logs": "Logs",
     "nav.screens": "All Screens",
     "footer.judgment": "This tool supports farmer judgment and local expertise. Check with your extension officer."
   };

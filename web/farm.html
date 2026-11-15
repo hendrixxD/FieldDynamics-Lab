@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% from "_crop_icon.html" import crop_svg, crop_art_bg %}
+{% from "_crop_icon.html" import crop_svg, crop_art_bg, crop_family, soil_icon, water_icon, equipment_icon %}
 
 {% block title %}Step 1 · Farm Profile & History · FieldDynamics{% endblock %}
 
@@ -214,7 +214,7 @@
         <span
           id="soilSourceBadge"
           class="fd-soil-source {% if is_soil_overridden %}is-manual{% else %}is-satellite{% endif %}"
-        >{% if is_soil_overridden %}Manual override · lowers confidence if Not sure{% else %}✓ iSDAsoil 30m Satellite Default{% if selected_lga_info.soil_ph is not none %} (pH {{ selected_lga_info.soil_ph }}){% endif %}{% endif %}</span>
+        >{% if is_soil_overridden %}Selected manually{% else %}✓ Typical for {{ advisor_req.lga }}{% if selected_lga_info.soil_ph is not none %} (pH {{ selected_lga_info.soil_ph }}){% endif %}{% endif %}</span>
       </div>
       <div class="fd-chip-group fd-chip-grid-4" role="group" aria-labelledby="soilGroupLabel">
         {% for soil_opt in ['Sandy', 'Loamy', 'Clay', 'Not sure'] %}
@@ -223,7 +223,10 @@
           class="fd-chip {% if active_soil == soil_opt %}is-selected{% endif %}"
           data-soil="{{ soil_opt }}"
           aria-pressed="{{ 'true' if active_soil == soil_opt else 'false' }}"
-        >{{ soil_opt }}</button>
+        >
+          <span class="fd-chip-icon" aria-hidden="true">{{ soil_icon(soil_opt) }}</span>
+          <span>{{ soil_opt }}</span>
+        </button>
         {% endfor %}
       </div>
     </div>
@@ -239,7 +242,10 @@
           class="fd-chip {% if advisor_req.water == water_opt %}is-selected{% endif %}"
           data-water="{{ water_opt }}"
           aria-pressed="{{ 'true' if advisor_req.water == water_opt else 'false' }}"
-        >{{ water_opt }}</button>
+        >
+          <span class="fd-chip-icon" aria-hidden="true">{{ water_icon(water_opt) }}</span>
+          <span>{{ water_opt }}</span>
+        </button>
         {% endfor %}
       </div>
     </div>
@@ -255,7 +261,10 @@
           class="fd-chip {% if advisor_req.equipment == equip_opt %}is-selected{% endif %}"
           data-equipment="{{ equip_opt }}"
           aria-pressed="{{ 'true' if advisor_req.equipment == equip_opt else 'false' }}"
-        >{{ equip_opt }}</button>
+        >
+          <span class="fd-chip-icon" aria-hidden="true">{{ equipment_icon(equip_opt) }}</span>
+          <span>{{ equip_opt }}</span>
+        </button>
         {% endfor %}
       </div>
     </div>
@@ -292,8 +301,10 @@
           data-crop-label="{{ cname }}"
           aria-pressed="{{ 'true' if cid in s1_crops else 'false' }}"
         >
-          <div class="fd-crop-art" style="{{ crop_art_bg(cid)|trim }}">{{ crop_svg(cid) }}</div>
+          <div class="fd-crop-art" style="{{ crop_art_bg(cid)|trim }}">{{ crop_svg(cid, 38) }}</div>
           <div class="fd-crop-tile-name">{{ cname }}</div>
+          <div class="fd-crop-tile-family">{{ crop_family(cid) }}</div>
+          <span class="fd-crop-selected-badge" aria-hidden="true">✓</span>
         </button>
         {% endfor %}
       </div>
@@ -332,8 +343,10 @@
           data-crop-label="{{ cname }}"
           aria-pressed="{{ 'true' if cid in s2_crops else 'false' }}"
         >
-          <div class="fd-crop-art" style="{{ crop_art_bg(cid)|trim }}">{{ crop_svg(cid) }}</div>
+          <div class="fd-crop-art" style="{{ crop_art_bg(cid)|trim }}">{{ crop_svg(cid, 38) }}</div>
           <div class="fd-crop-tile-name">{{ cname }}</div>
+          <div class="fd-crop-tile-family">{{ crop_family(cid) }}</div>
+          <span class="fd-crop-selected-badge" aria-hidden="true">✓</span>
         </button>
         {% endfor %}
       </div>
@@ -355,11 +368,11 @@
     {% set s2_title = s2_crops | map('replace', '_', ' ') | map('title') | join(' + ') %}
     <p class="fd-baseline-foot" id="baselineSummaryNote">
       {% if s2_crops and s2_crops == s1_crops and s1_crops|length == 1 %}
-      * Farmer baseline established as <strong>Continuous {{ s1_title }}</strong> (monocropping). This becomes Card 1 on the comparison screen.
+      Your current plan to compare: <strong>Continuous {{ s1_title }}</strong>.
       {% elif s2_crops %}
-      * Farmer baseline established as <strong>{{ s2_title }} → {{ s1_title }}</strong> (2-season sequence). This becomes Card 1 on the comparison screen.
+      Your current plan to compare: <strong>{{ s2_title }} → {{ s1_title }}</strong>.
       {% else %}
-      * Farmer baseline established as <strong>{{ s1_title }}</strong> (1-season history). This becomes Card 1 on the comparison screen.
+      Your current plan to compare: <strong>{{ s1_title }}</strong>.
       {% endif %}
     </p>
   </section>
@@ -506,14 +519,14 @@
 
     if (state.soilOverridden) {
       soilBadge.className = "fd-soil-source is-manual";
-      soilBadge.textContent = "Manual override · lowers confidence if Not sure";
+      soilBadge.textContent = "Selected manually";
     } else if (info) {
       soilBadge.className = "fd-soil-source is-satellite";
       var phSuffix = info.soil_ph !== null && info.soil_ph !== undefined ? " (pH " + info.soil_ph + ")" : "";
-      soilBadge.textContent = "✓ iSDAsoil 30m Satellite Default" + phSuffix;
+      soilBadge.textContent = "✓ Typical for " + state.lga + phSuffix;
     } else {
       soilBadge.className = "fd-soil-source is-manual";
-      soilBadge.textContent = "Choose LGA for iSDAsoil default";
+      soilBadge.textContent = "Choose an LGA first";
     }
   }
 
@@ -563,7 +576,7 @@
 
     baselineNote.textContent = "";
     if (s1Names.length === 0) {
-      baselineNote.textContent = "* Choose at least one crop in Season 1 (Last Year) to establish the farmer's baseline rotation.";
+      baselineNote.textContent = "Choose at least one crop in Season 1 (Last Year) to set your current plan.";
     } else {
       var s1Joined = s1Names.join(" + ");
       var s2Joined = s2Names.join(" + ");
@@ -571,23 +584,17 @@
         state.s2.length === 1 &&
         state.s1.length === 1 &&
         state.s2[0] === state.s1[0];
-      baselineNote.appendChild(document.createTextNode("* Farmer baseline established as "));
+      baselineNote.appendChild(document.createTextNode("Your current plan to compare: "));
       var strong = document.createElement("strong");
-      var tail = "";
       if (sameSingle) {
         strong.textContent = "Continuous " + s1Joined;
-        tail = " (monocropping). This becomes Card 1 on the comparison screen.";
       } else if (s2Names.length > 0) {
         strong.textContent = s2Joined + " → " + s1Joined;
-        tail =
-          (state.s1.length > 1 || state.s2.length > 1 ? " (intercrop sequence)" : " (2-season sequence)") +
-          ". This becomes Card 1 on the comparison screen.";
       } else {
         strong.textContent = s1Joined;
-        tail = " (1-season history). This becomes Card 1 on the comparison screen.";
       }
       baselineNote.appendChild(strong);
-      baselineNote.appendChild(document.createTextNode(tail));
+      baselineNote.appendChild(document.createTextNode("."));
     }
 
     var canProceed = Boolean(state.lga && lgaByName[state.lga] && state.s1.length >= 1);

@@ -11,8 +11,8 @@
 
   {% if scored.close_call %}
   <div class="fd-alert fd-alert-blue" role="status">
-    <strong data-lang-ha="Kusa da juna (Gwajin Nauyi):">Close call (Sensitivity Check):</strong>
-    Option A and Option B swap places in ≥30% of 200 weight-perturbation runs (±20%). Discuss both closely with your extension officer.
+    <strong data-lang-ha="Kusa da juna:">Close call:</strong>
+    Option A and Option B score very closely for your goals — discuss both options with your extension officer.
   </div>
   {% endif %}
 
@@ -31,7 +31,7 @@
     <div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
         <span class="fd-section-label" style="margin:0;">
-          CARD {{ loop.index }} · {{ card.badge }}
+          {{ 'Current plan' if card.badge == 'Current' else ('Top match · Option A' if card.badge == 'Option A' else 'Second option · Option B') }}
         </span>
         {% if card.badge == 'Current' %}
         <span class="fd-badge fd-badge-muted" data-lang-ha="Tsarin Yanzu">Current Rotation</span>

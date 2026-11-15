@@ -271,8 +271,8 @@
 <section class="fd-page-head">
   <div>
     <h1 class="fd-h1" data-lang-ha="Mataki na 2 · Bukatun Manomi da Kasuwa">Step 2 · Farmer Priorities &amp; Market</h1>
-    <p class="fd-sub" data-lang-ha="Zabi bukatu har zuwa 3. Bukatun da aka zaba suna samun nauyi ninki 3× a makin musayar shuka.">
-      Select up to 3 goals. Chosen priorities receive 3× weighting in rotation scoring.
+    <p class="fd-sub" data-lang-ha="Zabi bukatu har zuwa 3 da suka fi muhimmanci ga wannan gona.">
+      Select up to 3 goals that matter most for this farm.
     </p>
   </div>
   <div>
@@ -289,7 +289,7 @@
   <section class="fd-card fd-prio-card" aria-label="7 agronomic priority dimensions">
     <div>
       <div class="fd-prio-head">
-        <h2 class="fd-prio-heading" data-lang-ha="BANGARORIN BUKATUN GONA 7">7 AGRONOMIC PRIORITY DIMENSIONS</h2>
+        <h2 class="fd-prio-heading" data-lang-ha="ABIN DA YA FI MUHIMMANCI A WANNAN GONA">WHAT MATTERS MOST ON THIS FARM</h2>
         <span class="fd-prio-count-pill" id="prioCountBadge" aria-live="polite">
           {{ advisor_req.priorities|length }} of 3 chosen
         </span>
@@ -369,7 +369,7 @@
     </div>
 
     <p class="fd-card-footnote">
-      * R42 compliance: Nitrogen and organic matter are evaluated as separate scientific dimensions.
+      Pick up to 3 priorities — or leave blank to rank options by local soil and rainfall needs.
     </p>
   </section>
 
@@ -403,20 +403,19 @@
       </div>
 
       <div class="fd-card-soft fd-matrix-box">
-        <h3 class="fd-matrix-title" data-lang-ha="TSARIN AUNA NAUYIN MAKI">ALGORITHM WEIGHTING MATRIX</h3>
+        <h3 class="fd-matrix-title" data-lang-ha="YADDA ZABINKA KE JAGORANTAR SHAWARA">HOW YOUR GOALS SHAPE THE RANKING</h3>
         <div class="fd-matrix-rows" id="weightingMatrixRows" aria-live="polite">
           {% for dim_key in dimensions_order %}
-          {% set w_val = scored.weights[dim_key] %}
           {% set is_prio_dim = dim_key in ns.chosen_dims %}
           <div class="fd-matrix-row {% if is_prio_dim %}is-prio{% endif %}" data-matrix-dim="{{ dim_key }}">
             <span class="fd-matrix-dim">{{ dimension_labels[dim_key] }}:</span>
             {% if is_prio_dim %}
             <span class="fd-matrix-val {% if dim_key == 'water' %}is-blue{% else %}is-green{% endif %}">
-              Weight 3× (Priority · {{ "%.2g"|format(w_val) }})
+              Top priority
             </span>
             {% else %}
             <span class="fd-matrix-val is-base">
-              Base {{ "%.2g"|format(w_val) }}×
+              Standard check
             </span>
             {% endif %}
           </div>
@@ -573,10 +572,10 @@
       var valSpan = document.createElement("span");
       if (isPrio) {
         valSpan.className = "fd-matrix-val " + (dimKey === "water" ? "is-blue" : "is-green");
-        valSpan.textContent = "Weight 3× (Priority · " + formatWeight(wVal) + ")";
+        valSpan.textContent = "Top priority";
       } else {
         valSpan.className = "fd-matrix-val is-base";
-        valSpan.textContent = "Base " + formatWeight(wVal) + "×";
+        valSpan.textContent = "Standard check";
       }
 
       row.appendChild(nameSpan);
