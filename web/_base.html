@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="stylesheet" href="/static/css/app.css">
   {% block head_extra %}{% endblock %}
 </head>
@@ -16,7 +19,9 @@
     <div class="fd-topbar-inner">
       <div class="fd-brand-group">
         <a class="fd-brand" href="/?{{ query_string }}">
-          <span class="fd-mark" aria-hidden="true">FD</span>
+          <span class="fd-mark" aria-hidden="true">
+            <img src="/static/img/logo-mark.svg" alt="FD Logo" width="34" height="34" style="width:100%;height:100%;border-radius:9px;display:block;">
+          </span>
           <span>FieldDynamics</span>
         </a>
         <span class="fd-role-pill" data-i18n="nav.advisor">Kaduna Rotation Advisor</span>

@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -199,6 +199,15 @@ def select_card(cards: list[dict[str, Any]], slot: str) -> tuple[str, dict[str, 
 # --------------------------------------------------------------------------- #
 # JSON API routes
 # --------------------------------------------------------------------------- #
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon() -> FileResponse:
+    """Serve the root favicon icon."""
+    favicon_path = STATIC_DIR / "favicon.ico"
+    if not favicon_path.exists():
+        raise HTTPException(status_code=404, detail="Favicon not found")
+    return FileResponse(favicon_path, media_type="image/x-icon")
+
+
 @app.get("/api/health")
 def health() -> HealthResponse:
     """Report that the app started, so a preview can be confirmed as running."""

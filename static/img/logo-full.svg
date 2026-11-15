@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 80" width="380" height="80">
+  <defs>
+    <linearGradient id="fullBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#143e20"/>
+      <stop offset="100%" stop-color="#24572e"/>
+    </linearGradient>
+    <linearGradient id="fullGold" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="fullGreen" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#15803d"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <linearGradient id="fullOrbit" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#a7f3d0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Emblem Mark (64x64 at 8,8) -->
+  <g transform="translate(8, 8) scale(0.5)">
+    <rect x="4" y="4" width="120" height="120" rx="30" fill="url(#fullBg)" stroke="#327542" stroke-width="2.5"/>
+    <path d="M 22 96 C 24 50, 60 26, 104 26" fill="none" stroke="url(#fullOrbit)" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="98" cy="28" r="6" fill="#38bdf8"/>
+    <circle cx="98" cy="28" r="3" fill="#ffffff"/>
+    <path d="M 22 104 C 42 104, 76 94, 96 66" fill="none" stroke="url(#fullGold)" stroke-width="7.5" stroke-linecap="round"/>
+    <path d="M 22 84 C 36 84, 62 76, 78 52" fill="none" stroke="url(#fullGreen)" stroke-width="6.5" stroke-linecap="round"/>
+    <path d="M 38 106 Q 44 76, 60 56" fill="none" stroke="#86efac" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 60 56 C 58 40, 74 34, 82 32 C 84 46, 74 54, 60 56 Z" fill="url(#fullGreen)"/>
+    <path d="M 52 70 C 44 64, 42 54, 48 48 C 54 50, 56 60, 52 70 Z" fill="#86efac"/>
+    <circle cx="38" cy="104" r="5" fill="#fbbf24"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="86" y="44" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.03em" fill="#18201b">
+    Field<tspan fill="#1e4d28">Dynamics</tspan>
+  </text>
+  <text x="88" y="62" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10" font-weight="700" letter-spacing="0.08em" fill="#5a665d" text-transform="uppercase">
+    Kaduna Agricultural Adaptation Lab
+  </text>
+</svg>
