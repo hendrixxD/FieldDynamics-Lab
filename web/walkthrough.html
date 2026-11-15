@@ -1,9 +1,14 @@
 {% extends "_base.html" %}
 
 {% block title %}All 18 Live Screens · FieldDynamics Interactive Workbench{% endblock %}
+{% block main_class %}fd-main-wide{% endblock %}
 
 {% block head_extra %}
 <style>
+  .fd-main.fd-main-wide {
+    max-width: 1560px;
+    width: 100%;
+  }
   .fd-wt-toolbar {
     display: flex;
     align-items: center;
@@ -57,6 +62,15 @@
   .fd-wt-layout {
     display: grid;
     gap: 18px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  @media (min-width: 1024px) {
+    .fd-wt-layout {
+      grid-template-columns: 310px minmax(0, 1fr);
+      align-items: start;
+    }
   }
   .fd-wt-sidebar {
     background: var(--bg-card);
@@ -128,6 +142,11 @@
     flex-direction: column;
     align-items: center;
     min-height: 820px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   .fd-wt-chrome {
     width: 100%;
@@ -141,6 +160,7 @@
     border-radius: 10px;
     background: var(--bg-card);
     border: 1px solid var(--line);
+    box-sizing: border-box;
   }
   .fd-wt-url-pill {
     font-family: var(--font-mono);
@@ -153,12 +173,14 @@
   }
   .fd-wt-frame-shell {
     width: 100%;
-    max-width: 1280px;
+    max-width: 100%;
     background: #ffffff;
     border-radius: 14px;
     border: 2px solid var(--line-strong);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
     transition: max-width 0.2s ease, border-radius 0.2s ease;
   }
   .fd-wt-frame-shell.is-mobile {
@@ -166,12 +188,20 @@
     border: 8px solid #18201b;
     border-radius: 28px;
   }
+  .fd-wt-iframe-wrap {
+    width: 100%;
+    height: 760px;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+  }
   .fd-wt-iframe {
     width: 100%;
-    height: 740px;
+    height: 100%;
     border: 0;
     display: block;
     background: var(--bg-canvas);
+    transform-origin: 0 0;
   }
   .fd-wt-grid-card {
     display: flex;
@@ -228,7 +258,10 @@
         Mobile 360px
       </button>
       <button type="button" class="fd-wt-seg-btn is-active" id="vpDesktopBtn" data-vp="desktop">
-        Desktop 1280px
+        Desktop (Fit)
+      </button>
+      <button type="button" class="fd-wt-seg-btn" id="vpFullBtn" data-vp="full">
+        Full 1280px
       </button>
     </div>
   </div>
@@ -293,12 +326,14 @@
     </div>
 
     <div class="fd-wt-frame-shell" id="wtFrameShell">
-      <iframe
-        id="liveScreenFrame"
-        class="fd-wt-iframe"
-        src="/?{{ query_string }}"
-        title="Live FieldDynamics screen preview"
-      ></iframe>
+      <div class="fd-wt-iframe-wrap" id="wtIframeWrap">
+        <iframe
+          id="liveScreenFrame"
+          class="fd-wt-iframe"
+          src="/?{{ query_string }}"
+          title="Live FieldDynamics screen preview"
+        ></iframe>
+      </div>
     </div>
   </div>
 </section>
@@ -352,6 +387,7 @@
 
     var iframe = document.getElementById("liveScreenFrame");
     var frameShell = document.getElementById("wtFrameShell");
+    var iframeWrap = document.getElementById("wtIframeWrap");
     var counterEl = document.getElementById("wtCounter");
     var openLink = document.getElementById("openFullScreenLink");
     var activeBadge = document.getElementById("wtActiveBadge");
@@ -366,9 +402,68 @@
     var gridPanel = document.getElementById("wtGridPanel");
     var vpMobileBtn = document.getElementById("vpMobileBtn");
     var vpDesktopBtn = document.getElementById("vpDesktopBtn");
+    var vpFullBtn = document.getElementById("vpFullBtn");
     var vpGroup = document.getElementById("viewportToggleGroup");
 
     var currentIdx = 0;
+    var currentVp = "desktop";
+
+    function updateFrameScaling() {
+      if (!frameShell || !iframe) return;
+
+      if (currentVp === "mobile") {
+        frameShell.classList.add("is-mobile");
+        frameShell.style.maxWidth = "376px";
+        iframe.style.width = "360px";
+        iframe.style.height = "740px";
+        iframe.style.transform = "none";
+        if (iframeWrap) {
+          iframeWrap.style.height = "740px";
+          iframeWrap.style.overflow = "hidden";
+        }
+        return;
+      }
+
+      frameShell.classList.remove("is-mobile");
+
+      if (currentVp === "full") {
+        frameShell.style.maxWidth = "100%";
+        iframe.style.width = "1280px";
+        iframe.style.height = "760px";
+        iframe.style.transform = "none";
+        if (iframeWrap) {
+          iframeWrap.style.height = "760px";
+          iframeWrap.style.overflow = "auto";
+        }
+        return;
+      }
+
+      // "desktop" -> Contained to fit available space perfectly without clipping
+      frameShell.style.maxWidth = "100%";
+      var containerW = (iframeWrap ? iframeWrap.clientWidth : frameShell.clientWidth) || frameShell.offsetWidth;
+      var targetW = 1240;
+      var targetH = 780;
+
+      if (containerW > 50 && containerW < targetW) {
+        var scale = containerW / targetW;
+        iframe.style.width = targetW + "px";
+        iframe.style.height = Math.round(targetH / scale) + "px";
+        iframe.style.transform = "scale(" + scale + ")";
+        iframe.style.transformOrigin = "top left";
+        if (iframeWrap) {
+          iframeWrap.style.height = Math.round(targetH * scale) + "px";
+          iframeWrap.style.overflow = "hidden";
+        }
+      } else {
+        iframe.style.width = "100%";
+        iframe.style.height = targetH + "px";
+        iframe.style.transform = "none";
+        if (iframeWrap) {
+          iframeWrap.style.height = targetH + "px";
+          iframeWrap.style.overflow = "hidden";
+        }
+      }
+    }
 
     function setTab(mode) {
       var isLive = mode !== "grid";
@@ -379,13 +474,17 @@
       tabGridBtn.classList.toggle("is-active", !isLive);
       tabLiveBtn.setAttribute("aria-selected", isLive ? "true" : "false");
       tabGridBtn.setAttribute("aria-selected", !isLive ? "true" : "false");
+      if (isLive) {
+        setTimeout(updateFrameScaling, 50);
+      }
     }
 
     function setViewport(vp) {
-      var mobile = vp === "mobile";
-      frameShell.classList.toggle("is-mobile", mobile);
-      vpMobileBtn.classList.toggle("is-active", mobile);
-      vpDesktopBtn.classList.toggle("is-active", !mobile);
+      currentVp = vp || "desktop";
+      if (vpMobileBtn) vpMobileBtn.classList.toggle("is-active", currentVp === "mobile");
+      if (vpDesktopBtn) vpDesktopBtn.classList.toggle("is-active", currentVp === "desktop");
+      if (vpFullBtn) vpFullBtn.classList.toggle("is-active", currentVp === "full");
+      updateFrameScaling();
     }
 
     function selectScreen(idx) {
@@ -462,6 +561,19 @@
         setViewport("desktop");
       });
     }
+    if (vpFullBtn) {
+      vpFullBtn.addEventListener("click", function () {
+        setViewport("full");
+      });
+    }
+
+    window.addEventListener("resize", updateFrameScaling);
+    if (iframe) {
+      iframe.addEventListener("load", function () {
+        setTimeout(updateFrameScaling, 50);
+      });
+    }
+    setTimeout(updateFrameScaling, 100);
 
     var hashId = (window.location.hash || "").replace(/^#/, "");
     if (hashId) {
