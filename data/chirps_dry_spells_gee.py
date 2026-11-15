@@ -12,6 +12,7 @@ Method (all on Earth Engine's servers, one request per year)
   2. Walk the days in order with ImageCollection.iterate. Per pixel: run = run + 1 on a dry day
      (under 1 mm), else 0. A month is flagged when the run reaches the threshold on one of its
      days (7 days: Sivakumar's false-start length, as in A2; 10 days: A2's long spell).
+     One request per month (counting from 9 days before it) keeps each request small.
   3. Mask to cropland (ESA WorldCover 2021, class 40, via data.gee_extras.crop_mask_for) and
      take the mean per LGA: the share of the LGA's cropland in such a spell that month.
   A run already going on 1 June is counted from 1 June, so June shares are a lower bound.
@@ -45,50 +46,60 @@ WET_MM = 1.0  # a dry day has under 1 mm, as in A2 (ETCCDI)
 THRESHOLDS = (7, 10)  # days: A2's false-start length and A2's long dry spell
 MONTHS = (6, 7, 8, 9)  # June to September, inside the rains
 SCALE_M = 5566  # CHIRPS 0.05 degree pixel
+LOOKBACK_DAYS = max(THRESHOLDS) - 1  # a spell reaching k days in a month can start k-1 days earlier
+TILE_SCALE = 8  # smaller tiles for reduceRegions: Earth Engine's fix for its memory limit
 
 
-def year_image(ee, year: int):
-    """One image per year: band f'm{month}_{k}' is 1 where a k-day dry run reached k that month."""
+def month_image(ee, year: int, month: int):
+    """Band f'k{k}' is 1 where a k-day dry run reached k on a day of this month.
+
+    The run is counted from up to LOOKBACK_DAYS before the month (never before 1 June), so a
+    spell that starts late in the previous month is still seen. One month per request keeps the
+    iterate short (about 40 days, 3 bands), which stays inside Earth Engine's memory limit.
+    """
+    first = dt.date(year, month, 1)
+    start = max(dt.date(year, MONTHS[0], 1), first - dt.timedelta(days=LOOKBACK_DAYS))
+    end = dt.date(year + (month == 12), month % 12 + 1, 1)
     days = (
         ee.ImageCollection(COLLECTION)
-        .filterDate(f"{year}-06-01", f"{year}-10-01")
+        .filterDate(start.isoformat(), end.isoformat())
         .select(BAND)
         .sort("system:time_start")
     )
-    names = [f"m{m}_{k}" for m in MONTHS for k in THRESHOLDS]
-    start = ee.Image.constant([0] * (1 + len(names))).rename(["run", *names]).toInt()
+    names = [f"k{k}" for k in THRESHOLDS]
+    first_ms = ee.Date(first.isoformat()).millis()
+    initial = ee.Image.constant([0] * (1 + len(names))).rename(["run", *names]).toInt()
 
     def step(img, acc):
         acc = ee.Image(acc)
-        month = ee.Date(img.get("system:time_start")).get("month")
+        in_month = ee.Image.constant(ee.Number(img.get("system:time_start")).gte(first_ms))
         run = acc.select("run").add(1).multiply(img.lt(WET_MM)).rename("run").toInt()
         flags = [
-            acc.select(f"m{m}_{k}")
-            .Or(run.gte(k).And(ee.Image.constant(month.eq(m))))
-            .rename(f"m{m}_{k}")
-            .toInt()
-            for m in MONTHS
+            acc.select(f"k{k}").Or(run.gte(k).And(in_month)).rename(f"k{k}").toInt()
             for k in THRESHOLDS
         ]
         return ee.Image.cat([run, *flags])
 
-    return ee.Image(days.iterate(step, start)).select(names), days.first().projection()
+    return ee.Image(days.iterate(step, initial)).select(names), days.first().projection()
 
 
-def pull_year(ee, year: int, fc) -> pd.DataFrame:
-    """Share of each LGA's cropland flagged per month and threshold, for one year."""
-    image, proj = year_image(ee, year)
+def pull_month(ee, year: int, month: int, fc) -> pd.DataFrame:
+    """Share of each LGA's cropland flagged in one month, per threshold."""
+    image, proj = month_image(ee, year, month)
     # 10 m to 5.5 km in one jump folds ~3,100 pixels into each output pixel (EE allows 1,024),
     # so average to 100 m, then 1 km, then the CHIRPS grid.
     crop = crop_mask_for(proj.getInfo(), steps=((100, 1024), (1000, 1024)))
-    reduced = image.updateMask(crop).reduceRegions(fc, ee.Reducer.mean(), scale=SCALE_M)
-    rows = [f["properties"] for f in reduced.getInfo()["features"]]
-    wide = pd.DataFrame(rows)
-    long = wide.melt(id_vars=["lga"], var_name="key", value_name="share")
-    long[["month", "threshold"]] = long["key"].str.extract(r"m(\d+)_(\d+)").astype(int)
-    table = long.pivot_table(index=["lga", "month"], columns="threshold", values="share")
-    table.columns = [f"cropland_share_{k}plus" for k in table.columns]
-    return table.reset_index().assign(year=year)
+    reduced = image.updateMask(crop).reduceRegions(
+        fc, ee.Reducer.mean(), scale=SCALE_M, tileScale=TILE_SCALE
+    )
+    rows = pd.DataFrame([f["properties"] for f in reduced.getInfo()["features"]])
+    renamed = {f"k{k}": f"cropland_share_{k}plus" for k in THRESHOLDS}
+    return rows.rename(columns=renamed).assign(year=year, month=month)
+
+
+def pull_year(ee, year: int, fc) -> pd.DataFrame:
+    """Every month of the window for one year."""
+    return pd.concat([pull_month(ee, year, m, fc) for m in MONTHS], ignore_index=True)
 
 
 def main() -> None:
