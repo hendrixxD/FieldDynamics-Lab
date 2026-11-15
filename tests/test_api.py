@@ -20,6 +20,13 @@ def test_health_reports_ok() -> None:
     assert response.json() == {"status": "ok"}
 
 
+def test_favicon_serves_ico() -> None:
+    response = client.get("/favicon.ico")
+    assert response.status_code == 200
+    assert "image/x-icon" in response.headers.get("content-type", "")
+    assert len(response.content) > 0
+
+
 def test_score_returns_current_and_two_options() -> None:
     body = {"lga": "Zaria", "past_seasons": [["maize"], ["maize"]], "season_type": "Dry spell"}
     response = client.post("/api/score", json=body)

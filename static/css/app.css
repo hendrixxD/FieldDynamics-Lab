@@ -135,6 +135,7 @@ a {
   font-weight: 800;
   letter-spacing: -0.02em;
   flex-shrink: 0;
+  overflow: hidden;
   box-shadow: 0 1px 3px rgba(30, 77, 40, 0.25);
 }
 
