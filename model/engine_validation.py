@@ -74,7 +74,9 @@ def study_check(ranks: pd.DataFrame, data: EngineData) -> pd.DataFrame:
     return pd.DataFrame(out)
 
 
-def permutation_p(ranks: pd.DataFrame, studied: list[str], runs: int, seed: int) -> dict:
+def permutation_p(
+    ranks: pd.DataFrame, studied: list[str], runs: int, seed: int
+) -> dict[str, float | int]:
     """Is the studied sequences' mean percentile higher than random sets of the same size?"""
     by_seq = ranks.groupby("sequence")["percentile"].mean()
     observed = by_seq[by_seq.index.isin(studied)].mean()

@@ -62,6 +62,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from numpy.typing import ArrayLike
 
 log = logging.getLogger("soil_hydro")
 
@@ -71,14 +72,16 @@ OC_TO_OM = 1.724
 ENGINE_TOPSOIL = ("sand_content", "nitrogen_total", "carbon_organic")
 
 
-def col(prop, depth, stat):
+def col(prop: str, depth: str, stat: str) -> str:
     return f"{prop}__{depth}__value_{stat}"
 
 
 # --------------------------------------------------------------------------- #
 # Soil water: Saxton and Rawls, 2006
 # --------------------------------------------------------------------------- #
-def saxton_rawls(sand_pct, clay_pct, oc_gkg, bd_gcm3):
+def saxton_rawls(
+    sand_pct: ArrayLike, clay_pct: ArrayLike, oc_gkg: ArrayLike, bd_gcm3: ArrayLike
+) -> dict[str, np.ndarray]:
     """Returns dict of wp, fc, sat (m3/m3), awc_mm_per_m, ksat_mm_h."""
     S = np.asarray(sand_pct, float) / 100  # noqa: N806 - paper notation
     C = np.asarray(clay_pct, float) / 100  # noqa: N806 - paper notation
@@ -136,7 +139,7 @@ def saxton_rawls(sand_pct, clay_pct, oc_gkg, bd_gcm3):
 # --------------------------------------------------------------------------- #
 # Hydrologic soil group, NEH 630 Ch. 7 Table 7-1
 # --------------------------------------------------------------------------- #
-def hydrologic_group(ksat_mm_h, bedrock_cm):
+def hydrologic_group(ksat_mm_h: ArrayLike, bedrock_cm: ArrayLike) -> np.ndarray:
     k = np.asarray(ksat_mm_h, float) / 3.6  # mm/h -> um/s
     d = np.asarray(bedrock_cm, float)
     out = np.empty(k.shape, dtype=object)
@@ -151,7 +154,9 @@ def hydrologic_group(ksat_mm_h, bedrock_cm):
 # --------------------------------------------------------------------------- #
 # Erodibility, Williams (1995) EPIC
 # --------------------------------------------------------------------------- #
-def k_factor_williams(sand_pct, silt_pct, clay_pct, oc_gkg):
+def k_factor_williams(
+    sand_pct: ArrayLike, silt_pct: ArrayLike, clay_pct: ArrayLike, oc_gkg: ArrayLike
+) -> np.ndarray:
     san = np.asarray(sand_pct, float)
     sil = np.asarray(silt_pct, float)
     cla = np.asarray(clay_pct, float)
@@ -161,13 +166,13 @@ def k_factor_williams(sand_pct, silt_pct, clay_pct, oc_gkg):
     f_orgc = 1 - 0.25 * c / (c + np.exp(3.72 - 2.95 * c))
     sn1 = 1 - san / 100
     f_hisand = 1 - 0.7 * sn1 / (sn1 + np.exp(-5.51 + 22.9 * sn1))
-    return f_csand * f_clsi * f_orgc * f_hisand
+    return np.asarray(f_csand * f_clsi * f_orgc * f_hisand, dtype=float)
 
 
 US_TO_SI = 0.1317  # K in EPIC/SWAT units (0.013 t m2 h / (m3 t cm)) -> t ha h / (ha MJ mm)
 
 
-def k_class(k):
+def k_class(k: ArrayLike) -> np.ndarray:
     """Relative erodibility within Kaduna (terciles). Williams' K runs lower than
     the Wischmeier nomograph, so fixed absolute cut-offs would mislead; ranking
     LGAs against each other is what the A10 index needs."""
@@ -178,7 +183,7 @@ def k_class(k):
 # --------------------------------------------------------------------------- #
 # Build
 # --------------------------------------------------------------------------- #
-def build(stats, bedrock_stat_col):
+def build(stats: pd.DataFrame, bedrock_stat_col: str) -> pd.DataFrame:
     out = pd.DataFrame({"lga": stats["lga"]})
     for stat in ("mean", "p10", "p50", "p90"):
         layers = {}
@@ -227,7 +232,7 @@ def build(stats, bedrock_stat_col):
     return out
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

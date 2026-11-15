@@ -49,7 +49,7 @@ def canonical_lga(names: pd.Series, canonical: list[str]) -> pd.Series:
 def to_grid(df: pd.DataFrame, column: str, dates: pd.DatetimeIndex, lgas: list[str]) -> np.ndarray:
     """A long (lga, date) column as a (date x LGA) array on the given date grid."""
     wide = df.pivot(index="date", columns="lga", values=column)
-    return wide.reindex(index=dates, columns=lgas).to_numpy(dtype=float)
+    return np.asarray(wide.reindex(index=dates, columns=lgas).to_numpy(dtype=float), dtype=float)
 
 
 def load_inputs(cfg: ModelConfig, canonical: list[str]) -> DailyInputs:
@@ -136,7 +136,9 @@ def crop_kc(crop: Crop, windows: dict[str, np.ndarray], cfg: ModelConfig) -> np.
         else np.full(len(kc_mid), crop.kc.end)
     )
     w = wb.kc_weights(lengths)
-    return crop.kc.ini * w[0][None, :] + kc_mid[:, None] * w[1] + kc_end[:, None] * w[2]
+    return np.asarray(
+        crop.kc.ini * w[0][None, :] + kc_mid[:, None] * w[1] + kc_end[:, None] * w[2], dtype=float
+    )
 
 
 def run_crop(

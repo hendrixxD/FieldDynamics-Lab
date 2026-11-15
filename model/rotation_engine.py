@@ -167,7 +167,7 @@ def suitability_filter(rotation: Rotation, req: Request, data: EngineData) -> st
     return None
 
 
-def studies(seasons: list[list[str]], data: EngineData) -> list[dict]:
+def studies(seasons: list[list[str]], data: EngineData) -> list[dict[str, Any]]:
     """Published studies behind this exact sequence (config/rotations.yaml): checks, not gates."""
     return [
         {"key": k, "evidence": t.evidence, "status": t.status, "zones": t.best_fit}
@@ -178,7 +178,7 @@ def studies(seasons: list[list[str]], data: EngineData) -> list[dict]:
 
 def candidates(
     req: Request, data: EngineData, current: Rotation, relax_water: bool = False
-) -> tuple[list[Rotation], dict]:
+) -> tuple[list[Rotation], dict[str, str]]:
     """Every two-season sequence of two different crops our data can assess (A15 covers all 14;
     A9's water balance covers nine of them).
 
@@ -220,7 +220,11 @@ def nutrients(rot: Rotation, data: EngineData) -> Score:
                 gaps.append(f"nitrogen for {crop}")
             elif nitro.fixes:
                 r = nitro.net_n_after_grain_kg_ha
-                net = 0.0 if r is None else (r.mean if r.mean is not None else (r.low + r.high) / 2)
+                net = (
+                    0.0
+                    if r is None
+                    else (r.mean if r.mean is not None else ((r.low or 0.0) + (r.high or 0.0)) / 2)
+                )
                 share = float(np.clip(net / n.full_credit_kg_ha, 0, 1))
                 best = max(best, n.base_credit + (1 - n.base_credit) * share)
         credits.append(best)
@@ -330,15 +334,15 @@ def water(rot: Rotation, req: Request, data: EngineData) -> Score:
 
 def forage(rot: Rotation, data: EngineData) -> Score:
     rules = data.crops.rules()
-    eaten = {
-        c: rules[c].forage.share_eaten
+    eaten: dict[str, float] = {
+        c: f.share_eaten
         for c in crops_in(rot)
-        if c in rules and rules[c].forage and rules[c].forage.share_eaten is not None
+        if c in rules and (f := rules[c].forage) is not None and f.share_eaten is not None
     }
     gaps = [f"share of {c} forage animals eat" for c in crops_in(rot) if c not in eaten]
     if gaps:  # a row covers every crop or none: partial data would let a partner carry it
         return Score(None, "forage value not known for every crop", gaps)
-    best = max(eaten, key=eaten.get)
+    best = max(eaten, key=lambda k: eaten[k])
     return Score(
         float(np.mean(list(eaten.values()))),
         f"animals eat {eaten[best]:.0%} of {best} residues",
@@ -455,8 +459,8 @@ def total(scores: dict[str, Score], w: dict[str, float]) -> float:
     A row without data adds nothing: the tool will not rank up what it cannot evaluate, so
     filling a data gap can only raise a rotation, never a guess (PRD Step 4).
     """
-    known = [d for d in DIMENSIONS if scores[d].value is not None]
-    mean = sum(w[d] * scores[d].value for d in known) / sum(w[d] for d in known)
+    known = [(w[d], v) for d in DIMENSIONS if (v := scores[d].value) is not None]
+    mean = sum(wd * v for wd, v in known) / sum(wd for wd, _ in known)
     return mean * coverage(scores, w)
 
 
@@ -565,7 +569,11 @@ def weather_lines(rot: Rotation, req: Request, data: EngineData) -> list[str]:
 
 def labour_line(rot: Rotation, req: Request, data: EngineData) -> str:
     rules = data.crops.rules()
-    days = [rules[c].labour.days_per_ha for c in crops_in(rot) if c in rules and rules[c].labour]
+    days = [
+        lab.days_per_ha
+        for c in crops_in(rot)
+        if c in rules and (lab := rules[c].labour) is not None
+    ]
     if len(days) < len(crops_in(rot)):
         return "Labour: not enough information for every crop"
     return (
@@ -582,7 +590,7 @@ def card(
     data: EngineData,
     striga: tuple[str, str],
     base: dict[str, Score] | None,
-) -> dict:
+) -> dict[str, Any]:
     """One card in the PRD section 9 field order."""
     rows = {}
     for d in DIMENSIONS:
@@ -802,7 +810,7 @@ def opportunities(rows: dict[str, dict[str, Any]]) -> list[dict[str, str]]:
 
 def rank_candidates(
     req: Request, data: EngineData, current: Rotation, w: dict[str, float]
-) -> tuple[list[tuple[Rotation, dict[str, Score]]], dict]:
+) -> tuple[list[tuple[Rotation, dict[str, Score]]], dict[str, str]]:
     """Every surviving candidate, best first; ties go to a sequence a study backs."""
     pool, dropped = candidates(req, data, current)
     if len(pool) < 2:
@@ -814,7 +822,7 @@ def rank_candidates(
     return ranked, dropped
 
 
-def score_request(req: Request, data: EngineData) -> dict:
+def score_request(req: Request, data: EngineData) -> dict[str, Any]:
     """The PRD's /api/score result: Current plus Options A and B, with what was dropped."""
     if req.lga not in data.zone_of:
         raise ValueError(f"unknown LGA {req.lga!r}")

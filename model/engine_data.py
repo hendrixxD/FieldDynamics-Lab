@@ -7,6 +7,7 @@ Reliability). LGA names are mapped to the feature tables' spelling on load.
 import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -56,7 +57,7 @@ class EngineData:
     prices: pd.DataFrame  # KDBS retail price per mudu, LGA x crop
     risk_lines: pd.DataFrame  # A14: share of seasons with each weather risk, per LGA and crop
     suitability: pd.DataFrame  # A15: EcoCrop climate and soil fit, indexed by LGA and crop
-    suit_lookup: dict[tuple[str, str], dict]  # fast A15 access
+    suit_lookup: dict[tuple[str, str], dict[str, Any]]  # fast A15 access
     trends: pd.DataFrame  # A7 card series per LGA: Sen slope per decade and significance
     phosphorus_ppm: pd.Series  # iSDA extractable P, 0-20 cm, cropland mean per LGA
     season_days: dict[str, float]  # days in the ground per crop (FAO-56, else ECOCROP)

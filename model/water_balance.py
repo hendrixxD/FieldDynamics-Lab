@@ -39,7 +39,7 @@ def root_depth_m(
     start = stage_bounds(lengths_days)
     day = np.arange(start[-1]) + 0.5
     grown = np.clip(day / start[2], 0, 1)
-    return zr_start_m + (zr_max_m - zr_start_m) * grown
+    return np.asarray(zr_start_m + (zr_max_m - zr_start_m) * grown, dtype=float)
 
 
 def saturation_vapour_pressure_kpa(temp_c: np.ndarray) -> np.ndarray:
@@ -53,7 +53,7 @@ def rh_min_pct(dewpoint_c: np.ndarray, tmax_c: np.ndarray) -> np.ndarray:
     FAO-56 Eq. 11 applied as the chapter 6 note on estimating RHmin when it is not measured.
     """
     ratio = saturation_vapour_pressure_kpa(dewpoint_c) / saturation_vapour_pressure_kpa(tmax_c)
-    return np.clip(100 * ratio, 0, 100)
+    return np.asarray(np.clip(100 * ratio, 0, 100), dtype=float)
 
 
 def adjust_kc_for_climate(
@@ -73,7 +73,7 @@ def adjust_kc_for_climate(
     Inputs are stage means; callers limit them to the valid range (1-6 m/s, 20-80 %).
     """
     shift = wind_coef * (wind_m_s - wind_ref) + rh_coef * (rhmin_pct - rhmin_ref)
-    return kc_table + shift * (height_m / 3) ** exponent
+    return np.asarray(kc_table + shift * (height_m / 3) ** exponent, dtype=float)
 
 
 def total_available_water_mm(
@@ -86,7 +86,9 @@ def total_available_water_mm(
     """
     top = np.minimum(root_depth, top_m)
     sub = np.maximum(root_depth - top_m, 0)
-    return awc_top_mm_m[:, None] * top[None, :] + awc_sub_mm_m[:, None] * sub[None, :]
+    return np.asarray(
+        awc_top_mm_m[:, None] * top[None, :] + awc_sub_mm_m[:, None] * sub[None, :], dtype=float
+    )
 
 
 def depletion_fraction(

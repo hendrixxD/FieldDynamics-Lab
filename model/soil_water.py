@@ -45,7 +45,7 @@ def van_genuchten_theta(
     """Volumetric water content (m3/m3) at suction h_kpa. van Genuchten (1980) with m = 1 - 1/n."""
     tr, ts = np.asarray(theta_r, float), np.asarray(theta_s, float)
     a, nn = np.asarray(alpha_per_kpa, float), np.asarray(n, float)
-    return tr + (ts - tr) / (1 + (a * abs(h_kpa)) ** nn) ** (1 - 1 / nn)
+    return np.asarray(tr + (ts - tr) / (1 + (a * abs(h_kpa)) ** nn) ** (1 - 1 / nn), dtype=float)
 
 
 def hodnett_tomasella_params(

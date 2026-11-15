@@ -67,11 +67,16 @@ def season_windows(monthly: pd.DataFrame, months: int) -> pd.DataFrame:
     """
     m = monthly.sort_values(["lga", "year", "month"]).reset_index(drop=True)
     g = m.groupby("lga")
-    roll = lambda col, fn: getattr(g[col].rolling(months, min_periods=months), fn)()  # noqa: E731
     out = m[["lga", "year", "month"]].copy()
-    out["t_min_month"] = roll("tmean_c", "min").reset_index(level=0, drop=True)
-    out["t_max_month"] = roll("tmean_c", "max").reset_index(level=0, drop=True)
-    out["rain_mm"] = roll("rain_mm", "sum").reset_index(level=0, drop=True)
+    out["t_min_month"] = (
+        g["tmean_c"].rolling(months, min_periods=months).min().reset_index(level=0, drop=True)
+    )
+    out["t_max_month"] = (
+        g["tmean_c"].rolling(months, min_periods=months).max().reset_index(level=0, drop=True)
+    )
+    out["rain_mm"] = (
+        g["rain_mm"].rolling(months, min_periods=months).sum().reset_index(level=0, drop=True)
+    )
     # rolling windows end at `month`; shift labels to the start month
     end = pd.to_datetime(dict(year=out["year"], month=out["month"], day=1))
     start = end - pd.DateOffset(months=months - 1)
