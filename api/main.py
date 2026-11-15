@@ -103,7 +103,7 @@ SCREENS_MANIFEST = (
         "Alheri FM 98.7",
     ),
     ("06-learn", "F7. Science & Data Learn Portal", "/learn", "Learn", "Methodology"),
-    ("07-trend-map", "F8. Kaduna 23-LGA Trend Map", "/map", "Map", "Geospatial"),
+    ("07-trend-map", "F8. 23-LGA Trend Map", "/map", "Map", "Geospatial"),
     (
         "08-history",
         "P5. CBA Field Logs & Offline Archive",
