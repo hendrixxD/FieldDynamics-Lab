@@ -25,6 +25,24 @@
     letter-spacing: -0.02em;
     flex-shrink: 0;
   }
+  .fd-lab-pill {
+    display: none;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--green-soft);
+    border: 1px solid var(--green-border);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 1250px) {
+    .fd-lab-pill {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
   .fd-landing-nav {
     display: none;
     align-items: center;
@@ -76,6 +94,56 @@
       gap: 36px;
       padding-top: 18px;
     }
+  }
+
+  .fd-hero-brand-lockup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .fd-hero-logo-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 12px 4px 5px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-xs);
+  }
+  .fd-hero-logo-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    display: block;
+    flex-shrink: 0;
+  }
+  .fd-hero-brand-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+  .fd-hero-brand-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .fd-hero-brand-sub {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--green);
+    letter-spacing: 0.04em;
+  }
+  .fd-hero-tag-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
   }
 
   .fd-loc-pill {
@@ -134,6 +202,40 @@
   }
   .fd-resume-link:hover {
     text-decoration: underline;
+  }
+  .fd-trust-line {
+    margin: 18px 0 16px;
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .fd-trust-check {
+    color: var(--green);
+    font-weight: 800;
+  }
+  .fd-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-xs);
+  }
+  .fd-metric-val {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1.15;
+    margin-bottom: 2px;
+  }
+  .fd-metric-lbl {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 600;
   }
   .fd-trust-note {
     margin: 18px 0 0;
@@ -371,6 +473,7 @@
         <img src="/static/img/logo-mark.svg" alt="FD Logo" width="34" height="34" style="width:100%;height:100%;border-radius:9px;display:block;">
       </span>
       <span>FieldDynamics</span>
+      <span class="fd-lab-pill">KADUNA EXTENSION LAB</span>
     </a>
 
     <nav class="fd-landing-nav" aria-label="Main navigation">
@@ -400,17 +503,31 @@
 {% block content %}
 <section id="overview" class="fd-hero">
   <div>
-    <span class="fd-loc-pill">
-      <span class="fd-loc-dot" aria-hidden="true"></span>
-      <span data-lang-ha="Jihar Kaduna · Kananan Hukumomi 23">Kaduna State · All 23 LGAs</span>
-    </span>
+    <div class="fd-hero-brand-lockup">
+      <div class="fd-hero-logo-row">
+        <img src="/static/img/logo-mark.svg" alt="FieldDynamics Logo" width="38" height="38" class="fd-hero-logo-img">
+        <div class="fd-hero-brand-copy">
+          <div class="fd-hero-brand-title">FieldDynamics</div>
+          <div class="fd-hero-brand-sub" data-lang-ha="Cibiyar Daidaita Noma ta Kaduna">Kaduna Adaptation Lab</div>
+        </div>
+      </div>
+      <div class="fd-hero-tag-group">
+        <span class="fd-kicker" data-lang-ha="GASAR NASA SPACE APPS 2026 · FIELD SHIFT">
+          NASA SPACE APPS CHALLENGE 2026 · FIELD SHIFT
+        </span>
+        <span class="fd-loc-pill">
+          <span class="fd-loc-dot" aria-hidden="true"></span>
+          <span data-lang-ha="Jihar Kaduna · Kananan Hukumomi 23">Kaduna State · All 23 LGAs</span>
+        </span>
+      </div>
+    </div>
 
     <h1 class="fd-h1-serif fd-hero-h1">
       <span data-lang-ha="Masu ba da shawara suna gaya wa manoma lokacin da ruwan sama ke zuwa. FieldDynamics yana taimakawa wajen yanke shawarar ">Advisors tell farmers when rain comes. FieldDynamics helps decide </span><span class="fd-green-italic" data-lang-ha="abin da za a shuka gaba, da dalili.">what to plant next, and why.</span>
     </h1>
 
-    <p class="fd-hero-lead" data-lang-ha="Kwatanta shukarka ta baya da zabin juyin amfani guda biyu da suka dace da lokacin ruwan sama, kasa, da fifikon karamar hukumarka.">
-      Compare your last crop with two rotation options matched to your Local Government Area's rainfall window, soil type, and priorities.
+    <p class="fd-hero-lead" data-lang-ha="Tsarin tallafin shawara na wayar hannu wanda ke hada shekaru 45 na bayanan tauraron dan adam na NASA (1981–2025) da taswirar kasar iSDAsoil mai mita 30 da bukatun manomi a fadin Jihar Kaduna. Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida ba tare da maye gurbinsu ba.">
+      A phone-first decision-support platform pairing 45 years of Earth observations (1981–2025) with iSDAsoil 30m soil properties and farmer priorities across Kaduna State. Built so every recommendation supports farmer judgment and local expertise rather than replacing them.
     </p>
 
     <div class="fd-hero-cta">
@@ -424,9 +541,31 @@
       </a>
     </div>
 
-    <p class="fd-trust-note" data-lang-ha="Wannan kayan aiki yana taimaka wa shawarar manomi da gogewar gida — yana aiki ba tare da intanet a waya ba, ba tare da tattara bayanan sirri ba. A koyaushe a tabbatar da irin shuka da bukatun kasa tare da jami'in gona.">
-      This tool supports farmer judgment and local expertise — works offline on your phone, with no personal data collected. Always confirm seed varieties and soil needs with your extension officer.
+    <p class="fd-trust-line">
+      <span class="fd-trust-check" aria-hidden="true">✓</span>
+      <span data-lang-ha="Yana taimaka wa hukuncin manomi · Ba a tattara bayanan sirri · Yana aiki ba tare da intanet ba">
+        Supports farmer judgment · Zero farmer personal data collected · Operates offline via local cache
+      </span>
     </p>
+
+    <div class="fd-metrics-4" aria-label="Platform key metrics">
+      <div class="fd-metric-card">
+        <div class="fd-metric-val">{{ lgas|length }} / 23</div>
+        <div class="fd-metric-lbl" data-lang-ha="Kananan Hukumomin Kaduna">Kaduna LGAs Mapped</div>
+      </div>
+      <div class="fd-metric-card">
+        <div class="fd-metric-val">45 Yrs</div>
+        <div class="fd-metric-lbl" data-lang-ha="Tarihin Yanayi 1981–2025">Climate Record 1981–2025</div>
+      </div>
+      <div class="fd-metric-card">
+        <div class="fd-metric-val">7 Dims</div>
+        <div class="fd-metric-lbl" data-lang-ha="Ma'aunin Noma">Agronomic Scoring</div>
+      </div>
+      <div class="fd-metric-card">
+        <div class="fd-metric-val">0 Bytes</div>
+        <div class="fd-metric-lbl" data-lang-ha="Bayanan Sirri da Aka Adana">Stored Farmer Data</div>
+      </div>
+    </div>
   </div>
 
   <div class="fd-preview-shell">
@@ -454,7 +593,7 @@
         <div class="fd-preview-card-top">
           <div class="fd-preview-seq">
             {% for crop in c.seasons %}
-            <span class="fd-crop-chip">{{ crop }}</span>
+            <span class="fd-crop-chip">{{ (crop | join(' + ')) if (crop is iterable and crop is not string) else crop }}</span>
             {% if not loop.last %}<span class="fd-crop-arrow" aria-hidden="true">→</span>{% endif %}
             {% endfor %}
           </div>
