@@ -292,6 +292,6 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 - The data contract is a draft. Confirm it against real data at first pull.
 - Decide whether `data/processed/` stays in git if the files get large.
 - Check the Resources tab of the challenge page, which the first principle validative measure does not cover.
-- Mid-season dry spells (NiMet's July window) need dry spells counted per CHIRPS pixel in Earth Engine; LGA-average rain hides them (docs/model-results.md, A2 fix).
+- NiMet's July dry-spell window does not show in CHIRPS, even per pixel (docs/model-results.md, A2 fix). Checking it needs station rainfall.
 - A bad season from official records for the backtest (A16 uses the worst MODIS greenness years).
 - The crop baseline per LGA (R37): `zone_crops` in `config/rotations.yaml` is unverified and unused until a source is in the repo.

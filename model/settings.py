@@ -175,6 +175,7 @@ class Paths(BaseModel):
     ndvi_composites: Path
     contract: Path
     dry_spells: Path
+    pixel_dry_spells: Path
     isda_grid: Path
 
 
