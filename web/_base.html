@@ -20,10 +20,6 @@
           <span>FieldDynamics</span>
         </a>
         <span class="fd-role-pill" data-i18n="nav.advisor">Kaduna Rotation Advisor</span>
-        <span class="fd-status-pill" id="fdStatusPill">
-          <span class="fd-status-dot" aria-hidden="true"></span>
-          <span id="fdStatusText" data-i18n="nav.ready">Ready (Offline-First)</span>
-        </span>
       </div>
 
       <nav class="fd-steps" aria-label="Advisory workflow steps">
@@ -42,15 +38,19 @@
 
       <div class="fd-nav-right">
         <div class="fd-util-links">
-          <a class="fd-util-link {% if active_step == 'map' %}is-active{% endif %}" href="/map?{{ query_string }}" data-i18n="nav.map">LGA Trend Map</a>
-          <a class="fd-util-link {% if active_step == 'learn' %}is-active{% endif %}" href="/learn?{{ query_string }}" data-i18n="nav.learn">Learn Science</a>
+          <a class="fd-util-link {% if active_step == 'map' %}is-active{% endif %}" href="/map?{{ query_string }}" data-i18n="nav.map">Trend Map</a>
+          <a class="fd-util-link {% if active_step == 'learn' %}is-active{% endif %}" href="/learn?{{ query_string }}" data-i18n="nav.learn">Science</a>
           <a class="fd-util-link {% if active_step == 'history' %}is-active{% endif %}" href="/history?{{ query_string }}" data-i18n="nav.logs">Field Logs</a>
-          <a class="fd-util-link {% if active_step == 'walkthrough' %}is-active{% endif %}" href="/walkthrough" data-i18n="nav.screens">All Screens</a>
+          <a class="fd-util-link {% if active_step == 'walkthrough' %}is-active{% endif %}" href="/walkthrough" data-i18n="nav.screens">18 Screens</a>
         </div>
         <div class="fd-lang-switch" role="group" aria-label="Language switch">
           <button type="button" class="fd-lang-btn is-on" data-lang="en" aria-pressed="true">EN</button>
           <button type="button" class="fd-lang-btn" data-lang="ha" aria-pressed="false">HA</button>
         </div>
+        <span class="fd-status-pill" id="fdStatusPill">
+          <span class="fd-status-dot" aria-hidden="true"></span>
+          <span id="fdStatusText" data-i18n="nav.ready">Ready</span>
+        </span>
       </div>
     </div>
 
