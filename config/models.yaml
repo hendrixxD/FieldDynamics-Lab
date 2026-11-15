@@ -241,7 +241,7 @@ paths:
   isda_grid: data/processed/isda_kaduna_1000m.parquet
   # A9 reads the soil water chosen by A8.
   soil: data/processed/models/a8/a8_lga_soil_water.csv
-  isda_stats: data/raw/isda/isda_lga_stats_cropland.csv
+  isda_stats: data/processed/isda/isda_lga_stats_cropland.csv
   # The rotation engine's soil inputs, from python -m data.soil_hydro (no raw data needed).
   engine_soil: data/processed/soil/lga_soil_hydro.csv
   # KDBS retail prices per LGA (python -m data.kdbs_prices)
@@ -267,8 +267,8 @@ paths:
 
 suitability:
   # Crop suitability per LGA (notebooks/a15_crop_suitability.ipynb): FAO ECOCROP crop ranges
-  # (data/raw/ecocrop) scored against our climate and soil data with the EcoCrop model.
-  ecocrop: data/raw/ecocrop/ecocrop_kaduna_crops.csv
+  # (data/processed/ecocrop) scored against our climate and soil data with the EcoCrop model.
+  ecocrop: data/processed/ecocrop/ecocrop_kaduna_crops.csv
   # Where python -m data.ecocrop reads ECOCROP: the Recocrop 0.4-2 R package (Hijmans, GPL-3)
   # on GitHub's CRAN mirror, with the file's SHA-256 so a changed copy is refused.
   ecocrop_source: https://raw.githubusercontent.com/cran/Recocrop/0.4-2/inst/parameters/ecocrop.rds
