@@ -8,7 +8,7 @@ the optimal range, linear in between. A season scores the lower of its temperatu
 scores; temperature is the worst month of the growing period.
 
 Source of the crop ranges: FAO ECOCROP database, as shipped in the Recocrop R package
-(Hijmans, GPL-3), extracted to data/raw/ecocrop/ecocrop_kaduna_crops.csv.
+(Hijmans, GPL-3), extracted to data/processed/ecocrop/ecocrop_kaduna_crops.csv.
 """
 
 import numpy as np
