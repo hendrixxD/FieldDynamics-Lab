@@ -3,7 +3,7 @@
 Input: inst/parameters/ecocrop.rds from Recocrop 0.4-2 on GitHub's CRAN mirror, checked against
 the SHA-256 in config/models.yaml (suitability.ecocrop_source, ecocrop_sha256).
 
-Output: data/raw/ecocrop/ecocrop_kaduna_crops.csv, one row per crop key in
+Output: data/processed/ecocrop/ecocrop_kaduna_crops.csv, one row per crop key in
 suitability.ecocrop_names, with every ECOCROP column. Notebook a15 reads it.
 
     python -m data.ecocrop

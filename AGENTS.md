@@ -292,7 +292,6 @@ When resampling, use bilinear for continuous data, nearest neighbour for categor
 - The data contract is a draft. Confirm it against real data at first pull.
 - Decide whether `data/processed/` stays in git if the files get large.
 - Check the Resources tab of the challenge page, which the first principle validative measure does not cover.
-- A8, A12 and A15 read files in `data/raw/` that are git-ignored and not in the repo (`isda/isda_lga_stats_cropland.csv`, `ecocrop/ecocrop_kaduna_crops.csv`), so they cannot be rebuilt from a clean clone. Commit their processed inputs, or document the pull that recreates them.
 - Mid-season dry spells (NiMet's July window) need dry spells counted per CHIRPS pixel in Earth Engine; LGA-average rain hides them (docs/model-results.md, A2 fix).
 - A bad season from official records for the backtest (A16 uses the worst MODIS greenness years).
 - The crop baseline per LGA (R37): `zone_crops` in `config/rotations.yaml` is unverified and unused until a source is in the repo.

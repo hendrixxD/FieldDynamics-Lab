@@ -6,7 +6,7 @@ PRD A8 (soil water properties) and the soil half of A10 (erosion and
 infiltration index), computed from the iSDAsoil cropland statistics that
 data/isda.py already produced. No downloads.
 
-Input   : data/raw/isda/isda_lga_stats_cropland.csv
+Input   : data/processed/isda/isda_lga_stats_cropland.csv
           (per LGA, cropland only, real units: sand/silt/clay %, organic carbon
           g/kg, bulk density g/cm3, stone %, bedrock depth cm; depths 0-20 and
           20-50 cm; spatial mean plus p10/p50/p90 within the LGA)
@@ -231,7 +231,7 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("--stats", default=str(REPO_ROOT / "data/raw/isda/isda_lga_stats_cropland.csv"))
+    ap.add_argument("--stats", default=str(REPO_ROOT / "data/processed/isda/isda_lga_stats_cropland.csv"))
     ap.add_argument("--out", default=str(REPO_ROOT / "data/processed/soil/lga_soil_hydro.csv"))
     args = ap.parse_args()
 
