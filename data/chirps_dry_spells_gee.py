@@ -78,7 +78,9 @@ def year_image(ee, year: int):
 def pull_year(ee, year: int, fc) -> pd.DataFrame:
     """Share of each LGA's cropland flagged per month and threshold, for one year."""
     image, proj = year_image(ee, year)
-    crop = crop_mask_for(proj.getInfo())
+    # 10 m to 5.5 km in one jump folds ~3,100 pixels into each output pixel (EE allows 1,024),
+    # so average to 100 m, then 1 km, then the CHIRPS grid.
+    crop = crop_mask_for(proj.getInfo(), steps=((100, 1024), (1000, 1024)))
     reduced = image.updateMask(crop).reduceRegions(fc, ee.Reducer.mean(), scale=SCALE_M)
     rows = [f["properties"] for f in reduced.getInfo()["features"]]
     wide = pd.DataFrame(rows)
