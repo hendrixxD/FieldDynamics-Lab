@@ -666,20 +666,26 @@ a {
 /* Dual-Encoded 12-Month Agroclimatological Strip (Color + Pattern + Label) */
 .fd-season-strip {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
 }
 
+@media (min-width: 600px) {
+  .fd-season-strip {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
 .fd-month-cell {
-  min-height: 76px;
-  padding: 8px 4px;
+  min-height: 72px;
+  padding: 6px 3px;
   border-radius: 10px;
   border: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 2px;
   text-align: center;
   cursor: pointer;
   background: var(--bg-warm);
@@ -691,16 +697,26 @@ a {
 }
 
 .fd-month-cell span {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .fd-month-cell small {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .fd-month-bare {
@@ -976,10 +992,12 @@ a {
 .fd-table-wrap {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .fd-table {
   width: 100%;
+  min-width: 480px;
   border-collapse: collapse;
   font-size: 13.5px;
 }
@@ -990,6 +1008,7 @@ a {
   text-align: left;
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .fd-table th {
