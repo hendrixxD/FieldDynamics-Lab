@@ -73,6 +73,13 @@ def dry_spell_window(shares: pd.Series, min_share: float) -> dict[str, Any]:
     return {"usual_month": month, "share_years": share, "note": None}
 
 
+def pixel_spell_means(table: pd.DataFrame, years: Any) -> pd.DataFrame:
+    """Mean share of each LGA's cropland in a 7+ day dry spell, per month, counted per CHIRPS
+    pixel (data/chirps_dry_spells_gee.py). LGA x month; only June to September are pulled."""
+    kept = table[table["year"].between(years.start, years.end)]
+    return kept.groupby(["lga", "month"])["cropland_share_7plus"].mean().unstack()
+
+
 def monthly_means(month: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     """Long-term mean of each column per LGA and calendar month, over the rows given."""
     return month.groupby(["lga", "month"])[columns].mean()
@@ -115,6 +122,7 @@ def load_inputs(cfg: ModelConfig) -> dict[str, pd.DataFrame]:
     return {
         "a2": a2[a2["year"].between(c.years.start, c.years.end)],
         "spells": spells[spells["year"].between(c.years.start, c.years.end)],
+        "pixel_spells": pixel_spell_means(read(cfg.paths.pixel_dry_spells), c.years),
         "a3": read(out / "a3" / "a3_lga_month_indicators.csv").set_index(["lga", "month"]),
         "a4": read(out / "a4" / "a4_bare_probability.csv").set_index("lga"),
         "a5_profiles": read(out / "a5" / "a5_monthly_profiles.csv"),
@@ -164,6 +172,7 @@ def months_block(lga: str, t: dict[str, pd.DataFrame], spells: pd.DataFrame) -> 
     block["ndvi_cropland"] = t["ndvi"].loc[lga].reindex(MONTHS)["ndvi_crop_sg"].tolist()
     block["bare_probability"] = t["a4"].loc[lga, [f"m{m:02d}" for m in MONTHS]].tolist()
     block["dry_spell_start_share"] = spells.loc[lga].tolist()
+    block["dry_spell_cropland_share_7plus"] = t["pixel_spells"].loc[lga].reindex(MONTHS).tolist()
     return block
 
 
@@ -241,6 +250,7 @@ def season_file(lga: str, t: dict[str, pd.DataFrame], cfg: ModelConfig) -> dict[
             | {
                 "share_years_10plus": float((a2["dry_spells_10plus"] > 0).mean()),
                 "longest_median_days": float(a2["longest_dry_spell_days"].median()),
+                "peak_cropland_share_7plus": float(t["pixel_spells"].loc[lga].max()),
             },
             "season_types": season_types_block(lga, t),
             "trends": trends_block(lga, t),

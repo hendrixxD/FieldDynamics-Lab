@@ -71,3 +71,9 @@ def test_committed_contract_is_current(tmp_path: Path) -> None:
     for path in sorted(fresh.rglob("*.json")):
         old = json.loads((committed / path.relative_to(fresh)).read_text())
         assert json.loads(path.read_text()) == old, f"run: python -m model.contract ({path.name})"
+
+
+def test_pixel_dry_spell_shares_cover_june_to_september_only() -> None:
+    shares = ct.season_file("Zaria", TABLES, CFG)["months"]["dry_spell_cropland_share_7plus"]
+    assert [v is not None for v in shares] == [m in (6, 7, 8, 9) for m in ct.MONTHS]
+    assert all(0 <= v <= 1 for v in shares if v is not None)

@@ -223,6 +223,20 @@
    0.089,
    0.0,
    0.0
+  ],
+  "dry_spell_cropland_share_7plus": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   0.021,
+   0.0,
+   0.0,
+   0.028,
+   null,
+   null,
+   null
   ]
  },
  "onset_doy": {
@@ -248,7 +262,8 @@
   "share_years": 0.089,
   "note": "LGA-average rain rarely shows a 7+ day dry spell inside the season; local dry spells can still happen",
   "share_years_10plus": 0.022,
-  "longest_median_days": 4.0
+  "longest_median_days": 4.0,
+  "peak_cropland_share_7plus": 0.028
  },
  "season_types": [
   {

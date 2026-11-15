@@ -223,6 +223,20 @@
    0.156,
    0.0,
    0.0
+  ],
+  "dry_spell_cropland_share_7plus": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   0.024,
+   0.003,
+   0.013,
+   0.029,
+   null,
+   null,
+   null
   ]
  },
  "onset_doy": {
@@ -248,7 +262,8 @@
   "share_years": 0.156,
   "note": null,
   "share_years_10plus": 0.067,
-  "longest_median_days": 4.0
+  "longest_median_days": 4.0,
+  "peak_cropland_share_7plus": 0.029
  },
  "season_types": [
   {
