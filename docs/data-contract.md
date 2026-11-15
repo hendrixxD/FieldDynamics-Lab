@@ -86,9 +86,9 @@ Built by `python -m model.contract`, which `python -m model.build` also runs at 
 
 | Field | Contents | Source |
 | --- | --- | --- |
-| `months` | Twelve values each: `rain_mm`, `et0_mm`, `water_balance_mm`, `tmax_c`, `heat_days`, `heat_share_years`, `frost_share_years`, `very_heavy_rain_share_years`, `extreme_rain_share_years`, `soil_moisture_anomaly_z`, `dry_soil_share_years`, `ndvi_cropland`, `bare_probability`, `dry_spell_start_share` | A3, A4, A2, MODIS NDVI |
+| `months` | Twelve values each: `rain_mm`, `et0_mm`, `water_balance_mm`, `tmax_c`, `heat_days`, `heat_share_years`, `frost_share_years`, `very_heavy_rain_share_years`, `extreme_rain_share_years`, `soil_moisture_anomaly_z`, `dry_soil_share_years`, `ndvi_cropland`, `bare_probability`, `dry_spell_start_share`, `dry_spell_cropland_share_7plus` (June to September, per-pixel CHIRPS) | A3, A4, A2, MODIS NDVI, CHIRPS |
 | `onset_doy`, `cessation_doy`, `length_days` | `median`, `p10`, `p90` (8 years in 10 fall between) and `years` | A2, 1981 to 2025 |
-| `dry_spell` | `usual_month` (null when no month has 7+ day spells in 1 year in 10, with a `note`), `share_years`, `share_years_10plus`, `longest_median_days` | A2 |
+| `dry_spell` | `usual_month` (null when no month has 7+ day spells in 1 year in 10, with a `note`), `share_years`, `share_years_10plus`, `longest_median_days`, `peak_cropland_share_7plus` | A2, per-pixel CHIRPS |
 | `season_types` | Per A5 type: `name`, `share_years`, `years`, `profile_source`, and a monthly profile (`rain_mm`, `ndvi_cropland`, `tmax_c`, `heat_days`, `water_balance_mm`) | A5 |
 | `trends` | A7 rows allowed on cards (`trends.card_series`): `series`, `card_line`, `sen_slope_per_decade`, `significant`, `first_year`, `last_year` | A7 |
 | `erosion_band`, `confidence` | Low, Medium or High band; level and reason | A10, A12 |

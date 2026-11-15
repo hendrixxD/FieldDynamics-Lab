@@ -237,6 +237,9 @@ paths:
   onset: data/processed/a2/a2_lga_year.csv
   # Every mid-season dry spell of 7+ days (python -m data.onset_a2): the season strip's window.
   dry_spells: data/processed/a2/a2_dry_spells.csv
+  # Share of each LGA's cropland in a 7+ / 10+ day dry spell per month, counted per CHIRPS pixel
+  # (python -m data.chirps_dry_spells_gee).
+  pixel_dry_spells: data/processed/chirps/chirps_lga_dry_spell_share.csv
   # iSDA 1 km grid with cropland share per cell (python -m data.isda): engine P and S line.
   isda_grid: data/processed/isda_kaduna_1000m.parquet
   # A9 reads the soil water chosen by A8.
