@@ -152,3 +152,24 @@ def test_lga_grid_geojson_rejects_unknown_lga() -> None:
     response = client.get("/api/layers/NonExistentLGA/grid.geojson")
     assert response.status_code == 404
     assert "Unknown LGA" in response.json()["detail"]
+
+
+def test_static_state_layer_pngs_and_jemaa_queries() -> None:
+    bounds_res = client.get("/static/layers/bounds.json")
+    assert bounds_res.status_code == 200
+    bounds_data = bounds_res.json()
+    assert len(bounds_data["bounds"]) == 2
+    for layer in ("soil_moisture", "heat_stress", "erosion_risk", "water_stress"):
+        png_res = client.get(f"/static/layers/state/{layer}.png")
+        assert png_res.status_code == 200
+        assert png_res.headers["content-type"].startswith("image/png")
+
+    grid_res = client.get("/api/layers/Jema'a/grid.geojson")
+    assert grid_res.status_code == 200
+    grid_data = grid_res.json()
+    assert grid_data["lga"] == "Jema'a"
+    assert grid_data["cell_count"] > 50
+
+    pt_res = client.get("/api/point?lat=9.488&lon=8.261")
+    assert pt_res.status_code == 200
+    assert pt_res.json()["lga"] == "Jema'a"

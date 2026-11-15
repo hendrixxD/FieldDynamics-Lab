@@ -30,7 +30,7 @@ def run_notebook(path: Path, timeout_s: int) -> float:
     if not path.exists():
         raise FileNotFoundError(f"Training notebook not found: {path}")
     start = time.perf_counter()
-    book = nbformat.read(path, as_version=4)
+    book = nbformat.read(path, as_version=4)  # type: ignore[no-untyped-call]
     client = NotebookClient(
         book,
         timeout=timeout_s,
@@ -38,7 +38,7 @@ def run_notebook(path: Path, timeout_s: int) -> float:
         resources={"metadata": {"path": str(path.parent)}},
     )
     client.execute()
-    nbformat.write(book, path)
+    nbformat.write(book, path)  # type: ignore[no-untyped-call]
     return time.perf_counter() - start
 
 

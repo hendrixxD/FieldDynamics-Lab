@@ -1,0 +1,19 @@
+{
+  "crs": "EPSG:4326",
+  "bounds": [
+    [
+      9.0014,
+      6.0922
+    ],
+    [
+      11.524,
+      8.8183
+    ]
+  ],
+  "layers": [
+    "erosion_risk",
+    "heat_stress",
+    "soil_moisture",
+    "water_stress"
+  ]
+}

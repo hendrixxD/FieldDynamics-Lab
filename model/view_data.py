@@ -681,13 +681,26 @@ def all_legends_view() -> dict[str, Any]:
 
 
 @lru_cache(maxsize=1)
+def _canonical_lga_map() -> dict[str, str]:
+    """Map casefolded LGA names to the canonical spelling in `api/contract/lgas.json`."""
+    return {str(entry["lga"]).casefold(): str(entry["lga"]) for entry in read_lgas_contract()}
+
+
+@lru_cache(maxsize=1)
 def _read_kaduna_lgas_geojson() -> dict[str, Any]:
-    """Read the static 23-LGA boundary GeoJSON once per process."""
+    """Read the static 23-LGA boundary GeoJSON once per process with canonical LGA names."""
     geo_path = CONFIG_DIR.parent / "static" / "geo" / "kaduna_lgas.geojson"
     if not geo_path.exists():
         raise FileNotFoundError(f"Kaduna LGA GeoJSON missing at {geo_path}")
     raw = json.loads(geo_path.read_text())
-    return dict(raw) if isinstance(raw, dict) else {}
+    if not isinstance(raw, dict):
+        return {}
+    canonical = _canonical_lga_map()
+    for feat in raw.get("features", []):
+        props = feat.get("properties", {})
+        if "lga" in props:
+            props["lga"] = canonical.get(str(props["lga"]).casefold(), str(props["lga"]))
+    return dict(raw)
 
 
 def _point_in_polygon_ring(x: float, y: float, ring: list[list[float]]) -> bool:
@@ -798,8 +811,10 @@ _GRID_CACHE: dict[str, dict[str, Any]] = {}
 
 def lga_grid_geojson_view(lga: str, data: EngineData) -> dict[str, Any]:
     """Generate or retrieve the 1 km GeoJSON grid cells for one LGA (docs/map-architecture.md)."""
-    if lga not in data.zone_of:
+    canonical = {k.casefold(): k for k in data.zone_of}.get(lga.casefold())
+    if canonical is None:
         raise ValueError(f"Unknown LGA: {lga}")
+    lga = canonical
     if lga in _GRID_CACHE:
         return _GRID_CACHE[lga]
 

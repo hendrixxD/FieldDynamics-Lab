@@ -176,8 +176,9 @@ def k_class(k: ArrayLike) -> np.ndarray:
     """Relative erodibility within Kaduna (terciles). Williams' K runs lower than
     the Wischmeier nomograph, so fixed absolute cut-offs would mislead; ranking
     LGAs against each other is what the A10 index needs."""
-    lo, hi = np.nanquantile(k, [1 / 3, 2 / 3])
-    return np.select([k <= lo, k <= hi], ["lower", "middle"], "higher")
+    k_arr = np.asarray(k, dtype=float)
+    lo, hi = np.nanquantile(k_arr, [1 / 3, 2 / 3])
+    return np.select([k_arr <= lo, k_arr <= hi], ["lower", "middle"], "higher")
 
 
 # --------------------------------------------------------------------------- #
