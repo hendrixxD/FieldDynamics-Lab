@@ -13,7 +13,7 @@ Method (all on Earth Engine's servers, one request per year)
      (under 1 mm), else 0. A month is flagged when the run reaches the threshold on one of its
      days (7 days: Sivakumar's false-start length, as in A2; 10 days: A2's long spell).
      One request per month (counting from 9 days before it) keeps each request small.
-  3. Mask to cropland (ESA WorldCover 2021, class 40, via data.gee_extras.crop_mask_for) and
+  3. Mask to cropland (ESA WorldCover 2021, class 40, most common class per 500 m cell) and
      take the mean per LGA: the share of the LGA's cropland in such a spell that month.
   A run already going on 1 June is counted from 1 June, so June shares are a lower bound.
 
@@ -35,7 +35,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from data.gee_extras import crop_mask_for, ee_project, load_lgas, to_ee_features
+from data.gee_extras import CROPLAND_CLASS, WORLDCOVER, ee_project, load_lgas, to_ee_features
 
 log = logging.getLogger("chirps_dry_spells_gee")
 
@@ -45,7 +45,7 @@ BAND = "precipitation"
 WET_MM = 1.0  # a dry day has under 1 mm, as in A2 (ETCCDI)
 THRESHOLDS = (7, 10)  # days: A2's false-start length and A2's long dry spell
 MONTHS = (6, 7, 8, 9)  # June to September, inside the rains
-SCALE_M = 5566  # CHIRPS 0.05 degree pixel
+REDUCE_SCALE_M = 500  # cropland mask scale; CHIRPS (5.5 km) flags are read at it unchanged
 LOOKBACK_DAYS = max(THRESHOLDS) - 1  # a spell reaching k days in a month can start k-1 days earlier
 TILE_SCALE = 8  # smaller tiles for reduceRegions: Earth Engine's fix for its memory limit
 
@@ -85,12 +85,14 @@ def month_image(ee, year: int, month: int):
 
 def pull_month(ee, year: int, month: int, fc) -> pd.DataFrame:
     """Share of each LGA's cropland flagged in one month, per threshold."""
-    image, proj = month_image(ee, year, month)
-    # 10 m to 5.5 km in one jump folds ~3,100 pixels into each output pixel (EE allows 1,024),
-    # so average to 100 m, then 1 km, then the CHIRPS grid.
-    crop = crop_mask_for(proj.getInfo(), steps=((100, 1024), (1000, 1024)))
+    image, _ = month_image(ee, year, month)
+    # Cropland straight from WorldCover, reduced at 500 m: Earth Engine reads the map's stored
+    # coarser levels (the most common class per cell) instead of averaging 10 m pixels on every
+    # request, which ran out of memory. A cell counts as cropland when cropland is its most common
+    # class, close to the >= 0.5 cropland fraction the other pulls use.
+    crop = ee.ImageCollection(WORLDCOVER).first().select("Map").eq(CROPLAND_CLASS)
     reduced = image.updateMask(crop).reduceRegions(
-        fc, ee.Reducer.mean(), scale=SCALE_M, tileScale=TILE_SCALE
+        fc, ee.Reducer.mean(), scale=REDUCE_SCALE_M, tileScale=TILE_SCALE
     )
     rows = pd.DataFrame([f["properties"] for f in reduced.getInfo()["features"]])
     renamed = {f"k{k}": f"cropland_share_{k}plus" for k in THRESHOLDS}
