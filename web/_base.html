@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="{{ lang or 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}FieldDynamics · Kaduna Crop Rotation Advisor{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/app.css">
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  {% block topbar %}
+  <header class="fd-topbar">
+    <div class="fd-topbar-inner">
+      <div class="fd-brand-group">
+        <a class="fd-brand" href="/?{{ query_string }}">
+          <span class="fd-mark" aria-hidden="true">FD</span>
+          <span>FieldDynamics</span>
+        </a>
+        <span class="fd-role-pill" data-i18n="nav.advisor">Kaduna Rotation Advisor</span>
+        <span class="fd-status-pill" id="fdStatusPill">
+          <span class="fd-status-dot" aria-hidden="true"></span>
+          <span id="fdStatusText" data-i18n="nav.ready">Ready (Offline-First)</span>
+        </span>
+      </div>
+
+      <nav class="fd-steps" aria-label="Advisory workflow steps">
+        <a class="fd-step-link {% if active_step == 'farm' %}is-active{% endif %}" href="/farm?{{ query_string }}" data-i18n="nav.farm">1 Farm</a>
+        <span class="fd-step-arrow" aria-hidden="true">→</span>
+        <a class="fd-step-link {% if active_step == 'priorities' %}is-active{% endif %}" href="/priorities?{{ query_string }}" data-i18n="nav.priorities">2 Priorities</a>
+        <span class="fd-step-arrow" aria-hidden="true">→</span>
+        <a class="fd-step-link {% if active_step == 'season' %}is-active{% endif %}" href="/season?{{ query_string }}" data-i18n="nav.season">3 Season</a>
+        <span class="fd-step-arrow" aria-hidden="true">→</span>
+        <a class="fd-step-link {% if active_step == 'compare' %}is-active{% endif %}" href="/compare?{{ query_string }}" data-i18n="nav.compare">4 Compare</a>
+        <span class="fd-step-arrow" aria-hidden="true">→</span>
+        <a class="fd-step-link {% if active_step == 'decide' %}is-active{% endif %}" href="/decide?{{ query_string }}" data-i18n="nav.decide">5 Decide</a>
+        <span class="fd-step-arrow" aria-hidden="true">→</span>
+        <a class="fd-step-link {% if active_step == 'share' %}is-active{% endif %}" href="/share?{{ query_string }}" data-i18n="nav.share">Share</a>
+      </nav>
+
+      <div class="fd-nav-right">
+        <div class="fd-util-links">
+          <a class="fd-util-link {% if active_step == 'map' %}is-active{% endif %}" href="/map?{{ query_string }}" data-i18n="nav.map">LGA Trend Map</a>
+          <a class="fd-util-link {% if active_step == 'learn' %}is-active{% endif %}" href="/learn?{{ query_string }}" data-i18n="nav.learn">Learn Science</a>
+          <a class="fd-util-link {% if active_step == 'history' %}is-active{% endif %}" href="/history?{{ query_string }}" data-i18n="nav.logs">Field Logs</a>
+          <a class="fd-util-link {% if active_step == 'walkthrough' %}is-active{% endif %}" href="/walkthrough" data-i18n="nav.screens">All Screens</a>
+        </div>
+        <div class="fd-lang-switch" role="group" aria-label="Language switch">
+          <button type="button" class="fd-lang-btn is-on" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="fd-lang-btn" data-lang="ha" aria-pressed="false">HA</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="fd-mobile-strip" aria-label="Mobile quick navigation">
+      <a class="{% if active_step == 'start' %}is-active{% endif %}" href="/start?{{ query_string }}">Start</a>
+      <a class="{% if active_step == 'farm' %}is-active{% endif %}" href="/farm?{{ query_string }}">1·Farm</a>
+      <a class="{% if active_step == 'priorities' %}is-active{% endif %}" href="/priorities?{{ query_string }}">2·Priorities</a>
+      <a class="{% if active_step == 'season' %}is-active{% endif %}" href="/season?{{ query_string }}">3·Season</a>
+      <a class="{% if active_step == 'compare' %}is-active{% endif %}" href="/compare?{{ query_string }}">4·Compare</a>
+      <a class="{% if active_step == 'decide' %}is-active{% endif %}" href="/decide?{{ query_string }}">5·Decide</a>
+      <a class="{% if active_step == 'share' %}is-active{% endif %}" href="/share?{{ query_string }}">6·Share</a>
+      <a class="{% if active_step == 'map' %}is-active{% endif %}" href="/map?{{ query_string }}">Map</a>
+      <a class="{% if active_step == 'learn' %}is-active{% endif %}" href="/learn?{{ query_string }}">Learn</a>
+      <a class="{% if active_step == 'history' %}is-active{% endif %}" href="/history?{{ query_string }}">Logs</a>
+    </nav>
+  </header>
+  {% endblock %}
+
+  <main class="fd-main {% block main_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Global Tap-for-Meaning Bottom Sheet / Modal (F3f, R23) -->
+  <div id="fdTermModal" class="fd-modal-backdrop" role="dialog" aria-modal="true" aria-label="Scientific term explanation" {% if not explain_term %}hidden{% endif %}>
+    <div class="fd-modal-sheet" id="fdTermModalBody">
+      {% if explain_term %}
+        {% set term = explain_term %}
+        {% include "_term_sheet.html" ignore missing %}
+      {% endif %}
+    </div>
+  </div>
+
+  <footer class="fd-footer">
+    <div class="fd-footer-inner">
+      <span data-i18n="footer.judgment">This tool supports farmer judgment and local expertise. Check with your extension officer.</span>
+      <span>NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data · Kaduna State (23 LGAs)</span>
+    </div>
+  </footer>
+
+  <script src="/static/js/fd-app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

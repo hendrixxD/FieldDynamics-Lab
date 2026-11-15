@@ -1,0 +1,178 @@
+{% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_svg, crop_art_bg, crop_sequence_icons %}
+
+{% block title %}{{ card.badge }} · {{ card.title }} ({{ scored.lga }}) · FieldDynamics{% endblock %}
+
+{% block content %}
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;">
+  <nav class="fd-chip-group" aria-label="Switch rotation card dossier">
+    <a class="fd-chip {% if slot == 'current' %}is-selected{% endif %}" style="text-decoration:none;" href="/card/current?{{ query_string }}" data-lang-ha="Kati na 1: Na Yanzu">
+      Card 1: Current
+    </a>
+    {% if scored.cards|length > 1 %}
+    <a class="fd-chip {% if slot == 'a' %}is-selected{% endif %}" style="text-decoration:none;" href="/card/a?{{ query_string }}" data-lang-ha="Zabi na A">
+      Option A · {{ scored.cards[1].title }}
+    </a>
+    {% endif %}
+    {% if scored.cards|length > 2 %}
+    <a class="fd-chip {% if slot == 'b' %}is-selected{% endif %}" style="text-decoration:none;" href="/card/b?{{ query_string }}" data-lang-ha="Zabi na B">
+      Option B · {{ scored.cards[2].title }}
+    </a>
+    {% endif %}
+  </nav>
+  <span class="fd-badge fd-badge-muted">{{ scored.lga }} LGA · {{ scored.season_type }} season</span>
+</div>
+
+<div class="fd-grid-sidebar">
+  <aside class="fd-card">
+    <div style="height:170px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px;{{ crop_art_bg(card.seasons[-1][0]) }}">
+      <div style="transform:scale(1.3);background:rgba(255,253,249,0.94);padding:10px 14px;border-radius:14px;box-shadow:0 4px 14px rgba(24,32,27,0.16);">
+        {{ crop_sequence_icons(card.seasons) }}
+      </div>
+    </div>
+
+    <h1 class="fd-h1" style="font-size:26px;margin-bottom:8px;">{{ card.title }}</h1>
+
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <span style="font-size:13.5px;font-weight:700;color:var(--ink-soft);">{{ 'Card 1 · Baseline' if card.badge == 'Current' else card.badge }}</span>
+      <span aria-hidden="true" style="color:var(--muted);">·</span>
+      <span class="fd-badge fd-badge-{{ card.confidence.level|lower }}">{{ card.confidence.level }} Confidence</span>
+    </div>
+
+    <div class="fd-score-list" aria-label="Key crop and field facts">
+      {% for cf in card.crops %}
+      <div class="fd-score-row">
+        <span class="fd-score-name">{{ cf.crop|capitalize }} nitrogen</span>
+        <span class="fd-score-val {% if cf.fixes_nitrogen %}fd-arrow-better{% endif %}">
+          {{ 'Fixes atmospheric N' if cf.fixes_nitrogen else 'Uses soil N' }}
+        </span>
+      </div>
+      <div class="fd-score-row">
+        <span class="fd-score-name">{{ cf.crop|capitalize }} water need</span>
+        <span class="fd-score-val">
+          {% if cf.water_need_mm is not none %}
+            ~{{ cf.water_need_mm|round(-1)|int }} mm
+          {% else %}
+            Not modelled
+          {% endif %}
+          {% if cf.short_share is not none %}
+            · short {{ (cf.short_share * 10)|round|int }}/10 yrs
+          {% endif %}
+        </span>
+      </div>
+      {% endfor %}
+
+      <div class="fd-score-row">
+        <span class="fd-score-name">Labour</span>
+        <span class="fd-score-val" style="max-width:215px;">{{ card.labour }}</span>
+      </div>
+
+      <div class="fd-score-row" title="{{ scored.striga_risk.reason }}">
+        <span class="fd-score-name">Striga field risk</span>
+        <span class="fd-score-val">
+          <span class="fd-badge fd-badge-{{ scored.striga_risk.level|lower }}">{{ scored.striga_risk.level }}</span>
+        </span>
+      </div>
+    </div>
+
+    <a class="fd-btn fd-btn-outline fd-btn-block" style="margin-top:16px;" href="/compare?{{ query_string }}" data-lang-ha="← Komawa Kwatanta Kati 3">← Back to 3-Card Comparison</a>
+  </aside>
+
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    {% if card.check_first or card.confidence.level in ('Low', 'Medium') %}
+    <div class="fd-alert fd-alert-amber" role="status">
+      <strong data-lang-ha="⚠ Karfin Hujja ({{ card.confidence.level }}) — tuntubi malamin gona kafin ba manomi shawara">⚠ {{ card.confidence.level }} Confidence — check with your extension officer before advising the farmer</strong>
+      <p style="margin:6px 0 0;">Reason: {{ card.confidence.reason }}. {{ card.gaps[0] if card.gaps else '' }}</p>
+    </div>
+    {% endif %}
+
+    <section class="fd-card fd-card-picked" aria-label="Plan decision actions">
+      <a class="fd-btn fd-btn-dark fd-btn-block" href="/decide?{{ query_string }}&pick={{ slot }}" data-lang-ha="Zabi wannan tsarin →">Choose this plan →</a>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px;margin-top:10px;font-size:13px;font-weight:700;">
+        <a href="/compare?{{ query_string }}" data-lang-ha="← Komawa kwatanta">← Back to comparison</a>
+        <a href="/decide?{{ query_string }}&pick=defer" style="color:var(--ink);" data-lang-ha="Ba a gama shawara ba — tuntubi malamin gona">Not sure yet — check with officer</a>
+      </div>
+    </section>
+
+    <section class="fd-card">
+      <h2 class="fd-section-label" data-lang-ha="1. DALILIN BA DA WANNAN SHAWARA">1. WHY THIS ROTATION WAS SUGGESTED</h2>
+      {% if card.badge == 'Current' %}
+      <p style="margin:0 0 8px;">
+        Farmer's current rotation is kept as the objective baseline and is never labelled wrong. {{ card.why }}
+      </p>
+      {% else %}
+      <p style="margin:0 0 8px;">{{ card.why }}</p>
+      {% endif %}
+      <p style="margin:0;font-size:13.5px;color:var(--muted);">{{ card.water_line }}.</p>
+    </section>
+
+    <section class="fd-card">
+      <h2 class="fd-section-label" data-lang-ha="2. BINCIKEN JAMI'A DA WURAREN GWAJI">2. NAMED ACADEMIC RESEARCH &amp; TRIAL SITES</h2>
+      {% if card.studies %}
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;">
+        {% for s in card.studies %}
+        <li>
+          <span>{{ s.evidence }}</span>
+          <div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted);">
+            <span class="fd-badge fd-badge-muted">Zones: {{ s.zones|join(', ') }}</span>
+            <span class="fd-badge fd-badge-ok">{{ s.status }}</span>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% elif card.source == 'current' %}
+      <p style="margin:0;color:var(--muted);">
+        This card represents the farmer's current practice (`source: current`). No published savanna rotation trial in the evidence catalogue matches this exact sequence, so it is evaluated directly from LGA climate, water balance, and soil rules.
+      </p>
+      {% else %}
+      <p style="margin:0;color:var(--muted);">
+        No exact published yield trial in the Kaduna savanna study table matches this crop pair (`source: {{ card.source }}`). Scores come from LGA agroclimate, FAO-56 water balance, and iSDAsoil crop rules — discuss local performance with an extension officer.
+      </p>
+      {% endif %}
+    </section>
+
+    <section class="fd-card">
+      <h2 class="fd-section-label" style="color:var(--green);" data-lang-ha="3. AMFANIN DA YA DACE DA BUKATUN MANOMI">3. BENEFITS TIED TO FARMER PRIORITIES</h2>
+      {% if card.benefits or card.opportunities %}
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;">
+        {% for b in card.benefits %}
+        <li>{{ b }}</li>
+        {% endfor %}
+        {% for opp in card.opportunities %}
+        <li><strong>+ {{ opp.name }}:</strong> {{ opp.reason }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p style="margin:0;color:var(--muted);">Serves as the current reference sequence against which Options A and B are compared.</p>
+      {% endif %}
+    </section>
+
+    <section class="fd-card">
+      <h2 class="fd-section-label" data-lang-ha="4. GURABEN BAYANAI">4. INFORMATION GAPS</h2>
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;">
+        {% for g in card.gaps %}
+        <li>{{ g }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="fd-alert fd-alert-blue">
+      <h2 class="fd-section-label" style="color:#1e3a8a;" data-lang-ha="5. YADDA YAKE JURE CANJIN YANAYI">5. COPES WITH THE TREND</h2>
+      <p style="margin:0;">{{ card.trend_line }}</p>
+    </section>
+
+    <section class="fd-alert fd-alert-danger">
+      <h2 class="fd-section-label" style="color:#7a1c1c;" data-lang-ha="6. HADURRAN DA ZA A TABBATA DA MALAMIN GONA">6. RISKS TO CHECK WITH EXTENSION OFFICER</h2>
+      {% if card.risks %}
+      <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px;">
+        {% for r in card.risks %}
+        <li>{{ r.text }} — <strong>Check with: {{ r.check_with }}</strong></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p style="margin:0;">No specific weather or pest alert triggered for this sequence — still confirm local seed variety with your extension officer.</p>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

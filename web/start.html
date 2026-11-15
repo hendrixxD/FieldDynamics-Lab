@@ -1,0 +1,341 @@
+{% extends "_base.html" %}
+
+{% block title %}Start Farm Visit · FieldDynamics Kaduna Advisor{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-start-wrap {
+    padding: 8px 0 24px;
+  }
+  .fd-start-grid {
+    align-items: center;
+    gap: 28px;
+  }
+  .fd-start-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .fd-start-h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.08;
+    max-width: 16ch;
+  }
+  .fd-start-lead {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15.5px;
+    line-height: 1.62;
+    max-width: 54ch;
+  }
+  .fd-resume-card {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 18px;
+    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--line);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-xs);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  }
+  .fd-resume-card:hover {
+    border-color: var(--ink);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+  .fd-resume-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .fd-resume-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .fd-resume-kicker {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .fd-resume-title {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .fd-resume-meta {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fd-resume-arrow {
+    color: var(--muted);
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .fd-start-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .fd-start-science-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 4px 0;
+  }
+  .fd-start-science-link:hover {
+    color: var(--green);
+    text-decoration: underline;
+  }
+  .fd-savanna-card {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    min-height: 440px;
+    background: linear-gradient(155deg, #2d5a27 0%, #557a2b 38%, #c99227 80%, #9b5b1a 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 18px;
+  }
+  .fd-savanna-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .fd-savanna-overlay {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 253, 249, 0.96);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 15px 18px;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(6px);
+  }
+  .fd-savanna-lga {
+    margin: 0 0 4px;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .fd-savanna-stats {
+    margin: 0 0 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .fd-savanna-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  @media (max-width: 1023px) {
+    .fd-savanna-card {
+      min-height: 290px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="fd-start-wrap">
+  <div class="fd-grid-2 fd-start-grid">
+    <div class="fd-start-left">
+      <span class="fd-kicker is-blue" data-lang-ha="GASAR NASA SPACE APPS 2026 · KALUBALEN FIELD SHIFT">
+        NASA SPACE APPS 2026 · FIELD SHIFT CHALLENGE
+      </span>
+
+      <h1 class="fd-h1 fd-start-h1" data-lang-ha="Me za a shuka a gaba, da dalilin hakan.">
+        What to plant next, and why.
+      </h1>
+
+      <p class="fd-start-lead" data-lang-ha="Malaman gonar Kaduna suna taimaka wa kananan manoma su kwatanta jerin amfanin gonarsu na yanzu da hanyoyin musayar amfanin gona guda biyu masu hujjar kimiyya ta amfani da bayanan tauraron dan adam na NASA.">
+        Kaduna extension advisors already help smallholder farmers read the rains. FieldDynamics compares a farmer's current crop sequence against two evidence-backed rotation alternatives using 45 years of NASA Earth observations and local soil properties.
+      </p>
+
+      <button type="button" class="fd-resume-card" id="resumeVisitCard" aria-label="Resume last saved field visit">
+        <span class="fd-resume-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 14 2 H 6 A 2 2 0 0 0 4 4 V 20 A 2 2 0 0 0 6 22 H 18 A 2 2 0 0 0 20 20 V 8 Z"/>
+            <path d="M 14 2 V 8 H 20"/>
+            <path d="M 8 13 H 16 M 8 17 H 13"/>
+          </svg>
+        </span>
+        <span class="fd-resume-body">
+          <span class="fd-resume-kicker" data-lang-ha="ZIYARAR GONA TA KARSHE DA AKA ADANA">LAST SAVED FIELD VISIT</span>
+          <span class="fd-resume-title" id="resumeVisitSummary">
+            {{ advisor_req.lga }} LGA · {% if advisor_req.past_seasons|length > 1 %}{{ advisor_req.past_seasons[0]|join(' + ')|title }} then {% endif %}{{ advisor_req.past_seasons[-1]|join(' + ')|title }}
+          </span>
+          <span class="fd-resume-meta" id="resumeVisitMeta" data-lang-ha="An adana a wannan na'ura · A shirye ba tare da intanet ba">
+            Cached on this device · Ready offline
+          </span>
+        </span>
+        <span class="fd-resume-arrow" aria-hidden="true">→</span>
+      </button>
+
+      <div class="fd-start-actions">
+        <a class="fd-btn fd-btn-dark" href="/farm?{{ query_string }}">
+          <span data-lang-ha="Fara Sabuwar Ziyarar Gona →">Start New Farm Visit →</span>
+        </a>
+        <a class="fd-btn fd-btn-outline" href="/map?{{ query_string }}">
+          <span data-lang-ha="Bincika Kananan Hukumomi 23">Explore 23 Kaduna LGAs</span>
+        </a>
+      </div>
+
+      <a class="fd-start-science-link" href="/learn?{{ query_string }}" data-lang-ha="Koyi game da kimiyya da bayanan NASA →">
+        Learn about the science &amp; NASA datasets →
+      </a>
+    </div>
+
+    <div class="fd-savanna-card">
+      <svg class="fd-savanna-art" viewBox="0 0 560 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="huskLeafA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3f7a32"/>
+            <stop offset="100%" stop-color="#1f471c"/>
+          </linearGradient>
+          <linearGradient id="huskLeafB" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6da344"/>
+            <stop offset="100%" stop-color="#2c5c26"/>
+          </linearGradient>
+          <linearGradient id="cobCoreGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fef08a"/>
+            <stop offset="55%" stop-color="#eab308"/>
+            <stop offset="100%" stop-color="#b45309"/>
+          </linearGradient>
+          <linearGradient id="cobCoreAmber" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fde68a"/>
+            <stop offset="60%" stop-color="#d97706"/>
+            <stop offset="100%" stop-color="#92400e"/>
+          </linearGradient>
+          <pattern id="kernelGrid" width="26" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+            <rect x="2" y="2" width="21" height="17" rx="7" fill="#fde047" stroke="#b45309" stroke-width="1.5"/>
+            <rect x="6" y="5" width="9" height="5" rx="2.5" fill="#fef9c3" opacity="0.75"/>
+          </pattern>
+          <pattern id="kernelGridWarm" width="26" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+            <rect x="2" y="2" width="21" height="17" rx="7" fill="#fbbf24" stroke="#92400e" stroke-width="1.5"/>
+            <rect x="14" y="3" width="9" height="15" rx="4" fill="#d97706" opacity="0.35"/>
+            <rect x="5" y="5" width="8" height="5" rx="2.5" fill="#fef3c7" opacity="0.7"/>
+          </pattern>
+        </defs>
+
+        <path d="M -20 150 C 120 40 320 20 540 -10 L 580 120 C 370 140 160 210 -20 290 Z" fill="url(#huskLeafB)" opacity="0.9"/>
+        <path d="M -30 330 C 140 210 350 110 590 70 L 590 250 C 380 280 180 370 -10 470 Z" fill="url(#huskLeafA)" opacity="0.88"/>
+
+        <g transform="translate(30, 36)">
+          <ellipse cx="220" cy="120" rx="215" ry="66" transform="rotate(-28 220 120)" fill="url(#cobCoreGold)" stroke="#854d0e" stroke-width="3"/>
+          <ellipse cx="220" cy="120" rx="208" ry="60" transform="rotate(-28 220 120)" fill="url(#kernelGrid)"/>
+          <circle cx="155" cy="142" r="9" fill="#c2410c" opacity="0.55"/>
+          <circle cx="242" cy="98" r="9" fill="#b45309" opacity="0.55"/>
+          <circle cx="298" cy="74" r="8.5" fill="#9a3412" opacity="0.5"/>
+        </g>
+
+        <g transform="translate(85, 148)">
+          <ellipse cx="240" cy="145" rx="235" ry="74" transform="rotate(-28 240 145)" fill="url(#cobCoreAmber)" stroke="#78350f" stroke-width="3.5"/>
+          <ellipse cx="240" cy="145" rx="227" ry="67" transform="rotate(-28 240 145)" fill="url(#kernelGridWarm)"/>
+          <circle cx="145" cy="188" r="10" fill="#9a3412" opacity="0.55"/>
+          <circle cx="215" cy="152" r="10" fill="#b45309" opacity="0.5"/>
+          <circle cx="288" cy="112" r="10" fill="#9a3412" opacity="0.55"/>
+          <circle cx="344" cy="86" r="9.5" fill="#7c2d12" opacity="0.5"/>
+        </g>
+
+        <path d="M 310 520 C 390 420 470 350 580 300 L 580 530 Z" fill="url(#huskLeafA)" opacity="0.92"/>
+      </svg>
+
+      <div class="fd-savanna-overlay">
+        <p class="fd-savanna-lga">
+          {{ sv.lga }}, Kaduna State · {{ sv.zone }} Senatorial Zone
+        </p>
+        <p class="fd-savanna-stats">
+          Median rain onset: <strong>{{ sv.onset_label }}</strong> · Cessation: <strong>{{ sv.cessation_label }}</strong> ({{ sv.length_days }} days) · Soil default: <strong>{{ sv.soil_default }}{% if sv.soil_ph %} (pH {{ sv.soil_ph }}){% endif %}</strong>
+        </p>
+        <div class="fd-savanna-pills">
+          <span class="fd-badge {% if sv.confidence.level == 'High' %}fd-badge-ok{% elif sv.confidence.level == 'Medium' %}fd-badge-amber{% else %}fd-badge-danger{% endif %}">
+            {{ sv.confidence.level }} Data Confidence
+          </span>
+          <span class="fd-badge fd-badge-muted">
+            {{ sv.erosion_band }} Erosion Band
+          </span>
+          <span class="fd-badge fd-badge-blue">
+            NASA POWER + CHIRPS + iSDAsoil
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    var card = document.getElementById("resumeVisitCard");
+    var summaryEl = document.getElementById("resumeVisitSummary");
+    var metaEl = document.getElementById("resumeVisitMeta");
+    if (!card || !window.FDStore) return;
+
+    function titleWords(arr) {
+      return (arr || [])
+        .map(function (c) {
+          return c ? c.charAt(0).toUpperCase() + c.slice(1) : "";
+        })
+        .filter(Boolean)
+        .join(" + ");
+    }
+
+    function refreshSavedVisit() {
+      var s = window.FDStore.load();
+      var s1 = titleWords(s.s1 && s.s1.length ? s.s1 : ["maize"]);
+      var s2 = titleWords(s.s2 || []);
+      var seq = (s2 ? s2 + " then " : "") + s1;
+      if (summaryEl) {
+        summaryEl.textContent = (s.lga || "Zaria") + " LGA · " + seq;
+      }
+      if (metaEl && s.savedAt) {
+        var dt = new Date(s.savedAt);
+        if (!isNaN(dt.getTime())) {
+          metaEl.textContent =
+            "Saved " +
+            dt.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+            " · Cached on this device · Ready offline";
+        }
+      }
+    }
+
+    refreshSavedVisit();
+
+    card.addEventListener("click", function () {
+      window.FDStore.go("/compare");
+    });
+  })();
+</script>
+{% endblock %}

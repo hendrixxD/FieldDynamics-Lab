@@ -1,0 +1,96 @@
+{% extends "_base.html" %}
+
+{% block title %}Step 1: Farm Situation · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-screen fd-farm-screen">
+  <div class="fd-step-intro">
+    <div class="fd-step-num">STEP 1 OF 5</div>
+    <h1 class="fd-title">Farm Situation & Field History</h1>
+    <p class="fd-sub">Enter the farm's location, soil reality, water access, and crops planted over the last two seasons in {{ selected_lga_info.lga }}.</p>
+  </div>
+
+  <form method="get" action="/priorities" class="fd-farm-form">
+    <input type="hidden" name="lga" value="{{ advisor_req.lga }}">
+
+    <div class="fd-grid-2col">
+      <div class="fd-panel">
+        <h2 class="fd-panel-title">1. Location & Soil Context</h2>
+        
+        <div class="fd-field">
+          <label class="fd-label" for="lgaField">Selected LGA (Kaduna State)</label>
+          <select id="lgaField" name="lga" class="fd-select" onchange="window.location.href='/farm?lga=' + this.value">
+            {% for item in lgas %}
+              <option value="{{ item.lga }}" {% if item.lga == advisor_req.lga %}selected{% endif %}>
+                {{ item.lga }} ({{ item.zone }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="fd-field">
+          <label class="fd-label" for="soilField">Soil Texture Group</label>
+          <select id="soilField" name="soil" class="fd-select">
+            <option value="Loamy" {% if advisor_req.soil == 'Loamy' or not advisor_req.soil %}selected{% endif %}>Loamy (Balanced medium soil - iSDA default)</option>
+            <option value="Sandy" {% if advisor_req.soil == 'Sandy' %}selected{% endif %}>Sandy (Light, fast-draining, higher Striga risk)</option>
+            <option value="Clay" {% if advisor_req.soil == 'Clay' %}selected{% endif %}>Clay (Heavy, moisture-holding, slower drainage)</option>
+            <option value="Not sure" {% if advisor_req.soil == 'Not sure' %}selected{% endif %}>Not sure (Use satellite default: {{ selected_lga_info.soil_default }})</option>
+          </select>
+          <p class="fd-hint">iSDA 0–20 cm cropland default for {{ selected_lga_info.lga }}: {{ selected_lga_info.soil_default }} (pH {{ selected_lga_info.soil_ph or '6.0' }}).</p>
+        </div>
+
+        <div class="fd-field">
+          <label class="fd-label" for="waterField">Water Access</label>
+          <select id="waterField" name="water" class="fd-select">
+            <option value="Rain only" {% if advisor_req.water == 'Rain only' %}selected{% endif %}>Rain only (Subject to seasonal onset & dry spells)</option>
+            <option value="Irrigation" {% if advisor_req.water == 'Irrigation' %}selected{% endif %}>Irrigation access (Fadama / river pumping)</option>
+            <option value="Both" {% if advisor_req.water == 'Both' %}selected{% endif %}>Both (Supplementary dry-season watering)</option>
+          </select>
+        </div>
+
+        <div class="fd-field">
+          <label class="fd-label" for="equipmentField">Farm Equipment Level</label>
+          <select id="equipmentField" name="equipment" class="fd-select">
+            <option value="Hand tools" {% if advisor_req.equipment == 'Hand tools' %}selected{% endif %}>Hand tools (Hoe and cutlass)</option>
+            <option value="Animal traction" {% if advisor_req.equipment == 'Animal traction' %}selected{% endif %}>Animal traction (Oxen plough)</option>
+            <option value="Tractor" {% if advisor_req.equipment == 'Tractor' %}selected{% endif %}>Tractor hiring service</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fd-panel">
+        <h2 class="fd-panel-title">2. Recent Cropping History</h2>
+        <p class="fd-panel-desc">We need the last two seasons to check cereal-on-cereal exhaustion and Striga pest buildup.</p>
+
+        <div class="fd-field">
+          <label class="fd-label" for="s1Crop">Most Recent Season Crop (Year 1)</label>
+          <select id="s1Crop" name="s1" class="fd-select">
+            {% for cid, clabel in crop_choices %}
+              <option value="{{ cid }}" {% if advisor_req.past_seasons[-1][0] == cid %}selected{% endif %}>{{ clabel }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="fd-field">
+          <label class="fd-label" for="s2Crop">Previous Season Crop (Year 2)</label>
+          <select id="s2Crop" name="s2" class="fd-select">
+            {% set prev_crop = advisor_req.past_seasons[0][0] if advisor_req.past_seasons|length > 1 else advisor_req.past_seasons[0][0] %}
+            {% for cid, clabel in crop_choices %}
+              <option value="{{ cid }}" {% if prev_crop == cid %}selected{% endif %}>{{ clabel }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="fd-alert-box">
+          <strong>Rotation Note:</strong> Repeating maize or sorghum year after year depletes soil nitrogen and increases root parasite (Striga hermonthica) seedbank.
+        </div>
+      </div>
+    </div>
+
+    <div class="fd-form-actions">
+      <a href="/start?{{ query_string }}" class="fd-btn-outline">← Back to LGA Select</a>
+      <button type="submit" class="fd-btn-primary">Continue to Farmer Priorities (Step 2) →</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

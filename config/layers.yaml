@@ -1,0 +1,141 @@
+# config/layers.yaml
+# Single source of truth for map layer colour scales, thresholds, and units.
+# Used by both map overlays and the /api/legend/{layer} endpoint (docs/map-architecture.md).
+
+layers:
+  soil_moisture:
+    label: "Root-Zone Soil Moisture Anomaly"
+    unit: "z-score (SD)"
+    value_min: -2.5
+    value_max: 2.5
+    native_resolution: "~9 km (NASA SMAP SPL4SMGP V008, 2015–2025)"
+    colours:
+      - "#7a0000"
+      - "#d73027"
+      - "#f46d43"
+      - "#fdae61"
+      - "#fee08b"
+      - "#d9ef8b"
+      - "#66bd63"
+      - "#1a9850"
+    stops:
+      - value: -2.5
+        label: "Severe root-zone deficit (≤ -2.5 SD)"
+        colour: "#7a0000"
+      - value: -1.5
+        label: "Moderate dry anomaly (-1.5 SD)"
+        colour: "#d73027"
+      - value: -0.5
+        label: "Mild dry anomaly (-0.5 SD)"
+        colour: "#f46d43"
+      - value: 0.0
+        label: "Normal monthly baseline (0.0 SD)"
+        colour: "#fee08b"
+      - value: 0.5
+        label: "Mild moisture surplus (+0.5 SD)"
+        colour: "#d9ef8b"
+      - value: 1.5
+        label: "High moisture reserve (+1.5 SD)"
+        colour: "#66bd63"
+      - value: 2.5
+        label: "Extreme surplus (≥ +2.5 SD)"
+        colour: "#1a9850"
+
+  heat_stress:
+    label: "Extreme Heat Days (Tmax ≥ 35°C)"
+    unit: "days / year"
+    value_min: 0.0
+    value_max: 60.0
+    native_resolution: "0.5° × 0.625° (NASA POWER Daily Tmax, 1981–2025)"
+    colours:
+      - "#ffffb2"
+      - "#fed976"
+      - "#feb24c"
+      - "#fd8d3c"
+      - "#f03b20"
+      - "#bd0026"
+    stops:
+      - value: 0.0
+        label: "Minimal heat stress (0–10 d/yr)"
+        colour: "#ffffb2"
+      - value: 12.0
+        label: "Moderate savanna heat (10–20 d/yr)"
+        colour: "#fed976"
+      - value: 24.0
+        label: "Elevated pre-planting heat (20–30 d/yr)"
+        colour: "#feb24c"
+      - value: 36.0
+        label: "High heat stress (30–40 d/yr)"
+        colour: "#fd8d3c"
+      - value: 48.0
+        label: "Very high heat stress (40–50 d/yr)"
+        colour: "#f03b20"
+      - value: 60.0
+        label: "Extreme thermal risk (≥ 50 d/yr)"
+        colour: "#bd0026"
+
+  erosion_risk:
+    label: "Topsoil Erosion Risk Index"
+    unit: "index (0–1)"
+    value_min: 0.0
+    value_max: 1.0
+    native_resolution: "30 m SRTM Slope × 0.1° IMERG p95 × iSDAsoil K"
+    colours:
+      - "#2ca02c"
+      - "#a6d96a"
+      - "#fee08b"
+      - "#fdae61"
+      - "#f46d43"
+      - "#d73027"
+    stops:
+      - value: 0.0
+        label: "Low erosion risk (flat gentle plains)"
+        colour: "#2ca02c"
+      - value: 0.2
+        label: "Slight slope & protected cover"
+        colour: "#a6d96a"
+      - value: 0.4
+        label: "Moderate erosion risk"
+        colour: "#fee08b"
+      - value: 0.6
+        label: "High erodibility & slope wash"
+        colour: "#fdae61"
+      - value: 0.8
+        label: "Very high storm wash"
+        colour: "#f46d43"
+      - value: 1.0
+        label: "Critical erosion hotspot"
+        colour: "#d73027"
+
+  water_stress:
+    label: "Crop Water Shortfall Risk"
+    unit: "shortfall share (%)"
+    value_min: 0.0
+    value_max: 100.0
+    native_resolution: "CHIRPS 5.5 km × NASA POWER FAO-56 Penman-Monteith (1981–2025)"
+    colours:
+      - "#1a9850"
+      - "#91cf60"
+      - "#d9ef8b"
+      - "#fee08b"
+      - "#fc8d59"
+      - "#d73027"
+    stops:
+      - value: 0.0
+        label: "Full seasonal water security (0% shortfall)"
+        colour: "#1a9850"
+      - value: 20.0
+        label: "Mild occasional pause (20%)"
+        colour: "#91cf60"
+      - value: 40.0
+        label: "Moderate late-season taper (40%)"
+        colour: "#d9ef8b"
+      - value: 60.0
+        label: "Significant dry pause risk (60%)"
+        colour: "#fee08b"
+      - value: 80.0
+        label: "Frequent flowering stress (80%)"
+        colour: "#fc8d59"
+      - value: 100.0
+        label: "Severe deficit in almost all years (100%)"
+        colour: "#d73027"

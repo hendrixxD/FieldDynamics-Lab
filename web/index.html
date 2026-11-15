@@ -1,14 +1,572 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FieldDynamics-Lab</title>
-  </head>
-  <body>
-    <h1>FieldDynamics-Lab</h1>
-    <p>Crop rotation decision support for Kaduna, Nigeria, using NASA Earth observations.</p>
-    <p>This tool supports farmer judgment and local expertise. It never replaces them.</p>
-    <p>The map and strategy cards are not built yet.</p>
-  </body>
-</html>
+{% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_sequence_icons %}
+
+{% block title %}FieldDynamics · Adapting Kaduna Farms with NASA Data{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-landing-topbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .fd-landing-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .fd-landing-brand-text {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--green);
+  }
+  .fd-lab-pill {
+    display: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--green-soft);
+    border: 1px solid var(--green-border);
+    color: var(--green);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .fd-landing-nav {
+    display: none;
+    align-items: center;
+    gap: 4px;
+  }
+  .fd-landing-nav a {
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .fd-landing-nav a:hover,
+  .fd-landing-nav a.is-current {
+    background: var(--bg-warm);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .fd-hero-section {
+    padding: 10px 0 28px;
+  }
+  .fd-kicker-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .fd-geo-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+  .fd-hero-lead {
+    margin: 16px 0 22px;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    line-height: 1.62;
+    max-width: 60ch;
+  }
+  .fd-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .fd-trust-line {
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .fd-trust-check {
+    color: var(--green);
+    font-weight: 800;
+  }
+  .fd-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 13px 14px;
+    box-shadow: var(--shadow-xs);
+  }
+  .fd-metric-val {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1.15;
+    margin-bottom: 3px;
+  }
+  .fd-metric-lbl {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .fd-bench-shell {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .fd-bench-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 12px;
+  }
+  .fd-bench-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  .fd-bench-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .fd-bench-select {
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-warm);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .fd-bench-subbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fd-bench-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .fd-bench-item {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--line-strong);
+    background: var(--bg-elevated);
+    padding: 12px 14px;
+    transition: border-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  }
+  .fd-bench-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--green);
+  }
+  .fd-bench-item.is-opt-a {
+    border: 1.5px solid var(--green);
+    border-left: 5px solid var(--green);
+    background: #f5fbf6;
+  }
+  .fd-bench-item.is-opt-b {
+    border-left: 4px solid var(--terra);
+  }
+  .fd-bench-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .fd-bench-seq-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+  .fd-bench-name {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .fd-bench-score-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .fd-bench-score {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .fd-bench-item.is-opt-a .fd-bench-score {
+    color: var(--green);
+  }
+  .fd-bench-water {
+    margin: 0 0 4px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .fd-bench-why {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fd-bench-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 7px;
+    border-top: 1px dashed var(--line);
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .fd-bench-meta strong {
+    color: var(--ink);
+  }
+  .fd-bench-cite {
+    margin: 12px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 11.5px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .fd-pillars-section {
+    margin-top: 20px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .fd-pillar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .fd-pillar-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+  .fd-pillar-title {
+    margin: 0 0 5px;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .fd-pillar-body {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  @media (min-width: 1080px) {
+    .fd-lab-pill {
+      display: inline-block;
+    }
+    .fd-landing-nav {
+      display: flex;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block topbar %}
+<header class="fd-topbar">
+  <div class="fd-landing-topbar-inner">
+    <div class="fd-brand-group">
+      <a class="fd-landing-brand" href="/?{{ query_string }}">
+        <span class="fd-mark" aria-hidden="true">FD</span>
+        <span class="fd-landing-brand-text">FieldDynamics</span>
+      </a>
+      <span class="fd-lab-pill" data-lang-ha="DAKIN GWADIN GONAR KADUNA">KADUNA EXTENSION LAB</span>
+    </div>
+
+    <nav class="fd-landing-nav" aria-label="Project overview navigation">
+      <a class="is-current" href="#overview" data-lang-ha="Bayani">Overview</a>
+      <a href="#pillars" data-lang-ha="Bayanan NASA">NASA Earth Observations</a>
+      <a href="/compare?{{ query_string }}" data-lang-ha="Ma'auni 7">7 Agronomic Dimensions</a>
+      <a href="/map?{{ query_string }}" data-lang-ha="Taswirar LGA 23">Kaduna 23-LGA Map</a>
+      <a href="/learn?{{ query_string }}" data-lang-ha="Kimiyya da Hujja">Science &amp; Verification</a>
+      <a href="/walkthrough" data-lang-ha="Dukkan Shafi 18">All 18 Screens</a>
+    </nav>
+
+    <div class="fd-nav-right">
+      <div class="fd-lang-switch" role="group" aria-label="Language switch">
+        <button type="button" class="fd-lang-btn is-on" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="fd-lang-btn" data-lang="ha" aria-pressed="false">HA</button>
+      </div>
+      <span class="fd-status-pill" id="fdStatusPill">
+        <span class="fd-status-dot" aria-hidden="true"></span>
+        <span id="fdStatusText" data-i18n="nav.ready">Offline Ready</span>
+      </span>
+      <a class="fd-btn fd-btn-green" href="/start?{{ query_string }}" style="min-height:38px;padding:0 14px;font-size:13px;">
+        <span data-lang-ha="Bude Kayan Shawara →">Launch Advisor Web Tool →</span>
+      </a>
+    </div>
+  </div>
+
+  <nav class="fd-mobile-strip" aria-label="Mobile landing navigation">
+    <a class="is-active" href="#overview">Overview</a>
+    <a href="/start?{{ query_string }}">Start Tool</a>
+    <a href="/compare?{{ query_string }}">7 Dimensions</a>
+    <a href="/map?{{ query_string }}">23-LGA Map</a>
+    <a href="/learn?{{ query_string }}">Science</a>
+    <a href="/walkthrough">18 Screens</a>
+  </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<section id="overview" class="fd-hero-section">
+  <div class="fd-grid-2">
+    <div>
+      <div class="fd-kicker-row">
+        <span class="fd-kicker" data-lang-ha="GASAR NASA SPACE APPS 2026 · FIELD SHIFT">
+          NASA SPACE APPS CHALLENGE 2026 · FIELD SHIFT
+        </span>
+        <span class="fd-geo-pill" data-lang-ha="Jihar Kaduna, Najeriya (Kananan Hukumomi 23)">
+          Kaduna State, Nigeria (All 23 LGAs)
+        </span>
+      </div>
+
+      <h1 class="fd-h1-serif">
+        <span data-lang-ha="Masu ba da shawara suna gaya wa manoma lokacin zuwan ruwa. FieldDynamics yana nuna musu ">Advisors tell farmers when rain comes. FieldDynamics tells them </span><span class="fd-terra-italic" data-lang-ha="abin da za a shuka a gaba, da dalilin hakan.">what to plant next, and why.</span>
+      </h1>
+
+      <p class="fd-hero-lead" data-lang-ha="Tsarin tallafin shawara na wayar hannu wanda ke hada shekaru 45 na bayanan tauraron dan adam na NASA (1981–2025) da taswirar kasar iSDAsoil mai mita 30 da bukatun manomi. Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida ba tare da maye gurbinsu ba.">
+        A phone-first decision-support platform pairing 45 years of Earth observations (1981–2025) with iSDAsoil 30m soil properties and farmer priorities across Kaduna State. Built so every recommendation supports farmer judgment and local expertise rather than replacing them.
+      </p>
+
+      <div class="fd-cta-row">
+        <a class="fd-btn fd-btn-green" href="/start?{{ query_string }}">
+          <span data-lang-ha="Bude Kayan Shawara →">Launch Advisor Web Tool →</span>
+        </a>
+        <a class="fd-btn fd-btn-outline" href="/map?{{ query_string }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M 12 21 C 12 21 5 15.6 5 10 A 7 7 0 1 1 19 10 C 19 15.6 12 21 12 21 Z"/>
+            <circle cx="12" cy="10" r="2.5"/>
+          </svg>
+          <span data-lang-ha="Duba Taswirar Yanayi ta LGA 23">Explore 23-LGA Climate Shift Map</span>
+        </a>
+      </div>
+
+      <p class="fd-trust-line">
+        <span class="fd-trust-check" aria-hidden="true">✓</span>
+        <span data-lang-ha="Yana taimaka wa hukuncin manomi · Ba a tattara bayanan sirri · Yana aiki ba tare da intanet ba">
+          Supports farmer judgment · Zero farmer personal data collected · Operates offline via local cache
+        </span>
+      </p>
+
+      <div class="fd-metrics-4" aria-label="Platform key metrics">
+        <div class="fd-metric-card">
+          <div class="fd-metric-val">{{ lgas|length }} / 23</div>
+          <div class="fd-metric-lbl" data-lang-ha="Kananan Hukumomin Kaduna">Kaduna LGAs Mapped</div>
+        </div>
+        <div class="fd-metric-card">
+          <div class="fd-metric-val">45 Yrs</div>
+          <div class="fd-metric-lbl" data-lang-ha="Tarihin Yanayi 1981–2025">Climate Record 1981–2025</div>
+        </div>
+        <div class="fd-metric-card">
+          <div class="fd-metric-val">7 Dims</div>
+          <div class="fd-metric-lbl" data-lang-ha="Ma'aunin Noma">Agronomic Scoring</div>
+        </div>
+        <div class="fd-metric-card">
+          <div class="fd-metric-val">0 Bytes</div>
+          <div class="fd-metric-lbl" data-lang-ha="Bayanan Sirri da Aka Adana">Stored Farmer Data</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fd-bench-shell">
+      <div class="fd-bench-head">
+        <span class="fd-bench-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <path d="M 3 9 H 21 M 9 21 V 9"/>
+          </svg>
+          <span data-lang-ha="GWADIN SHAWARA KAI TSAYE">LIVE ADVISORY BENCHMARK</span>
+        </span>
+
+        <form class="fd-bench-controls" method="get" action="/">
+          <label for="landingLgaSelect" class="fd-badge fd-badge-muted">
+            {{ benchmark.lga }} LGA · {{ advisor_req.water }}
+          </label>
+          <select id="landingLgaSelect" name="lga" class="fd-bench-select" aria-label="Switch Kaduna LGA live benchmark" onchange="this.form.submit()">
+            {% for item in lgas %}
+              <option value="{{ item.lga }}" {% if item.lga == benchmark.lga %}selected{% endif %}>
+                {{ item.lga }} ({{ item.zone }})
+              </option>
+            {% endfor %}
+          </select>
+          <noscript>
+            <button type="submit" class="fd-btn fd-btn-outline" style="min-height:32px;padding:0 10px;font-size:12px;">Go</button>
+          </noscript>
+        </form>
+      </div>
+
+      <div class="fd-bench-subbar">
+        <span>
+          Onset <strong>{{ sv.onset_label }}</strong> · Season <strong>{{ sv.length_days }}d</strong> · Soil <strong>{{ sv.soil_default }}</strong>
+        </span>
+        <span class="fd-badge {% if benchmark.striga_risk.level == 'High' %}fd-badge-danger{% elif benchmark.striga_risk.level == 'Medium' %}fd-badge-amber{% else %}fd-badge-ok{% endif %}">
+          Striga Risk: {{ benchmark.striga_risk.level }}
+        </span>
+      </div>
+
+      <div class="fd-bench-list">
+        {% for c in benchmark.cards %}
+          {% set slot_slug = 'current' if loop.index0 == 0 else ('a' if loop.index0 == 1 else 'b') %}
+          <a
+            class="fd-bench-item {% if c.badge == 'Option A' %}is-opt-a{% elif c.badge == 'Option B' %}is-opt-b{% endif %}"
+            href="/card/{{ slot_slug }}?{{ query_string }}"
+          >
+            <div class="fd-bench-top">
+              <div class="fd-bench-seq-wrap">
+                {{ crop_sequence_icons(c.seasons) }}
+                <span class="fd-bench-name">{{ c.title }} ({{ c.badge }})</span>
+              </div>
+
+              <div class="fd-bench-score-group">
+                {% if c.badge == 'Option A' %}
+                  <span class="fd-badge fd-badge-ok">★ Top Recommendation</span>
+                {% elif c.badge == 'Current' %}
+                  <span class="fd-badge fd-badge-muted">Baseline</span>
+                {% else %}
+                  <span class="fd-badge fd-badge-amber">Alternative</span>
+                {% endif %}
+                <span class="fd-badge {% if c.confidence.level == 'High' %}fd-badge-ok{% elif c.confidence.level == 'Medium' %}fd-badge-amber{% else %}fd-badge-danger{% endif %}">
+                  {{ c.confidence.level }} conf.
+                </span>
+                {% if c.total is not none %}
+                  <span class="fd-bench-score">{{ (c.total * 10)|round(1) }} / 10</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <p class="fd-bench-water">{{ c.water_line }}</p>
+            <p class="fd-bench-why">{{ c.why }}</p>
+
+            <div class="fd-bench-meta">
+              <span>Nutrients: <strong>{{ c.rows.nutrients.level }}</strong></span>
+              <span>Pest cycle: <strong>{{ c.rows.pests.level }}</strong></span>
+              <span>Market: <strong>{{ c.rows.market.level }}</strong></span>
+              <span style="color:var(--green);font-weight:700;">Open dossier →</span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+
+      <p class="fd-bench-cite">
+        Field evidence:
+        {% if benchmark.cards|length > 1 and benchmark.cards[1].studies %}
+          {{ benchmark.cards[1].studies[0].evidence }}
+        {% else %}
+          Validated against published Guinea savanna rotation trials
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="pillars" class="fd-pillars-section" aria-label="Core scientific and field pillars">
+  <div class="fd-grid-3">
+    <article class="fd-pillar-card">
+      <div class="fd-pillar-num" aria-hidden="true">1</div>
+      <div>
+        <h2 class="fd-pillar-title" data-lang-ha="1 · Tushen Bayanan Tauraron Dan Adam na NASA">
+          1 · NASA Earth Observation Core
+        </h2>
+        <p class="fd-pillar-body">
+          Combines NASA POWER agroclimatology (1981–2025), MODIS MOD13Q1 250m cropland NDVI, GPM IMERG V07 storm intensity, SMAP V008 root-zone moisture, and SRTM 30m slope across all 23 Kaduna LGAs.
+        </p>
+      </div>
+    </article>
+
+    <article class="fd-pillar-card">
+      <div class="fd-pillar-num" aria-hidden="true">2</div>
+      <div>
+        <h2 class="fd-pillar-title" data-lang-ha="2 · Tsarin Ma'aunin Noma Guda 7">
+          2 · 7-Dimension Agronomic Model
+        </h2>
+        <p class="fd-pillar-body">
+          Rule-based, explainable scoring across soil nutrients, organic matter cover, erosion &amp; infiltration, Striga &amp; pest cycles, FAO-56 crop water use, livestock forage value, and KDBS local market fit.
+        </p>
+      </div>
+    </article>
+
+    <article class="fd-pillar-card">
+      <div class="fd-pillar-num" aria-hidden="true">3</div>
+      <div>
+        <h2 class="fd-pillar-title" data-lang-ha="3 · Hanyoyin Isar da Sako ga Manoma">
+          3 · Multichannel Extension Handoff
+        </h2>
+        <p class="fd-pillar-body">
+          Zero app install required for farmers: extension advisors share clear rotation plans via WhatsApp cards, printable physical A5 extension cards, Hausa voice briefings, and Alheri 98.7 FM LGA radio scripts.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}

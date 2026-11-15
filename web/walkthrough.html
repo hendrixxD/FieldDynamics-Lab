@@ -1,0 +1,473 @@
+{% extends "_base.html" %}
+
+{% block title %}All 18 Live Screens · FieldDynamics Interactive Workbench{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-wt-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-xs);
+  }
+  .fd-wt-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .fd-wt-seg {
+    display: inline-flex;
+    padding: 3px;
+    border-radius: 10px;
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+  }
+  .fd-wt-seg-btn {
+    min-height: 34px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .fd-wt-seg-btn.is-active {
+    background: var(--ink);
+    color: #faf8f5;
+  }
+  .fd-wt-counter {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+  .fd-wt-layout {
+    display: grid;
+    gap: 18px;
+  }
+  .fd-wt-sidebar {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 10px;
+    max-height: 820px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fd-wt-nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.12s ease, border-color 0.12s ease;
+  }
+  .fd-wt-nav-btn:hover {
+    background: var(--bg-warm);
+  }
+  .fd-wt-nav-btn.is-active {
+    background: var(--green-soft);
+    border-color: var(--green-border);
+  }
+  .fd-wt-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+  }
+  .fd-wt-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    width: 22px;
+    flex-shrink: 0;
+  }
+  .fd-wt-nav-btn.is-active .fd-wt-num {
+    color: var(--green);
+  }
+  .fd-wt-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .fd-wt-sub {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .fd-wt-stage {
+    background: var(--bg-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 820px;
+  }
+  .fd-wt-chrome {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+  }
+  .fd-wt-url-pill {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  .fd-wt-frame-shell {
+    width: 100%;
+    max-width: 1280px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 2px solid var(--line-strong);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transition: max-width 0.2s ease, border-radius 0.2s ease;
+  }
+  .fd-wt-frame-shell.is-mobile {
+    max-width: 376px;
+    border: 8px solid #18201b;
+    border-radius: 28px;
+  }
+  .fd-wt-iframe {
+    width: 100%;
+    height: 740px;
+    border: 0;
+    display: block;
+    background: var(--bg-canvas);
+  }
+  .fd-wt-grid-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .fd-wt-route-code {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    background: var(--bg-warm);
+    padding: 4px 8px;
+    border-radius: 6px;
+    word-break: break-all;
+  }
+  @media (min-width: 1024px) {
+    .fd-wt-layout {
+      grid-template-columns: 330px 1fr;
+      align-items: start;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green" data-lang-ha="GWADIN DUKKAN SHAFI 18 KAI TSAYE">
+      INTERACTIVE PROTOTYPE &amp; LIVE ENGINE WORKBENCH
+    </span>
+    <h1 class="fd-h1" data-lang-ha="Dukkan Shafuka 18 Masu Aiki Kai Tsaye">
+      All {{ screens_manifest|length }} Live Advisory Screens
+    </h1>
+    <p class="fd-sub">
+      Inspect every route live in a 360px field-phone frame or 1280px desktop frame, backed by real Kaduna Earth observation data for <strong>{{ advisor_req.lga }} LGA</strong>.
+    </p>
+  </div>
+</div>
+
+<div class="fd-wt-toolbar" role="region" aria-label="Screen switcher controls">
+  <div class="fd-wt-group">
+    <div class="fd-wt-seg" role="tablist" aria-label="Workbench view mode">
+      <button type="button" class="fd-wt-seg-btn is-active" id="tabLiveBtn" role="tab" aria-selected="true" data-lang-ha="Duban Kai Tsaye">
+        Live Preview
+      </button>
+      <button type="button" class="fd-wt-seg-btn" id="tabGridBtn" role="tab" aria-selected="false" data-lang-ha="Dukkan Kati 18">
+        Grid Overview ({{ screens_manifest|length }})
+      </button>
+    </div>
+
+    <div class="fd-wt-seg" id="viewportToggleGroup" role="group" aria-label="Viewport size toggle">
+      <button type="button" class="fd-wt-seg-btn" id="vpMobileBtn" data-vp="mobile">
+        Mobile 360px
+      </button>
+      <button type="button" class="fd-wt-seg-btn is-active" id="vpDesktopBtn" data-vp="desktop">
+        Desktop 1280px
+      </button>
+    </div>
+  </div>
+
+  <div class="fd-wt-group">
+    <button type="button" class="fd-btn fd-btn-outline" id="wtPrevBtn" style="min-height:36px;padding:0 12px;font-size:13px;">
+      ← Prev
+    </button>
+    <span class="fd-wt-counter" id="wtCounter">1 / {{ screens_manifest|length }}</span>
+    <button type="button" class="fd-btn fd-btn-outline" id="wtNextBtn" style="min-height:36px;padding:0 12px;font-size:13px;">
+      Next →
+    </button>
+    <a
+      class="fd-btn fd-btn-green"
+      id="openFullScreenLink"
+      href="/?{{ query_string }}"
+      target="_blank"
+      rel="noopener"
+      style="min-height:36px;padding:0 14px;font-size:13px;"
+    >
+      <span data-lang-ha="Bude Cikakken Shafi ↗">Open Current Screen Full Page ↗</span>
+    </a>
+  </div>
+</div>
+
+<section id="wtLivePanel" class="fd-wt-layout" aria-label="Live screen preview workbench">
+  <aside class="fd-wt-sidebar" aria-label="18 screens manifest">
+    {% for sid, sname, surl, sbadge, sstep in screens_manifest %}
+      {% set live_href = surl ~ ('&' if '?' in surl else '?') ~ query_string %}
+      <button
+        type="button"
+        class="fd-wt-nav-btn {% if loop.first %}is-active{% endif %}"
+        data-screen-idx="{{ loop.index0 }}"
+        data-screen-id="{{ sid }}"
+        data-screen-name="{{ sname }}"
+        data-screen-badge="{{ sbadge }}"
+        data-screen-step="{{ sstep }}"
+        data-screen-url="{{ live_href }}"
+      >
+        <span class="fd-wt-nav-left">
+          <span class="fd-wt-num">{{ '%02d'|format(loop.index) }}</span>
+          <span>
+            <span class="fd-wt-name">{{ sname }}</span>
+            <span class="fd-wt-sub">{{ sstep }} · {{ surl }}</span>
+          </span>
+        </span>
+        <span class="fd-badge fd-badge-muted">{{ sbadge }}</span>
+      </button>
+    {% endfor %}
+  </aside>
+
+  <div class="fd-wt-stage">
+    <div class="fd-wt-chrome">
+      <div class="fd-wt-group" style="min-width:0;">
+        <span class="fd-badge fd-badge-ok" id="wtActiveBadge">Portal</span>
+        <strong id="wtActiveTitle" style="font-size:13.5px;">Public Project Landing Page</strong>
+        <code class="fd-wt-url-pill" id="wtActiveUrl">/?{{ query_string }}</code>
+      </div>
+      <button type="button" class="fd-term-btn" id="wtReloadBtn">Reload Frame ↻</button>
+    </div>
+
+    <div class="fd-wt-frame-shell" id="wtFrameShell">
+      <iframe
+        id="liveScreenFrame"
+        class="fd-wt-iframe"
+        src="/?{{ query_string }}"
+        title="Live FieldDynamics screen preview"
+      ></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="wtGridPanel" hidden aria-label="Grid overview of all 18 live screens">
+  <div class="fd-grid-3">
+    {% for sid, sname, surl, sbadge, sstep in screens_manifest %}
+      {% set live_href = surl ~ ('&' if '?' in surl else '?') ~ query_string %}
+      <article class="fd-card fd-wt-grid-card">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+            <span class="fd-badge fd-badge-ok">{{ '%02d'|format(loop.index) }} · {{ sbadge }}</span>
+            <span style="font-size:11.5px;font-weight:700;color:var(--muted);">{{ sstep }}</span>
+          </div>
+          <h2 style="margin:0 0 8px;font-size:15.5px;font-weight:800;color:var(--ink);">
+            {{ sname }}
+          </h2>
+          <div class="fd-wt-route-code">GET {{ surl }}</div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <button
+            type="button"
+            class="fd-btn fd-btn-dark"
+            data-jump-idx="{{ loop.index0 }}"
+            style="flex:1;min-height:38px;padding:0 12px;font-size:12.5px;"
+          >
+            Load in Frame
+          </button>
+          <a
+            class="fd-btn fd-btn-outline"
+            href="{{ live_href }}"
+            style="min-height:38px;padding:0 12px;font-size:12.5px;"
+          >
+            Open ↗
+          </a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    var navBtns = Array.prototype.slice.call(document.querySelectorAll(".fd-wt-nav-btn"));
+    if (!navBtns.length) return;
+
+    var iframe = document.getElementById("liveScreenFrame");
+    var frameShell = document.getElementById("wtFrameShell");
+    var counterEl = document.getElementById("wtCounter");
+    var openLink = document.getElementById("openFullScreenLink");
+    var activeBadge = document.getElementById("wtActiveBadge");
+    var activeTitle = document.getElementById("wtActiveTitle");
+    var activeUrl = document.getElementById("wtActiveUrl");
+    var prevBtn = document.getElementById("wtPrevBtn");
+    var nextBtn = document.getElementById("wtNextBtn");
+    var reloadBtn = document.getElementById("wtReloadBtn");
+    var tabLiveBtn = document.getElementById("tabLiveBtn");
+    var tabGridBtn = document.getElementById("tabGridBtn");
+    var livePanel = document.getElementById("wtLivePanel");
+    var gridPanel = document.getElementById("wtGridPanel");
+    var vpMobileBtn = document.getElementById("vpMobileBtn");
+    var vpDesktopBtn = document.getElementById("vpDesktopBtn");
+    var vpGroup = document.getElementById("viewportToggleGroup");
+
+    var currentIdx = 0;
+
+    function setTab(mode) {
+      var isLive = mode !== "grid";
+      livePanel.hidden = !isLive;
+      gridPanel.hidden = isLive;
+      if (vpGroup) vpGroup.style.display = isLive ? "inline-flex" : "none";
+      tabLiveBtn.classList.toggle("is-active", isLive);
+      tabGridBtn.classList.toggle("is-active", !isLive);
+      tabLiveBtn.setAttribute("aria-selected", isLive ? "true" : "false");
+      tabGridBtn.setAttribute("aria-selected", !isLive ? "true" : "false");
+    }
+
+    function setViewport(vp) {
+      var mobile = vp === "mobile";
+      frameShell.classList.toggle("is-mobile", mobile);
+      vpMobileBtn.classList.toggle("is-active", mobile);
+      vpDesktopBtn.classList.toggle("is-active", !mobile);
+    }
+
+    function selectScreen(idx) {
+      var total = navBtns.length;
+      currentIdx = ((idx % total) + total) % total;
+      var btn = navBtns[currentIdx];
+      var url = btn.getAttribute("data-screen-url");
+      var sid = btn.getAttribute("data-screen-id");
+
+      navBtns.forEach(function (b, i) {
+        b.classList.toggle("is-active", i === currentIdx);
+      });
+
+      if (iframe && iframe.getAttribute("src") !== url) {
+        iframe.setAttribute("src", url);
+      }
+      if (counterEl) counterEl.textContent = currentIdx + 1 + " / " + total;
+      if (openLink) openLink.setAttribute("href", url);
+      if (activeBadge) activeBadge.textContent = btn.getAttribute("data-screen-badge") || "";
+      if (activeTitle) activeTitle.textContent = btn.getAttribute("data-screen-name") || "";
+      if (activeUrl) activeUrl.textContent = url;
+
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, "", "#" + sid);
+      }
+      btn.scrollIntoView({ block: "nearest" });
+    }
+
+    navBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        selectScreen(parseInt(btn.getAttribute("data-screen-idx"), 10) || 0);
+      });
+    });
+
+    document.querySelectorAll("[data-jump-idx]").forEach(function (jumpBtn) {
+      jumpBtn.addEventListener("click", function () {
+        setTab("live");
+        selectScreen(parseInt(jumpBtn.getAttribute("data-jump-idx"), 10) || 0);
+      });
+    });
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function () {
+        selectScreen(currentIdx - 1);
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function () {
+        selectScreen(currentIdx + 1);
+      });
+    }
+    if (reloadBtn && iframe) {
+      reloadBtn.addEventListener("click", function () {
+        iframe.setAttribute("src", iframe.getAttribute("src"));
+      });
+    }
+    if (tabLiveBtn) {
+      tabLiveBtn.addEventListener("click", function () {
+        setTab("live");
+      });
+    }
+    if (tabGridBtn) {
+      tabGridBtn.addEventListener("click", function () {
+        setTab("grid");
+      });
+    }
+    if (vpMobileBtn) {
+      vpMobileBtn.addEventListener("click", function () {
+        setViewport("mobile");
+      });
+    }
+    if (vpDesktopBtn) {
+      vpDesktopBtn.addEventListener("click", function () {
+        setViewport("desktop");
+      });
+    }
+
+    var hashId = (window.location.hash || "").replace(/^#/, "");
+    if (hashId) {
+      var matchIdx = navBtns.findIndex(function (b) {
+        return b.getAttribute("data-screen-id") === hashId;
+      });
+      if (matchIdx >= 0) {
+        selectScreen(matchIdx);
+      }
+    }
+  })();
+</script>
+{% endblock %}

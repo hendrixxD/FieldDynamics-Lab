@@ -1,0 +1,69 @@
+{% extends "_base.html" %}
+
+{% block title %}Kaduna 23-LGA Agroclimatic Trend Map · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green">Geospatial Choropleth (F8)</span>
+    <h1 class="fd-h1">Kaduna State 23 LGAs Agroclimatic Trend Map</h1>
+    <p class="fd-sub">Interactive choropleth exploring multi-decade climate shifts, erosion vulnerabilities, and rainfall baselines across all 23 LGAs.</p>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <a class="fd-btn fd-btn-outline" href="/compare?{{ query_string }}">← Back to Compare</a>
+  </div>
+</section>
+
+<div class="fd-card" style="margin-bottom:24px;padding:20px;">
+  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div>
+      <span class="fd-section-label">ACTIVE CHOROPLETH LAYER</span>
+      <h2 style="font-size:20px;font-weight:800;margin:4px 0 0;">Kaduna 23-LGA Climate & Topsoil Indicators</h2>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <a href="/api/map/trends" target="_blank" class="fd-btn fd-btn-sm fd-btn-outline">Download JSON Trends</a>
+      <a href="/api/legend" target="_blank" class="fd-btn fd-btn-sm fd-btn-outline">View Layer Legends</a>
+    </div>
+  </div>
+
+  <div class="fd-table-wrap">
+    <table class="fd-table" style="width:100%;font-size:12.5px;">
+      <thead>
+        <tr>
+          <th>LGA Name</th>
+          <th>Zone</th>
+          <th>Cropland %</th>
+          <th>Annual Rain</th>
+          <th>Heat Days</th>
+          <th>Onset Trend</th>
+          <th>Erosion Risk</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for name, tr in trends_map.items() %}
+          <tr {% if name == advisor_req.lga %}class="is-selected" style="background:var(--green-soft);font-weight:600;"{% endif %}>
+            <td><strong>{{ name }}</strong></td>
+            <td>{{ tr.zone }}</td>
+            <td>{{ tr.cropland_pct }}%</td>
+            <td>{{ tr.annual_rain_mm }} mm</td>
+            <td>{{ tr.heat_days_yr }} d/yr</td>
+            <td>
+              {{ tr.onset_slope_days_dec|string }} d/dec
+              {% if tr.onset_significant %}<span class="fd-badge fd-badge-amber">Significant</span>{% endif %}
+            </td>
+            <td>
+              <span class="fd-badge {% if tr.erosion_band == 'High' %}fd-badge-danger{% elif tr.erosion_band == 'Medium' %}fd-badge-amber{% else %}fd-badge-green{% endif %}">
+                {{ tr.erosion_band }} ({{ tr.erosion_index }})
+              </span>
+            </td>
+            <td>
+              <a href="/farm?lga={{ name }}" class="fd-link" style="color:var(--green);font-weight:700;">Select LGA →</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "_base.html" %}
+
+{% block title %}FAO-56 Crop Water Check · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-screen fd-crop-check-screen">
+  <div class="fd-step-intro">
+    <div class="fd-step-kicker">FAO-56 WATER BALANCE DIAGNOSTIC (F3d)</div>
+    <h1 class="fd-title">{{ cw.crop_label }} Water Demand vs Rainfall · {{ cw.lga }}</h1>
+    <p class="fd-sub">Daily root-zone soil water tracking from planting onset to harvest ({{ cw.total_days }} days duration).</p>
+  </div>
+
+  <div class="fd-crop-selector-bar">
+    <span class="fd-sel-label">Switch Crop:</span>
+    {% for alt in cw.available_crops %}
+      <a href="/season/crop-check?{{ query_string }}&crop={{ alt }}" class="fd-pill {% if alt == cw.crop %}is-active{% endif %}">
+        {{ alt|capitalize }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="fd-metrics-row">
+    <div class="fd-metric-tile">
+      <span class="fd-tile-label">Total Water Need (ETc)</span>
+      <span class="fd-tile-val">{{ cw.water_need_mm }} mm</span>
+      <span class="fd-tile-sub">Atmospheric demand</span>
+    </div>
+    <div class="fd-metric-tile">
+      <span class="fd-tile-label">Seasonal Rainfall</span>
+      <span class="fd-tile-val">{{ cw.season_rain_mm }} mm</span>
+      <span class="fd-tile-sub">CHIRPS in-season rain</span>
+    </div>
+    <div class="fd-metric-tile">
+      <span class="fd-tile-label">Shortfall Share</span>
+      <span class="fd-tile-val">{{ cw.short_pct }}%</span>
+      <span class="fd-tile-sub">Years with moisture gap</span>
+    </div>
+    <div class="fd-metric-tile">
+      <span class="fd-tile-label">Fits Rainy Window</span>
+      <span class="fd-tile-val">{{ cw.fits_pct }}%</span>
+      <span class="fd-tile-sub">Matures before cessation</span>
+    </div>
+  </div>
+
+  <div class="fd-card fd-stages-card">
+    <h2>Phenological Growth Stages (FAO-56)</h2>
+    <div class="fd-stages-grid">
+      {% for st in cw.stages %}
+        <div class="fd-stage-box {% if st.is_riskiest %}is-riskiest{% endif %}">
+          <div class="fd-stage-name">{{ st.label }}</div>
+          <div class="fd-stage-meta">{{ st.days }} days · Kc {{ st.kc }}</div>
+          <div class="fd-stage-val">{{ st.need_mm }} mm need</div>
+          <div class="fd-stage-short">Shortfall in {{ st.short_pct }}% of yrs</div>
+          {% if st.is_riskiest %}
+            <span class="fd-risk-pill">Riskiest Stage</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="fd-card fd-compare-crops-card">
+    <h2>Water Demand Comparison with Rotational Crops</h2>
+    <table class="fd-table">
+      <thead>
+        <tr>
+          <th>Crop</th>
+          <th>Water Need</th>
+          <th>Season Length</th>
+          <th>Fits Season %</th>
+          <th>Shortfall Risk %</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comp in cw.comparisons %}
+          <tr {% if comp.crop == cw.crop %}class="is-selected"{% endif %}>
+            <td><strong>{{ comp.label }}</strong></td>
+            <td>{{ comp.need_mm }} mm</td>
+            <td>{{ comp.days }} days</td>
+            <td>{{ comp.fits_pct }}%</td>
+            <td>{{ comp.short_pct }}%</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fd-form-actions">
+    <a href="/season?{{ query_string }}" class="fd-btn-outline">← Back to Season Strip</a>
+    <a href="/compare?{{ query_string }}" class="fd-btn-primary">Proceed to Rotation Cards (Step 4) →</a>
+  </div>
+</section>
+{% endblock %}

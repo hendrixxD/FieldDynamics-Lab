@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+
+{% block title %}Offline Consultation Archive · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green">P5 Field Workstation Deliverable</span>
+    <h1 class="fd-h1">Offline CBA Field Logs & Consultation Records</h1>
+    <p class="fd-sub">Locally saved extension consultations and smallholder rotation plans for offline village visits.</p>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <a class="fd-btn fd-btn-outline" href="/start">← New Consultation</a>
+  </div>
+</section>
+
+<div class="fd-card" style="margin-bottom:24px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px;">
+    <div>
+      <span class="fd-section-label">LOCAL BROWSER ARCHIVE</span>
+      <h2 style="font-size:20px;font-weight:800;margin:4px 0 0;">Offline Consultation Records</h2>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="fd-btn fd-btn-sm fd-btn-dark" onclick="window.fdApp && window.fdApp.exportLogsCsv()">Export Records (CSV)</button>
+      <button type="button" class="fd-btn fd-btn-sm fd-btn-outline" onclick="window.fdApp && window.fdApp.clearLogs()">Clear Archive</button>
+    </div>
+  </div>
+
+  <div id="fdEmptyLogs" style="padding:40px 20px;text-align:center;color:var(--muted);">
+    <div style="font-size:36px;margin-bottom:12px;">📋</div>
+    <h3 style="margin:0 0 6px;font-size:16px;color:var(--ink);">No Local Records Saved Yet</h3>
+    <p style="margin:0 0 16px;font-size:13px;">Completed farmer consultations saved in the field workstation are stored locally in your browser for offline retrieval and CSV export.</p>
+    <a href="/farm?{{ query_string }}" class="fd-btn fd-btn-primary">Start a New Farm Consultation →</a>
+  </div>
+
+  <div class="fd-table-wrap" id="fdLogsTableWrap" style="display:none;">
+    <table class="fd-table" id="fdLogsTable" style="width:100%;font-size:13px;">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Farmer Name</th>
+          <th>LGA</th>
+          <th>Baseline</th>
+          <th>Selected Plan</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="fdLogsBody">
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

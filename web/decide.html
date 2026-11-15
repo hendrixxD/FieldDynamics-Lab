@@ -1,0 +1,202 @@
+{% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_sequence_icons %}
+
+{% block title %}Step 5 · Choose a Rotation Plan ({{ scored.lga }}) · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green" data-lang-ha="Mataki na 5 cikin 6 · Zabin Manomi">Step 5 of 6 · Farmer Choice</span>
+    <h1 class="fd-h1" style="margin-top:6px;" data-lang-ha="Zabi tsarin musayar amfanin gona">Choose a rotation plan</h1>
+    <p class="fd-sub" data-lang-ha="Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Wannan zabin na manomi ne.">
+      This tool supports farmer judgment and local expertise. This choice belongs to the farmer.
+    </p>
+  </div>
+  <div>
+    <a class="fd-btn fd-btn-outline" href="/compare?{{ query_string }}" data-lang-ha="← Kwatanta Kati 3">← Back to Compare</a>
+  </div>
+</section>
+
+{% if request.query_params.get('pick') == 'defer' %}
+<div class="fd-alert fd-alert-amber" style="margin-bottom:18px;" role="status">
+  <strong data-lang-ha="An zabi dakatawa don tuntubar malamin gona:">Checking with an extension officer first:</strong>
+  Use <strong>"Not sure yet — save &amp; check with extension officer →"</strong> on the right to save this field consultation to your offline logs without locking in a crop change yet.
+</div>
+{% endif %}
+
+{% set plan_slots = namespace(items=[]) %}
+{% if scored.cards|length > 1 %}
+  {% set plan_slots.items = plan_slots.items + [('a', scored.cards[1])] %}
+{% endif %}
+{% if scored.cards|length > 0 %}
+  {% set plan_slots.items = plan_slots.items + [('current', scored.cards[0])] %}
+{% endif %}
+{% if scored.cards|length > 2 %}
+  {% set plan_slots.items = plan_slots.items + [('b', scored.cards[2])] %}
+{% endif %}
+
+<div class="fd-grid-2">
+  <div style="display:flex;flex-direction:column;gap:14px;" role="list" aria-label="Selectable rotation plans">
+    {% for s_key, plan in plan_slots.items %}
+    {% set is_picked = (s_key == picked_slot) %}
+    <a
+      role="listitem"
+      class="fd-card {% if is_picked %}fd-card-picked{% endif %}"
+      style="display:block;text-decoration:none;color:inherit;"
+      href="/decide?{{ query_string }}&pick={{ s_key }}"
+      data-pick-slot="{{ s_key }}"
+      aria-current="{{ 'true' if is_picked else 'false' }}"
+    >
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;min-width:0;">
+          <div style="flex-shrink:0;padding-top:2px;">
+            {{ crop_sequence_icons(plan.seasons) }}
+          </div>
+          <div style="min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <strong style="font-size:17px;font-weight:800;color:var(--ink);">{{ plan.title }}</strong>
+              {% if plan.badge == 'Current' %}
+              <span class="fd-badge fd-badge-muted" data-lang-ha="Tsarin yanzu">Current rotation</span>
+              {% else %}
+              <span class="fd-badge fd-badge-{{ plan.confidence.level|lower }}">{{ plan.confidence.level }} Confidence</span>
+              {% endif %}
+            </div>
+
+            <div style="font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-top:2px;">
+              {{ 'Card 1 · Baseline' if plan.badge == 'Current' else plan.badge }}
+            </div>
+
+            <div style="font-size:13px;color:var(--muted);margin-top:5px;">
+              <strong style="color:var(--ink-soft);">Water:</strong> {{ plan.water_line }}
+            </div>
+
+            <div style="font-size:13px;color:var(--muted);margin-top:3px;">
+              <strong style="color:var(--ink-soft);">{{ 'Baseline note' if plan.badge == 'Current' else 'Why' }}:</strong>
+              {{ "Farmer's current sequence kept as objective reference." if plan.badge == 'Current' else plan.why }}
+            </div>
+
+            <div style="font-size:12.5px;color:var(--muted);margin-top:3px;">
+              <strong style="color:var(--ink-soft);">Evidence:</strong>
+              {{ plan.studies[0].evidence if plan.studies else ('Farmer baseline sequence' if plan.source == 'current' else 'Scored from LGA climate, FAO-56 & iSDAsoil data') }}
+            </div>
+          </div>
+        </div>
+
+        {% if is_picked %}
+        <span aria-label="Selected plan" style="width:28px;height:28px;border-radius:50%;background:var(--green);color:#ffffff;display:grid;place-items:center;flex-shrink:0;font-size:14px;font-weight:800;">✓</span>
+        {% else %}
+        <span aria-hidden="true" style="width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line-strong);background:var(--bg-card);flex-shrink:0;"></span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <aside aria-label="Selected plan summary">
+    <div class="fd-card" style="padding:0;overflow:hidden;">
+      <div style="background:var(--ink);color:#faf8f5;padding:12px 18px;font-size:11.5px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;" data-lang-ha="TSARIN DA AKA ZABA">
+        SELECTED PLAN
+      </div>
+      <div style="padding:18px;">
+        <h2 style="margin:0 0 4px;font-size:22px;font-weight:800;letter-spacing:-0.02em;">
+          {{ picked_card.title }}
+        </h2>
+        <p style="margin:0 0 14px;font-size:13px;font-weight:700;color:var(--green);">
+          {{ picked_card.badge }} · {{ picked_card.confidence.level }} Confidence · {{ scored.lga }}
+        </p>
+
+        <div style="padding:12px 0;border-top:1px solid var(--line);">
+          <div class="fd-section-label" style="margin-bottom:4px;">TOP BENEFIT</div>
+          <div style="font-size:14px;">
+            {{ picked_card.benefits[0] if picked_card.benefits else picked_card.why }}
+          </div>
+        </div>
+
+        <div style="padding:12px 0;border-top:1px solid var(--line);">
+          <div class="fd-section-label" style="margin-bottom:4px;">EVIDENCE</div>
+          <div style="font-size:14px;">
+            {{ picked_card.studies[0].evidence if picked_card.studies else 'Scored from LGA climate, FAO-56 water balance & iSDAsoil data' }}
+          </div>
+        </div>
+
+        <div style="padding:12px 0;border-top:1px solid var(--line);">
+          <div class="fd-section-label" style="margin-bottom:4px;">PLANTING WINDOW</div>
+          <div style="font-size:14px;">
+            Around {{ sv.onset_label }} ({{ sv.onset_range }} onset window)
+          </div>
+        </div>
+
+        <div class="fd-alert fd-alert-danger" style="margin-top:8px;">
+          ⚠ <strong>Key check with extension officer:</strong>
+          {{ picked_card.risks[0].text if picked_card.risks else 'Verify local seed variety before planting.' }}
+        </div>
+      </div>
+    </div>
+
+    <a
+      id="proceedShareBtn"
+      class="fd-btn fd-btn-dark fd-btn-block"
+      style="margin-top:14px;"
+      href="/share?{{ query_string }}&pick={{ picked_slot }}"
+      data-lang-ha="Ci gaba zuwa Aikawa → (An zabi {{ picked_card.badge }})"
+    >
+      Proceed to Share → ({{ picked_card.badge }} chosen)
+    </a>
+
+    <button
+      type="button"
+      id="deferDecisionBtn"
+      class="fd-btn fd-btn-outline fd-btn-block"
+      style="margin-top:8px;"
+      data-lang-ha="Ba a gama shawara ba — adana don tuntubar malamin gona →"
+    >
+      Not sure yet — save &amp; check with extension officer →
+    </button>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var currentPick = {{ picked_slot|tojson }};
+  if (window.FDStore) {
+    window.FDStore.save({ pick: currentPick });
+  }
+
+  document.querySelectorAll("[data-pick-slot]").forEach(function (link) {
+    link.addEventListener("click", function () {
+      var slot = link.getAttribute("data-pick-slot");
+      if (window.FDStore && slot) {
+        window.FDStore.save({ pick: slot });
+      }
+    });
+  });
+
+  var proceedBtn = document.getElementById("proceedShareBtn");
+  if (proceedBtn) {
+    proceedBtn.addEventListener("click", function () {
+      if (window.FDStore) {
+        window.FDStore.save({ pick: currentPick });
+      }
+    });
+  }
+
+  var deferBtn = document.getElementById("deferDecisionBtn");
+  if (deferBtn) {
+    deferBtn.addEventListener("click", function () {
+      if (window.FDStore) {
+        window.FDStore.save({ pick: "defer" });
+        window.FDStore.recordConsultation({
+          lga: {{ scored.lga|tojson }},
+          chosenPlan: "Deferred — Check with Officer",
+          confidence: {{ picked_card.confidence.level|tojson }},
+          status: "Deferred — Check with Officer"
+        });
+      }
+      window.location.href = "/history?" + {{ query_string|tojson }};
+    });
+  }
+})();
+</script>
+{% endblock %}

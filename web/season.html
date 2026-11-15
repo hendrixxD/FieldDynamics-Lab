@@ -1,0 +1,94 @@
+{% extends "_base.html" %}
+
+{% block title %}Step 3: 12-Month Season Strip · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-screen fd-season-screen">
+  <div class="fd-step-intro">
+    <div class="fd-step-num">STEP 3 OF 5</div>
+    <h1 class="fd-title">Seasonal Climate Reality · {{ sv.lga }} LGA</h1>
+    <p class="fd-sub">45-year satellite record (CHIRPS rain, NASA POWER temperature, SMAP root-zone soil moisture, MODIS vegetation cover).</p>
+  </div>
+
+  <div class="fd-scenario-bar">
+    <span class="fd-scenario-label">Simulate Historical Season Type:</span>
+    <div class="fd-scenario-pills">
+      {% for st in sv.season_types %}
+        <a href="/season?{{ query_string }}&season_type={{ st.name }}" class="fd-pill {% if st.name == sv.season_type %}is-active{% endif %}">
+          {{ st.name }} ({{ st.share_pct }}% of yrs)
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 12-Month Calendar Strip -->
+  <div class="fd-strip-card">
+    <div class="fd-strip-header">
+      <h2>12-Month Agricultural Strip ({{ sv.season_type }} Profile)</h2>
+      <span class="fd-strip-note">Median Onset: {{ sv.onset_label }} · Cessation: {{ sv.cessation_label }} ({{ sv.length_days }} days)</span>
+    </div>
+
+    <div class="fd-months-grid">
+      {% for m in sv.strip %}
+        <div class="fd-month-col is-{{ m.band }}">
+          <div class="fd-month-top">
+            <span class="fd-month-name">{{ m.name }}</span>
+            <span class="fd-month-tag">{{ m.tag }}</span>
+          </div>
+          <div class="fd-month-metrics">
+            <div class="fd-m-metric" title="Rainfall (CHIRPS)">
+              <span class="fd-m-icon">🌧️</span>
+              <span class="fd-m-val">{{ m.rain_mm }} mm</span>
+            </div>
+            <div class="fd-m-metric" title="Atmospheric Evaporation Demand (FAO-56 ET0)">
+              <span class="fd-m-icon">☀️</span>
+              <span class="fd-m-val">{{ m.et0_mm }} mm</span>
+            </div>
+            <div class="fd-m-metric" title="Max Air Temp">
+              <span class="fd-m-icon">🌡️</span>
+              <span class="fd-m-val">{{ m.tmax_c }}°C</span>
+            </div>
+            <div class="fd-m-metric" title="Cropland Greenness (MODIS NDVI)">
+              <span class="fd-m-icon">🌿</span>
+              <span class="fd-m-val">{{ m.ndvi }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="fd-strip-legend">
+      <span class="fd-legend-item"><span class="fd-swatch is-bare"></span> Bare Cropland (Nov–Apr)</span>
+      <span class="fd-legend-item"><span class="fd-swatch is-onset"></span> Planting Onset Window</span>
+      <span class="fd-legend-item"><span class="fd-swatch is-peak"></span> Peak Monsoon Rains</span>
+      <span class="fd-legend-item"><span class="fd-swatch is-dry"></span> July Dry Spell Window</span>
+    </div>
+  </div>
+
+  <!-- Diagnostic Action Links -->
+  <div class="fd-diag-links">
+    <a href="/season/crop-check?{{ query_string }}" class="fd-diag-card">
+      <div class="fd-diag-icon">💧</div>
+      <div class="fd-diag-info">
+        <h3>Crop Water Balance Check (FAO-56)</h3>
+        <p>Compare water demand across development stages against rainfall for maize, soybean, cowpea, and sorghum.</p>
+      </div>
+      <span class="fd-diag-arrow">→</span>
+    </a>
+
+    <a href="/season/patterns?{{ query_string }}" class="fd-diag-card">
+      <div class="fd-diag-icon">🛰️</div>
+      <div class="fd-diag-info">
+        <h3>All 9 NASA Challenge Climate Patterns</h3>
+        <p>Inspect temperature, heat stress, soil moisture anomalies, frost safety (0.0% risk), and IMERG storm intensity.</p>
+      </div>
+      <span class="fd-diag-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="fd-form-actions">
+    <a href="/priorities?{{ query_string }}" class="fd-btn-outline">← Back to Priorities</a>
+    <a href="/compare?{{ query_string }}" class="fd-btn-primary">Compare Rotation Cards (Step 4) →</a>
+  </div>
+</section>
+{% endblock %}

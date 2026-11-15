@@ -1,0 +1,57 @@
+{% extends "_base.html" %}
+
+{% block title %}Radio Script Studio · Alheri FM 98.7 · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green">P7 Rural Broadcast Deliverable</span>
+    <h1 class="fd-h1">Alheri FM 98.7 Kaduna 60-Second Radio Studio</h1>
+    <p class="fd-sub">Bilingual radio broadcast scripts (Hausa & English) delivering seasonal rotation advice across {{ radio.lga }} Local Government Area.</p>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <a class="fd-btn fd-btn-outline" href="/share?{{ query_string }}">← Back to Share</a>
+  </div>
+</section>
+
+<div class="fd-grid-2" style="margin-bottom:30px;">
+  <!-- Hausa Broadcast Script -->
+  <div class="fd-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px;">
+      <span class="fd-badge fd-badge-green">HAUSA BROADCAST (SHIRIN GONA)</span>
+      <span style="font-size:12px;color:var(--muted);font-weight:600;">{{ radio.ha_words }} kalmomi · ~60 Dakika</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      {% for time_tag, segment_text in radio.ha_segments %}
+        <div style="background:var(--bg-warm);padding:10px 14px;border-radius:6px;border-left:3px solid var(--green);">
+          <div style="font-size:11px;font-weight:800;color:var(--green);letter-spacing:0.04em;margin-bottom:4px;">{{ time_tag }}</div>
+          <p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--ink);">{{ segment_text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- English Broadcast Script -->
+  <div class="fd-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px;">
+      <span class="fd-badge fd-badge-blue">ENGLISH BROADCAST (FARM HOUR)</span>
+      <span style="font-size:12px;color:var(--muted);font-weight:600;">{{ radio.en_words }} words · ~60 Seconds</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      {% for time_tag, segment_text in radio.en_segments %}
+        <div style="background:var(--bg-warm);padding:10px 14px;border-radius:6px;border-left:3px solid var(--terra);">
+          <div style="font-size:11px;font-weight:800;color:var(--terra);letter-spacing:0.04em;margin-bottom:4px;">{{ time_tag }}</div>
+          <p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--ink);">{{ segment_text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="fd-card-soft" style="margin-bottom:24px;">
+  <h3 style="font-size:14px;font-weight:800;text-transform:uppercase;margin:0 0 8px;">Broadcast Provenance & Agronomic Sources</h3>
+  <p style="font-size:13px;line-height:1.5;color:var(--muted);margin:0;">
+    Script generated for Alheri FM 98.7 Kaduna rural broadcast syndication. Satellite indicators synthesized from CHIRPS 1981–2025 rainfall onset (median {{ radio.onset_label }}), NASA POWER evapotranspiration, and peer-reviewed trials: <em>{{ radio.study_cite }}</em>.
+  </p>
+</div>
+{% endblock %}

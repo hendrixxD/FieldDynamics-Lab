@@ -1,0 +1,118 @@
+{% from "_crop_icon.html" import crop_sequence_icons %}
+
+{% if scored.low_cropland or scored.close_call or scored.notice %}
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+  {% if scored.low_cropland %}
+  <div class="fd-alert fd-alert-amber" role="status">
+    <strong data-lang-ha="Karancin filin noma a taswirar tauraron dan adam ({{ scored.lga }})">Limited mapped cropland in {{ scored.lga }}:</strong>
+    ESA WorldCover maps {{ scored.lga }} as largely urban with limited agricultural pixels, so satellite averages carry extra uncertainty and on-field verification with a local extension officer is essential.
+  </div>
+  {% endif %}
+
+  {% if scored.close_call %}
+  <div class="fd-alert fd-alert-blue" role="status">
+    <strong data-lang-ha="Kusa da juna (Gwajin Nauyi):">Close call (Sensitivity Check):</strong>
+    Option A and Option B swap places in ≥30% of 200 weight-perturbation runs (±20%). Discuss both closely with your extension officer.
+  </div>
+  {% endif %}
+
+  {% if scored.notice %}
+  <div class="fd-alert fd-alert-blue" role="status">
+    {{ scored.notice }}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="fd-grid-3">
+  {% for card in scored.cards %}
+  {% set slot_key = 'current' if loop.index0 == 0 else ('a' if loop.index0 == 1 else 'b') %}
+  <article class="fd-card {% if card.badge == 'Option A' %}fd-card-picked{% endif %}" style="display:flex;flex-direction:column;justify-content:space-between;">
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
+        <span class="fd-section-label" style="margin:0;">
+          CARD {{ loop.index }} · {{ card.badge }}
+        </span>
+        {% if card.badge == 'Current' %}
+        <span class="fd-badge fd-badge-muted" data-lang-ha="Tsarin Yanzu">Current Rotation</span>
+        {% else %}
+        <span class="fd-badge fd-badge-{{ card.confidence.level|lower }}">{{ card.confidence.level }} Confidence</span>
+        {% endif %}
+      </div>
+
+      {% if card.check_first %}
+      <div class="fd-alert fd-alert-amber" style="margin-bottom:12px;padding:10px 12px;font-size:12.5px;" role="status">
+        ⚠ Check with your extension officer first: {{ card.confidence.reason }}
+      </div>
+      {% endif %}
+
+      {{ crop_sequence_icons(card.seasons) }}
+
+      <h2 style="margin:10px 0 4px;font-size:20px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;">
+        {{ card.title }}
+      </h2>
+      <p style="margin:0;font-size:13px;color:var(--muted);">
+        {{ card.water_line }}
+      </p>
+
+      {% if card.opportunities %}
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
+        {% for opp in card.opportunities %}
+        <span class="fd-badge fd-badge-ok" title="{{ opp.reason }}">+ {{ opp.name }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="fd-score-list" aria-label="{{ card.title }} agronomic scores">
+        {% for dim in dimensions_order %}
+        {% set row = card.rows[dim] %}
+        <div class="fd-score-row" title="{{ row.reason }}">
+          <span class="fd-score-name">{{ dimension_labels[dim] }}</span>
+          <span class="fd-score-val {% if row.arrow == 'better' %}fd-arrow-better{% elif row.arrow == 'worse' %}fd-arrow-worse{% endif %}">
+            {{ row.level }}
+            {% if row.arrow == 'better' %}
+            <span class="fd-arrow-better" aria-label="Better than current">↑</span>
+            {% elif row.arrow == 'worse' %}
+            <span class="fd-arrow-worse" aria-label="Lower than current">↓</span>
+            {% elif row.arrow == 'same' and card.badge != 'Current' %}
+            <span class="fd-arrow-same" aria-label="Same as current">→</span>
+            {% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+      {% if card.badge == 'Current' %}
+      <div class="fd-card-soft" style="font-size:12.5px;color:var(--muted);" data-lang-ha="Ba a taba kiran tsarin manomi na yanzu kuskure ba. Yana matsayin ma'aunin kwatanta sauran zabin.">
+        Farmer's current practice is never labelled wrong. It serves as the objective baseline for comparison.
+      </div>
+      {% elif card.confidence.level != 'High' %}
+      <div class="fd-alert {% if card.confidence.level == 'Low' %}fd-alert-danger{% else %}fd-alert-amber{% endif %}" style="font-size:12.5px;padding:11px 13px;">
+        <strong>{{ card.confidence.level }} confidence:</strong> {{ card.risks[0].text if card.risks else card.confidence.reason }}
+      </div>
+      {% else %}
+      <div class="fd-card-soft" style="font-size:12.5px;color:var(--ink-soft);">
+        {{ card.why }}
+      </div>
+      {% endif %}
+
+      <a class="fd-btn {{ 'fd-btn-dark' if card.badge == 'Option A' else 'fd-btn-outline' }} fd-btn-block" href="/card/{{ slot_key }}?{{ query_string }}" data-lang-ha="Duba cikakken bayani →">See details →</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+{% if scored.dropped %}
+<details class="fd-card-soft" style="margin-top:16px;font-size:13px;">
+  <summary style="cursor:pointer;font-weight:700;color:var(--ink-soft);" data-lang-ha="Dalilin cire sauran musayar amfanin gona ({{ scored.dropped|length }})">
+    Why {{ scored.dropped|length }} other rotation candidate{{ 's were' if scored.dropped|length != 1 else ' was' }} filtered out for {{ scored.lga }} ({{ scored.season_type }} season)
+  </summary>
+  <ul style="margin:10px 0 0;padding-left:18px;color:var(--muted);display:flex;flex-direction:column;gap:4px;">
+    {% for rot_name, drop_reason in scored.dropped.items() %}
+    <li><strong style="color:var(--ink-soft);">{{ rot_name }}:</strong> {{ drop_reason }}</li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}

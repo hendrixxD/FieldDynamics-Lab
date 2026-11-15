@@ -1,0 +1,92 @@
+{% extends "_base.html" %}
+
+{% block title %}A5 Extension Card · {{ picked_card.title }} · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+@media print {
+  body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+  .fd-topbar, .fd-footer, .fd-print-actions, .fd-mobile-strip { display: none !important; }
+  .fd-print-sheet { border: 2px solid #000 !important; box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="fd-page-head fd-print-actions">
+  <div>
+    <span class="fd-kicker is-green">P4 Physical Extension Deliverable</span>
+    <h1 class="fd-h1">Physical A5 Extension Card Print Studio</h1>
+    <p class="fd-sub">Printable black-and-white field advisory card for smallholder farmers and extension folders in {{ sv.lga }}.</p>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button type="button" class="fd-btn fd-btn-primary" onclick="window.print()">🖨️ Print A5 Card</button>
+    <a class="fd-btn fd-btn-outline" href="/share?{{ query_string }}">← Back to Share</a>
+  </div>
+</section>
+
+<div class="fd-print-sheet fd-card" style="max-width:760px;margin:0 auto 30px;padding:32px;border:2px solid var(--line-strong);background:#fff;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:18px;">
+    <div>
+      <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;">KADUNA AGRICULTURAL DEVELOPMENT AGENCY (KADA) · FIELD ADVISORY</span>
+      <h2 style="font-size:24px;font-weight:900;margin:4px 0 0;letter-spacing:-0.02em;">PHYSICAL A5 EXTENSION CARD</h2>
+    </div>
+    <div style="text-align:right;">
+      <span class="fd-badge fd-badge-dark">{{ sv.lga }} LGA</span>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">{{ sv.zone }} Zone · Season: {{ sv.season_type }}</div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg-warm);padding:14px 18px;border-radius:8px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <span class="fd-badge fd-badge-green">{{ picked_card.badge }} STRATEGY</span>
+      <h3 style="font-size:20px;font-weight:800;margin:6px 0 2px;">{{ picked_card.title }}</h3>
+      <div style="font-size:13px;color:var(--muted);">{{ picked_card.water_line }}</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:26px;font-weight:900;color:var(--green);">{{ picked_card.score }}<span style="font-size:14px;color:var(--muted);">/100</span></div>
+      <div style="font-size:11px;color:var(--muted);">Suitability Score</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:18px;">
+    <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Seasonal Timeline & Planting Window</h4>
+    <p style="font-size:13.5px;line-height:1.5;margin:0;">
+      Satellite rainfall records (CHIRPS 1981–2025) indicate median planting onset near <strong>{{ sv.onset_label }}</strong>, with rains tapering by <strong>{{ sv.cessation_label }}</strong> (approx <strong>{{ sv.length_days }} days</strong> duration). Scheduled planting should avoid early false starts.
+    </p>
+  </div>
+
+  <div style="margin-bottom:18px;">
+    <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Scientific Rationale</h4>
+    <p style="font-size:13.5px;line-height:1.5;margin:0;">{{ picked_card.why }}</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+    <div style="background:#fff;border:1px solid var(--line);padding:12px;border-radius:6px;">
+      <h5 style="margin:0 0 6px;font-size:12px;font-weight:800;text-transform:uppercase;color:var(--green);">Expected Benefits</h5>
+      <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.4;">
+        {% for b in picked_card.benefits %}
+          <li>{{ b }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);padding:12px;border-radius:6px;">
+      <h5 style="margin:0 0 6px;font-size:12px;font-weight:800;text-transform:uppercase;color:var(--danger);">Local Risks & Extension Checks</h5>
+      <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.4;">
+        {% for r in picked_card.risks %}
+          <li>{{ r }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div style="border-top:1px dashed var(--line-strong);padding-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted);">
+    <span>Advisory prepared with KADA Extension Agent · LGA: {{ sv.lga }}</span>
+    <span>Confidence: {{ sv.confidence.level }}</span>
+  </div>
+
+  <div style="margin-top:14px;padding:8px 12px;background:#fef2f2;border-left:3px solid #dc2626;font-size:11px;color:#991b1b;">
+    <strong>Judicial Directive:</strong> This tool supports farmer judgment and local expertise; it never replaces them. Check seed variety suitability and phosphorus fertilizer requirements with your local KADA extension officer before planting.
+  </div>
+</div>
+{% endblock %}

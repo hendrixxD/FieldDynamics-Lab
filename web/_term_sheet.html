@@ -1,0 +1,36 @@
+{# Tap-for-meaning scientific term bottom sheet fragment (F3f, R23) #}
+<div class="fd-term-sheet" id="termSheet">
+  <div class="fd-sheet-header">
+    <div class="fd-sheet-badge">NASA DATA & SCIENTIFIC MEANING</div>
+    <button type="button" class="fd-modal-close" onclick="document.getElementById('fdTermModal').setAttribute('hidden','')" aria-label="Close explainer">&times;</button>
+  </div>
+
+  <h2 class="fd-sheet-title">{{ term.title if term else 'Scientific Term Explainer' }}</h2>
+  <div class="fd-sheet-sub">{{ term.subtitle if term else '' }}</div>
+
+  <div class="fd-reading-card">
+    <div class="fd-reading-label">CURRENT READING FOR THIS LGA</div>
+    <div class="fd-reading-val">{{ term.reading if term else '' }}</div>
+    <p class="fd-reading-note">{{ term.reading_note if term else '' }}</p>
+  </div>
+
+  <div class="fd-sheet-section">
+    <h3>What does this mean in plain language?</h3>
+    <p>{{ term.what if term else '' }}</p>
+  </div>
+
+  <div class="fd-sheet-section">
+    <h3>Why this matters for your rotation plan</h3>
+    <p>{{ term.why if term else '' }}</p>
+  </div>
+
+  <div class="fd-sheet-footer">
+    <div class="fd-source-badge">
+      <span class="fd-source-icon" aria-hidden="true">🛰️</span>
+      <span><strong>Satellite Source:</strong> {{ term.source if term else 'NASA Earth Observations' }}</span>
+    </div>
+    <p class="fd-judgment-notice">
+      Satellite measurements smooth out local variations across village farms. Always cross-check with your local KADA extension agent.
+    </p>
+  </div>
+</div>

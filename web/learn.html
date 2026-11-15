@@ -1,0 +1,59 @@
+{% extends "_base.html" %}
+
+{% block title %}Science & Data Learn Portal · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green">Methodology & Provenance</span>
+    <h1 class="fd-h1">Scientific Framework & Satellite Data Provenance</h1>
+    <p class="fd-sub">How FieldDynamics harmonizes NASA Earth observations, local soil datasets, and multi-criteria agronomic decision models for Kaduna State.</p>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <a class="fd-btn fd-btn-outline" href="/start?{{ query_string }}">← Back to Advisor</a>
+  </div>
+</section>
+
+<div class="fd-grid-2" style="margin-bottom:28px;">
+  <div class="fd-card">
+    <h2 style="font-size:18px;font-weight:800;margin:0 0 12px;">Satellite Constellations & Datasets Used</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="border-left:3px solid #2563eb;padding-left:10px;">
+        <strong>NASA POWER Agroclimatology</strong>
+        <div style="font-size:12.5px;color:var(--muted);">1981–2025 daily radiation, humidity, wind, and temperature for FAO-56 Penman-Monteith reference evapotranspiration (ET0) and heat stress tracking.</div>
+      </div>
+      <div style="border-left:3px solid #059669;padding-left:10px;">
+        <strong>NASA SMAP SPL4SMGP V008</strong>
+        <div style="font-size:12.5px;color:var(--muted);">Root-zone soil moisture anomalies (0–100 cm depth, ~9 km native resolution, 2015–2025) monitoring crop flowering water deficits.</div>
+      </div>
+      <div style="border-left:3px solid #d97706;padding-left:10px;">
+        <strong>CHIRPS v2.0 Rainfall</strong>
+        <div style="font-size:12.5px;color:var(--muted);">0.05° high-resolution rainfall records driving the A2 agronomic onset rule and dry spell duration monitoring.</div>
+      </div>
+      <div style="border-left:3px solid #dc2626;padding-left:10px;">
+        <strong>NASA GPM IMERG V07 & SRTM 30 m</strong>
+        <div style="font-size:12.5px;color:var(--muted);">95th percentile extreme storm rainfall combined with 30 m SRTM elevation slopes and iSDA erodibility K factors for topsoil erosion risk.</div>
+      </div>
+      <div style="border-left:3px solid #7c3aed;padding-left:10px;">
+        <strong>NASA MODIS MOD13Q1 V6.1</strong>
+        <div style="font-size:12.5px;color:var(--muted);">250 m 16-day NDVI masked to ESA WorldCover cropland to detect bare-field duration and vegetative vigor transitions.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fd-card">
+    <h2 style="font-size:18px;font-weight:800;margin:0 0 12px;">Validation & Uncertainty Handling</h2>
+    <p style="font-size:13.5px;line-height:1.5;color:var(--ink-soft);margin-bottom:12px;">
+      Agricultural models must be held accountable to real smallholder conditions. FieldDynamics validates its models using spatial block GroupKFold and leave-one-year-out cross-validation:
+    </p>
+    <ul style="font-size:13px;line-height:1.5;padding-left:18px;color:var(--ink-soft);margin-bottom:14px;">
+      <li><strong>FAO-56 Penman-Monteith ET0:</strong> Validated against published FAO-56 benchmarks.</li>
+      <li><strong>Weight Perturbation Robustness:</strong> Rotation rankings are tested by perturbing weights ±20% over 200 iterations to flag close calls.</li>
+      <li><strong>Confidence Tiering:</strong> Every LGA displays a transparent data confidence level (High, Medium, Low) based on cloud-filling and cropland fraction.</li>
+    </ul>
+    <div style="background:var(--bg-warm);padding:10px 14px;border-radius:6px;font-size:12.5px;color:var(--muted);">
+      <strong>Local Expertise:</strong> Satellite observations guide long-term regional probability. Field application always requires the judgment of farmers and local KADA extension officers.
+    </div>
+  </div>
+</div>
+{% endblock %}

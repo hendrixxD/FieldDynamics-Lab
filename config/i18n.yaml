@@ -1,0 +1,56 @@
+# config/i18n.yaml
+# Bilingual UI translations (English and Hausa) for FieldDynamics Kaduna (docs/tech-stack.md).
+
+en:
+  nav:
+    advisor: "Kaduna Rotation Advisor"
+    ready: "Ready (Offline-First)"
+    offline: "Offline Cached Mode"
+    farm: "1 Farm"
+    priorities: "2 Priorities"
+    season: "3 Season"
+    compare: "4 Compare"
+    decide: "5 Decide"
+    share: "Share"
+    map: "LGA Trend Map"
+    learn: "Learn Science"
+    logs: "Field Logs"
+    screens: "All Screens"
+  footer:
+    judgment: "This tool supports farmer judgment and local expertise. Check with your extension officer."
+    challenge: "NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data · Kaduna State (23 LGAs)"
+  priorities:
+    save_water: "Save water"
+    add_nitrogen: "Add nitrogen to soil"
+    build_organic_matter: "Build organic matter"
+    stop_erosion: "Stop soil washing away"
+    feed_animals: "Feed animals (forage value)"
+    extra_income: "Extra cash income"
+    fewer_pests: "Interrupt pest & disease cycles"
+
+ha:
+  nav:
+    advisor: "Mai Ba Da Shawara Na Kaduna"
+    ready: "A Shirye (Ba Tare Da Intanet Ba)"
+    offline: "Yanayin Rashin Intanet"
+    farm: "1 Gona"
+    priorities: "2 Bukatu"
+    season: "3 Damina"
+    compare: "4 Kwatanta"
+    decide: "5 Zabi"
+    share: "Aika"
+    map: "Taswirar LGA 23"
+    learn: "Kimiyya"
+    logs: "Tarihin Ziyara"
+    screens: "Dukkan Shafi"
+  footer:
+    judgment: "Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonarku."
+    challenge: "Gasar NASA Space Apps 2026 · Field Shift: Sauyin Noma Da Bayanan NASA · Jihar Kaduna (Kananan Hukumomi 23)"
+  priorities:
+    save_water: "Kiyaye ruwa a gona"
+    add_nitrogen: "Kara sinadarin nitrogen a kasa"
+    build_organic_matter: "Kara karfin taki da yabanya a kasa"
+    stop_erosion: "Hana ruwa tafiya da kasar gona"
+    feed_animals: "Abincin dabbobi (harawa da ciyawa)"
+    extra_income: "Karin kudin shiga a kasuwa"
+    fewer_pests: "Karya da'irar kwarin wuta-wuta (Striga)"

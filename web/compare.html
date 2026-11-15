@@ -1,0 +1,144 @@
+{% extends "_base.html" %}
+
+{% block title %}Step 4 · Compare Planting Options for {{ scored.lga }} · FieldDynamics{% endblock %}
+
+{% block content %}
+{% set prio_labels = namespace(items=[]) %}
+{% for key, label, desc, dim in priority_meta %}
+  {% if key in advisor_req.priorities %}
+    {% set prio_labels.items = prio_labels.items + [label] %}
+  {% endif %}
+{% endfor %}
+
+<section class="fd-page-head">
+  <div>
+    <span class="fd-kicker is-green" data-lang-ha="Mataki na 4 cikin 6 · Kwatanta Musaya">Step 4 of 6 · 7 Agronomic Dimensions</span>
+    <h1 class="fd-h1" style="margin-top:6px;" data-lang-ha="Mataki na 4 · Kwatanta Zabin Shuka na {{ scored.lga }}">Step 4 · Compare Planting Options for {{ scored.lga }}</h1>
+    <p class="fd-sub">
+      Evaluated for <strong id="activeSeasonLabel">{{ scored.season_type }}</strong> season
+      · Striga risk: <strong>{{ scored.striga_risk.level }}</strong>
+      · Priorities:
+      {% if prio_labels.items %}
+        <strong>{{ prio_labels.items|join(', ') }}</strong>
+      {% else %}
+        <strong>LGA baseline weights</strong>
+      {% endif %}
+    </p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+    <a id="compareBackSeasonBtn" class="fd-btn fd-btn-outline" href="/season?{{ query_string }}" data-lang-ha="← Yanayin Damina">← Season</a>
+    <a id="compareNextDecideBtn" class="fd-btn fd-btn-dark" href="/decide?{{ query_string }}" data-lang-ha="Zabi Tsari (5/6) →">Choose a Plan (5/6) →</a>
+  </div>
+</section>
+
+<section class="fd-card-soft" style="margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;" aria-label="Quick rainfall scenario re-score">
+  <div>
+    <div class="fd-label" data-lang-ha="Gwada Yanayin Ruwan Sama Nan Take">Quick Scenario Re-Score</div>
+    <div style="font-size:13px;color:var(--muted);">Switch rainfall scenario to test how each rotation holds up in {{ scored.lga }}.</div>
+  </div>
+  <div class="fd-chip-group" role="group" aria-label="Rainfall scenario options">
+    {% for st in ['Typical', 'Late start', 'Dry spell', 'Wet'] %}
+    {% set st_meta = namespace(pct=none) %}
+    {% if sv and sv.season_types %}
+      {% for item in sv.season_types %}
+        {% if item.name == st %}
+          {% set st_meta.pct = item.share_pct %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    <button
+      type="button"
+      class="fd-chip {% if scored.season_type == st %}is-selected{% endif %}"
+      data-scenario-btn="{{ st }}"
+      aria-pressed="{{ 'true' if scored.season_type == st else 'false' }}"
+    >
+      <span>{{ st }}</span>
+      {% if st_meta.pct is not none %}
+      <small style="opacity:0.75;font-size:11.5px;">({{ st_meta.pct }}%)</small>
+      {% endif %}
+    </button>
+    {% endfor %}
+  </div>
+</section>
+
+<div id="cardsGridContainer" aria-live="polite">
+  {% include "_cards_grid.html" %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var container = document.getElementById("cardsGridContainer");
+  var seasonLabel = document.getElementById("activeSeasonLabel");
+  var backBtn = document.getElementById("compareBackSeasonBtn");
+  var nextBtn = document.getElementById("compareNextDecideBtn");
+  var buttons = document.querySelectorAll("[data-scenario-btn]");
+
+  function buildUpdatedQuery(nextSeason) {
+    var params = new URLSearchParams(window.location.search);
+    if (!params.get("lga")) {
+      params = new URLSearchParams({{ query_string|tojson }});
+    }
+    params.set("season_type", nextSeason);
+    return params.toString();
+  }
+
+  function syncNavLinks(qs) {
+    if (backBtn) backBtn.href = "/season?" + qs;
+    if (nextBtn) nextBtn.href = "/decide?" + qs;
+    document.querySelectorAll(".fd-steps a[href*='?'], .fd-mobile-strip a[href*='?'], .fd-util-links a[href*='?']").forEach(function (link) {
+      var base = link.getAttribute("href").split("?")[0];
+      link.setAttribute("href", base + "?" + qs);
+    });
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var chosen = btn.getAttribute("data-scenario-btn");
+      if (!chosen) return;
+
+      buttons.forEach(function (b) {
+        var active = b.getAttribute("data-scenario-btn") === chosen;
+        b.classList.toggle("is-selected", active);
+        b.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+
+      if (seasonLabel) seasonLabel.textContent = chosen;
+      if (window.FDStore) window.FDStore.save({ season_type: chosen });
+
+      var qs = buildUpdatedQuery(chosen);
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, "", "/compare?" + qs);
+      }
+      syncNavLinks(qs);
+
+      if (container) container.style.opacity = "0.55";
+      fetch("/partials/cards?" + qs, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ season_type: chosen })
+      })
+        .then(function (resp) {
+          if (!resp.ok) throw new Error("Re-score failed");
+          return resp.text();
+        })
+        .then(function (html) {
+          if (container) {
+            container.innerHTML = html;
+            container.style.opacity = "1";
+          }
+          if (window.FDStore) {
+            var activeLang = window.FDStore.load().lang || "en";
+            var activeBtn = document.querySelector('.fd-lang-btn[data-lang="' + activeLang + '"]');
+            if (activeBtn && activeLang === "ha") activeBtn.click();
+          }
+        })
+        .catch(function () {
+          window.location.href = "/compare?" + qs;
+        });
+    });
+  });
+})();
+</script>
+{% endblock %}

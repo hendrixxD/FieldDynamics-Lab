@@ -1,0 +1,58 @@
+{% extends "_base.html" %}
+
+{% block title %}Share & Smallholder Handoff · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-screen fd-share-screen">
+  <div class="fd-step-intro">
+    <div class="fd-step-kicker">OMNICHANNEL HANDOFF (F7)</div>
+    <h1 class="fd-title">Deliver Strategy Card to Farmer</h1>
+    <p class="fd-sub">Deliver {{ picked_card.title }} to the farmer via low-bandwidth channels adapted to Kaduna smallholder conditions.</p>
+  </div>
+
+  <div class="fd-channels-grid">
+    <!-- WhatsApp Channel -->
+    <div class="fd-channel-card">
+      <div class="fd-channel-icon">💬</div>
+      <h2>WhatsApp Advisory Summary</h2>
+      <p>Send formatted plain-text advice directly to the farmer or cooperative group without data-heavy attachments.</p>
+      <div class="fd-share-snippet">
+        <code>*FieldDynamics Advisory ({{ sv.lga }})*
+Plan: {{ picked_card.title }}
+Suitability: {{ picked_card.score }}/100
+Rains: Onset ~{{ sv.onset_label }}, ends ~{{ sv.cessation_label }}
+Advice: {{ picked_card.why }}
+_Supports farmer judgment. Consult KADA extension._</code>
+      </div>
+      <a href="https://api.whatsapp.com/send?text=FieldDynamics%20Rotation%20Plan%20for%20{{ sv.lga }}%3A%20{{ picked_card.title }}" target="_blank" class="fd-btn-primary">
+        Share to WhatsApp →
+      </a>
+    </div>
+
+    <!-- Print Studio Channel -->
+    <div class="fd-channel-card">
+      <div class="fd-channel-icon">📄</div>
+      <h2>Physical A5 Extension Card (Print Studio)</h2>
+      <p>Generate a high-contrast physical card formatted for black-and-white local printing and field folder storage.</p>
+      <a href="/share/print?{{ query_string }}&pick={{ picked_slot }}" class="fd-btn-outline">
+        Open Physical A5 Print Studio →
+      </a>
+    </div>
+
+    <!-- Radio Studio Channel -->
+    <div class="fd-channel-card">
+      <div class="fd-channel-icon">📻</div>
+      <h2>Alheri FM 98.7 Radio Script Studio</h2>
+      <p>Read or record 60-second public extension radio scripts for {{ sv.lga }} in both Hausa and English.</p>
+      <a href="/share/radio?{{ query_string }}" class="fd-btn-outline">
+        Open Radio Broadcast Studio →
+      </a>
+    </div>
+  </div>
+
+  <div class="fd-form-actions">
+    <a href="/decide?{{ query_string }}&pick={{ picked_slot }}" class="fd-btn-outline">← Back to Decision</a>
+    <a href="/start" class="fd-btn-primary">Start New Farmer Consultation</a>
+  </div>
+</section>
+{% endblock %}

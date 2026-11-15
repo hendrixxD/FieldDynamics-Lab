@@ -1,0 +1,42 @@
+{% extends "_base.html" %}
+
+{% block title %}NASA 9-Pattern Diagnostic Grid · FieldDynamics{% endblock %}
+
+{% block content %}
+<section class="fd-screen fd-patterns-screen">
+  <div class="fd-step-intro">
+    <div class="fd-step-kicker">CLIMATE TRACEABILITY MATRIX (F3e)</div>
+    <h1 class="fd-title">All 9 NASA Challenge Climate Patterns · {{ sv.lga }} LGA</h1>
+    <p class="fd-sub">Direct evidence from NASA POWER, SMAP, CHIRPS, GPM IMERG, SRTM, and MODIS satellites.</p>
+  </div>
+
+  <div class="fd-patterns-grid">
+    {% for p in sv.patterns %}
+      <article class="fd-pattern-card is-{{ p.tone }}">
+        <div class="fd-pat-top">
+          <span class="fd-pat-num">Pattern {{ p.num }}</span>
+          <span class="fd-pat-status is-{{ p.tone }}">{{ p.status }}</span>
+        </div>
+        <h2 class="fd-pat-title">{{ p.title }}</h2>
+        <div class="fd-pat-headline">{{ p.headline }}</div>
+        <div class="fd-pat-sub">{{ p.sub }}</div>
+        <p class="fd-pat-meaning">{{ p.meaning }}</p>
+        <div class="fd-pat-source">
+          <span class="fd-pat-src-icon" aria-hidden="true">🛰️</span>
+          <span>{{ p.source }}</span>
+        </div>
+        <div class="fd-pat-action">
+          <a href="/season?{{ query_string }}&explain={{ p.term_key }}" class="fd-link-explain">
+            Tap for Meaning & Explanation →
+          </a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+
+  <div class="fd-form-actions">
+    <a href="/season?{{ query_string }}" class="fd-btn-outline">← Back to Season Strip</a>
+    <a href="/compare?{{ query_string }}" class="fd-btn-primary">Continue to Rotation Cards (Step 4) →</a>
+  </div>
+</section>
+{% endblock %}

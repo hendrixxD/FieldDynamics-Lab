@@ -39,3 +39,109 @@ def test_score_rejects_unknown_lga() -> None:
 def test_score_rejects_unknown_priority() -> None:
     body = {"lga": "Zaria", "past_seasons": [["maize"]], "priorities": ["get_rich"]}
     assert client.post("/api/score", json=body).status_code == 422
+
+
+def test_lgas_returns_23_lgas_with_metadata() -> None:
+    response = client.get("/api/lgas")
+    assert response.status_code == 200
+    lgas = response.json()["lgas"]
+    assert len(lgas) == 23
+    zaria = next(item for item in lgas if item["lga"] == "Zaria")
+    assert zaria["zone"] == "North"
+    assert zaria["cropland_pct"] > 0
+    assert zaria["onset_label"] != "Unknown"
+    assert zaria["soil_default"] in ("Sandy", "Loamy", "Clay")
+
+
+def test_lga_season_returns_strip_and_patterns() -> None:
+    response = client.get("/api/lga/Zaria/season")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["strip"]) == 12
+    assert len(data["patterns"]) == 9
+    assert "soil_moisture_anomaly" in data["terms"]
+
+
+def test_lga_season_rejects_unknown_lga() -> None:
+    response = client.get("/api/lga/UnknownPlace/season")
+    assert response.status_code == 404
+    assert "Unknown LGA" in response.json()["detail"]
+
+
+def test_lga_crop_check_returns_fao56_water_balance() -> None:
+    response = client.get("/api/lga/Zaria/crop-check?crop=maize")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["crop"] == "maize"
+    assert len(data["stages"]) == 4
+    assert data["water_need_mm"] > 0
+    assert len(data["comparisons"]) >= 4
+
+
+def test_map_trends_returns_all_23_lgas() -> None:
+    response = client.get("/api/map/trends")
+    assert response.status_code == 200
+    trends = response.json()["trends"]
+    assert len(trends) == 23
+    assert "Zaria" in trends
+    assert trends["Zaria"]["annual_rain_mm"] > 500
+
+
+def test_legend_all_returns_four_layers() -> None:
+    response = client.get("/api/legend")
+    assert response.status_code == 200
+    layers = response.json()["layers"]
+    assert set(layers.keys()) == {"soil_moisture", "heat_stress", "erosion_risk", "water_stress"}
+    assert layers["soil_moisture"]["unit"] == "z-score (SD)"
+
+
+def test_legend_layer_returns_color_stops() -> None:
+    response = client.get("/api/legend/heat_stress")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["layer"] == "heat_stress"
+    assert len(data["stops"]) >= 4
+    assert data["value_max"] == 60.0
+
+
+def test_legend_layer_rejects_unknown() -> None:
+    response = client.get("/api/legend/unknown_layer")
+    assert response.status_code == 404
+    assert "Unknown layer" in response.json()["detail"]
+
+
+def test_point_resolves_valid_coordinate() -> None:
+    # Zaria LGA centroid (lat=11.085, lon=7.720)
+    response = client.get("/api/point?lat=11.085&lon=7.720")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["lga"] == "Zaria"
+    assert data["zone"] == "North"
+    assert data["layers"]["annual_rain_mm"] > 500
+    assert -3.0 <= data["layers"]["soil_moisture_z"] <= 3.0
+
+
+def test_point_rejects_coordinate_outside_kaduna() -> None:
+    # Lagos coordinates (outside Kaduna)
+    response = client.get("/api/point?lat=6.524&lon=3.379")
+    assert response.status_code == 422
+    assert "outside Kaduna State" in response.json()["detail"]
+
+
+def test_lga_grid_geojson_returns_feature_collection() -> None:
+    response = client.get("/api/layers/Zaria/grid.geojson")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["type"] == "FeatureCollection"
+    assert data["lga"] == "Zaria"
+    assert data["cell_count"] > 100
+    first_cell = data["features"][0]
+    assert first_cell["type"] == "Feature"
+    assert "cell_id" in first_cell["properties"]
+    assert "soil_moisture_z" in first_cell["properties"]
+
+
+def test_lga_grid_geojson_rejects_unknown_lga() -> None:
+    response = client.get("/api/layers/NonExistentLGA/grid.geojson")
+    assert response.status_code == 404
+    assert "Unknown LGA" in response.json()["detail"]
