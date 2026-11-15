@@ -231,7 +231,9 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("--stats", default=str(REPO_ROOT / "data/processed/isda/isda_lga_stats_cropland.csv"))
+    ap.add_argument(
+        "--stats", default=str(REPO_ROOT / "data/processed/isda/isda_lga_stats_cropland.csv")
+    )
     ap.add_argument("--out", default=str(REPO_ROOT / "data/processed/soil/lga_soil_hydro.csv"))
     args = ap.parse_args()
 
