@@ -257,7 +257,9 @@
 <section id="wtLivePanel" class="fd-wt-layout" aria-label="Live screen preview workbench">
   <aside class="fd-wt-sidebar" aria-label="18 screens manifest">
     {% for sid, sname, surl, sbadge, sstep in screens_manifest %}
-      {% set live_href = surl ~ ('&' if '?' in surl else '?') ~ query_string %}
+      {% set base_path = surl.split('?')[0] %}
+      {% set extra_qs = surl.split('?')[1] if '?' in surl else '' %}
+      {% set live_href = base_path ~ '?' ~ query_string ~ ('&' ~ extra_qs if extra_qs else '') %}
       <button
         type="button"
         class="fd-wt-nav-btn {% if loop.first %}is-active{% endif %}"
@@ -304,7 +306,9 @@
 <section id="wtGridPanel" hidden aria-label="Grid overview of all 18 live screens">
   <div class="fd-grid-3">
     {% for sid, sname, surl, sbadge, sstep in screens_manifest %}
-      {% set live_href = surl ~ ('&' if '?' in surl else '?') ~ query_string %}
+      {% set base_path = surl.split('?')[0] %}
+      {% set extra_qs = surl.split('?')[1] if '?' in surl else '' %}
+      {% set live_href = base_path ~ '?' ~ query_string ~ ('&' ~ extra_qs if extra_qs else '') %}
       <article class="fd-card fd-wt-grid-card">
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">

@@ -22,7 +22,7 @@ client = TestClient(app)
         ("04-compare", "/compare?lga=Zaria", "Option A"),
         ("04a-card-detail", "/card/a?lga=Zaria", "Option A"),
         ("04b-decide", "/decide?lga=Zaria&pick=a", "Option A"),
-        ("04c-low-confidence", "/card/b?lga=Chikun", "Confidence"),
+        ("04c-low-confidence", "/card/b?soil=Not+sure", "Low Confidence"),
         ("05-share", "/share?lga=Zaria&pick=a", "WhatsApp"),
         ("05a-print-card", "/share/print?lga=Zaria&pick=a", "EXTENSION CARD"),
         ("05b-radio-script", "/share/radio?lga=Zaria", "Alheri"),
@@ -44,12 +44,26 @@ def test_every_screen_renders_200_with_expected_content(
 
 def test_screens_manifest_has_all_18_design_screens() -> None:
     assert len(SCREENS_MANIFEST) == 18
+    for screen_id, _name, url, _badge, _step in SCREENS_MANIFEST:
+        res = client.get(url)
+        assert res.status_code == 200, f"{screen_id} ({url}) returned {res.status_code}"
+        assert "[object Object]" not in res.text
 
 
 def test_share_screen_excludes_sms_channel() -> None:
     response = client.get("/share?lga=Zaria&pick=a")
     assert response.status_code == 200
     assert "Send via SMS" not in response.text
+    assert "[object Object]" not in response.text
+    assert 'checkText: "' in response.text
+    assert 'checkWho: "' in response.text
+
+
+def test_low_confidence_dossier_renders_check_first_warning() -> None:
+    for url in ("/card/b?soil=Not+sure", "/card/b?lga=Chikun"):
+        res = client.get(url)
+        assert res.status_code == 200
+        assert "Low Confidence" in res.text
 
 
 def test_json_endpoints_return_valid_data_for_kaduna() -> None:
