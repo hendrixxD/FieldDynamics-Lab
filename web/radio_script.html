@@ -1,57 +1,383 @@
 {% extends "_base.html" %}
 
-{% block title %}Radio Script Studio · Alheri FM 98.7 · FieldDynamics{% endblock %}
+{% block title %}Alheri FM 98.7 Radio Broadcast Studio · {{ radio.lga }} · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-studio-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+  }
+  .fd-studio-head-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .fd-lga-picker-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fd-lga-picker-inline .fd-select {
+    width: auto;
+    min-width: 185px;
+    min-height: 40px;
+  }
+  .fd-script-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .fd-script-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--green);
+  }
+  .fd-teleprompter {
+    background: #f8f6f0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .fd-cue-label {
+    margin: 0 0 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--terra);
+  }
+  .fd-cue-speech {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.58;
+    color: var(--ink);
+  }
+  .fd-script-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .fd-station-strip {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .fd-station-stat-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .fd-station-stat-val {
+    margin-top: 3px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .fd-radio-bottom-bar {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 640px) {
+    .fd-script-actions,
+    .fd-station-strip {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-page-head">
-  <div>
-    <span class="fd-kicker is-green">P7 Rural Broadcast Deliverable</span>
-    <h1 class="fd-h1">Alheri FM 98.7 Kaduna 60-Second Radio Studio</h1>
-    <p class="fd-sub">Bilingual radio broadcast scripts (Hausa & English) delivering seasonal rotation advice across {{ radio.lga }} Local Government Area.</p>
+<section class="fd-studio-banner" aria-label="Radio broadcast studio header">
+  <div class="fd-studio-head-left">
+    <span class="fd-kicker" data-lang-ha="DAKIN REDIYO NA ALHERI FM KADUNA (98.7)">ALHERI FM KADUNA (98.7) BROADCAST STUDIO</span>
+    <span style="font-size:13.5px;font-weight:600;color:var(--muted);" data-lang-ha="Bukatar PRD P7 · Bayanin Gona na Dakika 60 a LGA (Babu Bayanan Sirri na Manomi)">
+      PRD Requirement P7 · 60-Second LGA Farm Advisory Read (Zero Individual Farmer Data)
+    </span>
   </div>
-  <div style="display:flex;gap:10px;">
-    <a class="fd-btn fd-btn-outline" href="/share?{{ query_string }}">← Back to Share</a>
+
+  <div class="fd-lga-picker-inline">
+    <label for="radioLgaSelect" class="fd-label" style="margin:0;">LGA:</label>
+    <select id="radioLgaSelect" class="fd-select" aria-label="Switch Kaduna LGA broadcast script">
+      {% for item in lgas %}
+      <option value="{{ item.lga }}" {% if item.lga == radio.lga %}selected{% endif %}>
+        {{ item.lga }} ({{ item.zone }})
+      </option>
+      {% endfor %}
+    </select>
   </div>
 </section>
 
-<div class="fd-grid-2" style="margin-bottom:30px;">
-  <!-- Hausa Broadcast Script -->
-  <div class="fd-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px;">
-      <span class="fd-badge fd-badge-green">HAUSA BROADCAST (SHIRIN GONA)</span>
-      <span style="font-size:12px;color:var(--muted);font-weight:600;">{{ radio.ha_words }} kalmomi · ~60 Dakika</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      {% for time_tag, segment_text in radio.ha_segments %}
-        <div style="background:var(--bg-warm);padding:10px 14px;border-radius:6px;border-left:3px solid var(--green);">
-          <div style="font-size:11px;font-weight:800;color:var(--green);letter-spacing:0.04em;margin-bottom:4px;">{{ time_tag }}</div>
-          <p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--ink);">{{ segment_text }}</p>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
+<div id="radioCopyToast" class="fd-alert fd-alert-green" hidden role="status" style="margin-bottom:16px;font-weight:700;"></div>
 
-  <!-- English Broadcast Script -->
-  <div class="fd-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px;">
-      <span class="fd-badge fd-badge-blue">ENGLISH BROADCAST (FARM HOUR)</span>
-      <span style="font-size:12px;color:var(--muted);font-weight:600;">{{ radio.en_words }} words · ~60 Seconds</span>
+<div class="fd-grid-2">
+  <section class="fd-card" aria-labelledby="hausaScriptHeading">
+    <div class="fd-script-card-head">
+      <h1 class="fd-script-title" id="hausaScriptHeading" data-lang-ha="🎙 Rubutun Rediyo na Hausa">🎙 Hausa Broadcast Script (Rubutun Rediyo)</h1>
+      <span class="fd-badge fd-badge-ok" style="flex-shrink:0;">60 SECONDS · {{ radio.ha_words }} WORDS</span>
     </div>
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      {% for time_tag, segment_text in radio.en_segments %}
-        <div style="background:var(--bg-warm);padding:10px 14px;border-radius:6px;border-left:3px solid var(--terra);">
-          <div style="font-size:11px;font-weight:800;color:var(--terra);letter-spacing:0.04em;margin-bottom:4px;">{{ time_tag }}</div>
-          <p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--ink);">{{ segment_text }}</p>
-        </div>
+
+    <div class="fd-teleprompter" id="hausaTeleprompter">
+      {% for cue, text in radio.ha_segments %}
+      <div>
+        <p class="fd-cue-label">[{{ cue }}]</p>
+        <p class="fd-cue-speech">"{{ text }}"</p>
+      </div>
       {% endfor %}
     </div>
+
+    <div class="fd-script-actions">
+      <button type="button" id="copyHausaBtn" class="fd-btn fd-btn-green" data-lang-ha="Kwafi Rubutun Hausa">Copy Hausa Script</button>
+      <button type="button" id="speakHausaRadioBtn" class="fd-btn fd-btn-outline" data-lang-ha="▶ Saurari Gwaji">▶ Read Aloud Preview</button>
+    </div>
+  </section>
+
+  <div style="display:flex;flex-direction:column;">
+    <section class="fd-card" aria-labelledby="englishScriptHeading">
+      <div class="fd-script-card-head">
+        <h2 class="fd-script-title" id="englishScriptHeading" data-lang-ha="Rubutun Turanci na Kwatance">English Reference Script</h2>
+        <span class="fd-badge fd-badge-blue" style="flex-shrink:0;">60 SECONDS · {{ radio.en_words }} WORDS</span>
+      </div>
+
+      <div class="fd-teleprompter" id="englishTeleprompter">
+        {% for cue, text in radio.en_segments %}
+        <div>
+          <p class="fd-cue-label">[{{ cue }}]</p>
+          <p class="fd-cue-speech">"{{ text }}"</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="fd-script-actions">
+        <button type="button" id="copyEnglishBtn" class="fd-btn fd-btn-green" data-lang-ha="Kwafi Rubutun Turanci">Copy English Script</button>
+        <button type="button" id="downloadTxtBtn" class="fd-btn fd-btn-outline" data-lang-ha="Sauke Takardar TXT">Download Teleprompter TXT</button>
+      </div>
+    </section>
+
+    <section class="fd-card fd-station-strip" aria-label="Broadcast metadata">
+      <div>
+        <div class="fd-station-stat-label">TARGET AUDIENCE</div>
+        <div class="fd-station-stat-val">Rainfed Smallholders</div>
+      </div>
+      <div>
+        <div class="fd-station-stat-label">STATION FREQUENCY</div>
+        <div class="fd-station-stat-val">Alheri 98.7 FM</div>
+      </div>
+      <div>
+        <div class="fd-station-stat-label">SCIENTIFIC CHECK</div>
+        <div class="fd-station-stat-val" title="{{ radio.study_cite }}">{{ radio.study_cite[:36] }}</div>
+      </div>
+    </section>
   </div>
 </div>
 
-<div class="fd-card-soft" style="margin-bottom:24px;">
-  <h3 style="font-size:14px;font-weight:800;text-transform:uppercase;margin:0 0 8px;">Broadcast Provenance & Agronomic Sources</h3>
-  <p style="font-size:13px;line-height:1.5;color:var(--muted);margin:0;">
-    Script generated for Alheri FM 98.7 Kaduna rural broadcast syndication. Satellite indicators synthesized from CHIRPS 1981–2025 rainfall onset (median {{ radio.onset_label }}), NASA POWER evapotranspiration, and peer-reviewed trials: <em>{{ radio.study_cite }}</em>.
+<div class="fd-radio-bottom-bar">
+  <p style="margin:0;font-size:13px;color:var(--muted);" data-lang-ha="Ana yada jagorar musayar shuka a kananan hukumomin Kaduna kafin damina · Babu sunan manomi a ciki.">
+    Broadcasting pre-season LGA rotation guidance across Kaduna savanna · No personal farmer data included.
   </p>
+  <a class="fd-btn fd-btn-dark" href="/share?{{ query_string }}" data-lang-ha="Koma Hanyoyin Aikawa →">Back to Share Channels →</a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var RADIO_DATA = {
+    lga: {{ radio.lga | tojson }},
+    zone: {{ radio.zone | tojson }},
+    onset: {{ radio.onset_label | tojson }},
+    cessation: {{ radio.cessation_label | tojson }},
+    study: {{ radio.study_cite | tojson }},
+    haWords: {{ radio.ha_words | tojson }},
+    enWords: {{ radio.en_words | tojson }},
+    haSegments: {{ radio.ha_segments | tojson }},
+    enSegments: {{ radio.en_segments | tojson }}
+  };
+
+  var toastEl = document.getElementById("radioCopyToast");
+  var lgaSelect = document.getElementById("radioLgaSelect");
+  var speakBtn = document.getElementById("speakHausaRadioBtn");
+  var isSpeaking = false;
+
+  function showToast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    window.clearTimeout(showToast._timer);
+    showToast._timer = window.setTimeout(function () {
+      toastEl.hidden = true;
+    }, 3500);
+  }
+
+  function formatSegments(headerTitle, segments) {
+    var lines = [headerTitle, ""];
+    for (var i = 0; i < segments.length; i++) {
+      lines.push("[" + segments[i][0] + "]");
+      lines.push("\"" + segments[i][1] + "\"");
+      lines.push("");
+    }
+    return lines.join("\n").trim();
+  }
+
+  function copyScript(text, notice) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast(notice);
+      }).catch(function () {
+        fallbackCopy(text, notice);
+      });
+      return;
+    }
+    fallbackCopy(text, notice);
+  }
+
+  function fallbackCopy(text, notice) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "readonly");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showToast(notice);
+    } catch (_err) {
+      showToast("Use your browser menu to copy the script.");
+    }
+    document.body.removeChild(ta);
+  }
+
+  if (lgaSelect) {
+    lgaSelect.addEventListener("change", function () {
+      var chosen = lgaSelect.value;
+      if (window.FDStore) {
+        window.FDStore.go("/share/radio", { lga: chosen });
+      } else {
+        window.location.href = "/share/radio?lga=" + encodeURIComponent(chosen);
+      }
+    });
+  }
+
+  var copyHaBtn = document.getElementById("copyHausaBtn");
+  if (copyHaBtn) {
+    copyHaBtn.addEventListener("click", function () {
+      var header = "ALHERI FM 98.7 KADUNA · RUBUTUN REDIYO NA HAUSA (" + RADIO_DATA.lga.toUpperCase() + " LGA · 60s)";
+      copyScript(formatSegments(header, RADIO_DATA.haSegments), "Copied Hausa broadcast script for " + RADIO_DATA.lga + " LGA.");
+    });
+  }
+
+  var copyEnBtn = document.getElementById("copyEnglishBtn");
+  if (copyEnBtn) {
+    copyEnBtn.addEventListener("click", function () {
+      var header = "ALHERI FM 98.7 KADUNA · ENGLISH REFERENCE SCRIPT (" + RADIO_DATA.lga.toUpperCase() + " LGA · 60s)";
+      copyScript(formatSegments(header, RADIO_DATA.enSegments), "Copied English reference script for " + RADIO_DATA.lga + " LGA.");
+    });
+  }
+
+  var downloadBtn = document.getElementById("downloadTxtBtn");
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", function () {
+      var fullTxt = [
+        "======================================================================",
+        "ALHERI FM 98.7 KADUNA · FIELDDYNAMICS 60-SECOND LGA RADIO ADVISORY",
+        "LGA: " + RADIO_DATA.lga + " (" + RADIO_DATA.zone + " Zone) · Median Onset: " + RADIO_DATA.onset + " · Cessation: " + RADIO_DATA.cessation,
+        "Privacy Check: Zero individual farmer data included (LGA-level benchmark only)",
+        "Scientific Check: " + RADIO_DATA.study,
+        "======================================================================",
+        "",
+        formatSegments("--- HAUSA BROADCAST SCRIPT (" + RADIO_DATA.haWords + " WORDS) ---", RADIO_DATA.haSegments),
+        "",
+        "----------------------------------------------------------------------",
+        "",
+        formatSegments("--- ENGLISH REFERENCE SCRIPT (" + RADIO_DATA.enWords + " WORDS) ---", RADIO_DATA.enSegments),
+        ""
+      ].join("\n");
+
+      var blob = new Blob([fullTxt], { type: "text/plain;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "AlheriFM-98.7-" + RADIO_DATA.lga.replace(/\s+/g, "-") + "-60s-Advisory.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      showToast("Downloaded teleprompter TXT for " + RADIO_DATA.lga + " LGA.");
+    });
+  }
+
+  function stopSpeaking() {
+    isSpeaking = false;
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (speakBtn) {
+      var isHaUi = window.FDStore && window.FDStore.load().lang === "ha";
+      speakBtn.textContent = isHaUi ? "▶ Saurari Gwaji" : "▶ Read Aloud Preview";
+    }
+  }
+
+  if (speakBtn) {
+    speakBtn.addEventListener("click", function () {
+      if (isSpeaking) {
+        stopSpeaking();
+        return;
+      }
+      if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
+        showToast("Speech synthesis is unavailable in this browser; read directly from the teleprompter.");
+        return;
+      }
+      var spoken = RADIO_DATA.haSegments.map(function (seg) { return seg[1]; }).join(" ");
+      window.speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance(spoken);
+      var voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      for (var i = 0; i < voices.length; i++) {
+        var vLang = (voices[i].lang || "").toLowerCase();
+        if (vLang.indexOf("ha") === 0 || vLang.indexOf("en-ng") === 0) {
+          utter.voice = voices[i];
+          break;
+        }
+      }
+      utter.rate = 0.95;
+      utter.onend = stopSpeaking;
+      utter.onerror = stopSpeaking;
+      isSpeaking = true;
+      speakBtn.textContent = "■ Stop Preview";
+      window.speechSynthesis.speak(utter);
+    });
+  }
+
+  window.addEventListener("beforeunload", function () {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  });
+})();
+</script>
 {% endblock %}

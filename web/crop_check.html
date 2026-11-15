@@ -1,93 +1,259 @@
 {% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_badge %}
 
-{% block title %}FAO-56 Crop Water Check · FieldDynamics{% endblock %}
+{%- macro advisor_qs(stype_val='', crop_val='') -%}
+{%- set s1_val = advisor_req.past_seasons[-1] | join(',') -%}
+{%- set s2_val = advisor_req.past_seasons[0] | join(',') if (advisor_req.past_seasons | length) > 1 else '' -%}
+lga={{ advisor_req.lga | urlencode }}&water={{ advisor_req.water | urlencode }}&equipment={{ advisor_req.equipment | urlencode }}&s1={{ s1_val | urlencode }}&s2={{ s2_val | urlencode }}&priorities={{ (advisor_req.priorities | join(',')) | urlencode }}&sell={{ advisor_req.sell | urlencode }}&season_type={{ (stype_val or advisor_req.season_type) | urlencode }}{% if advisor_req.soil %}&soil={{ advisor_req.soil | urlencode }}{% endif %}{% if lang and lang != 'en' %}&lang={{ lang | urlencode }}{% endif %}{% if crop_val %}&crop={{ crop_val | urlencode }}{% endif %}
+{%- endmacro -%}
+
+{% block title %}Crop Water Balance · {{ cw.crop_label }} ({{ cw.lga }} LGA) · FieldDynamics{% endblock %}
 
 {% block content %}
-<section class="fd-screen fd-crop-check-screen">
-  <div class="fd-step-intro">
-    <div class="fd-step-kicker">FAO-56 WATER BALANCE DIAGNOSTIC (F3d)</div>
-    <h1 class="fd-title">{{ cw.crop_label }} Water Demand vs Rainfall · {{ cw.lga }}</h1>
-    <p class="fd-sub">Daily root-zone soil water tracking from planting onset to harvest ({{ cw.total_days }} days duration).</p>
-  </div>
+  <div class="fd-page-head">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      {{ crop_badge(cw.crop) }}
+      <div>
+        <span class="fd-kicker is-blue" data-lang-ha="BINCIKEN RUWAN SHUKA · FAO-56">F3d · FAO-56 Water Diagnostic</span>
+        <h1
+          class="fd-h1"
+          style="margin-top:4px;"
+          data-lang-ha="Ma'aunin Ruwan Shuka · {{ cw.crop_label }} ({{ cw.lga }} LGA)"
+        >Crop Water Balance · {{ cw.crop_label }} ({{ cw.lga }} LGA)</h1>
+        <p class="fd-sub">
+          FAO-56 Penman-Monteith crop water demand (ETc) vs CHIRPS seasonal rainfall under {{ cw.season_type }} years.
+        </p>
+      </div>
+    </div>
 
-  <div class="fd-crop-selector-bar">
-    <span class="fd-sel-label">Switch Crop:</span>
-    {% for alt in cw.available_crops %}
-      <a href="/season/crop-check?{{ query_string }}&crop={{ alt }}" class="fd-pill {% if alt == cw.crop %}is-active{% endif %}">
-        {{ alt|capitalize }}
-      </a>
-    {% endfor %}
-  </div>
-
-  <div class="fd-metrics-row">
-    <div class="fd-metric-tile">
-      <span class="fd-tile-label">Total Water Need (ETc)</span>
-      <span class="fd-tile-val">{{ cw.water_need_mm }} mm</span>
-      <span class="fd-tile-sub">Atmospheric demand</span>
-    </div>
-    <div class="fd-metric-tile">
-      <span class="fd-tile-label">Seasonal Rainfall</span>
-      <span class="fd-tile-val">{{ cw.season_rain_mm }} mm</span>
-      <span class="fd-tile-sub">CHIRPS in-season rain</span>
-    </div>
-    <div class="fd-metric-tile">
-      <span class="fd-tile-label">Shortfall Share</span>
-      <span class="fd-tile-val">{{ cw.short_pct }}%</span>
-      <span class="fd-tile-sub">Years with moisture gap</span>
-    </div>
-    <div class="fd-metric-tile">
-      <span class="fd-tile-label">Fits Rainy Window</span>
-      <span class="fd-tile-val">{{ cw.fits_pct }}%</span>
-      <span class="fd-tile-sub">Matures before cessation</span>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
+      <a
+        href="/season?{{ query_string }}"
+        class="fd-btn fd-btn-outline"
+        data-lang-ha="← Koma Shafin Damina"
+      >← Back to Season</a>
+      <a
+        href="/compare?{{ query_string }}"
+        class="fd-btn fd-btn-dark"
+        data-lang-ha="Ci Gaba Zuwa Kwatanta Musaya →"
+      >Proceed to Compare Rotations →</a>
     </div>
   </div>
 
-  <div class="fd-card fd-stages-card">
-    <h2>Phenological Growth Stages (FAO-56)</h2>
-    <div class="fd-stages-grid">
-      {% for st in cw.stages %}
-        <div class="fd-stage-box {% if st.is_riskiest %}is-riskiest{% endif %}">
-          <div class="fd-stage-name">{{ st.label }}</div>
-          <div class="fd-stage-meta">{{ st.days }} days · Kc {{ st.kc }}</div>
-          <div class="fd-stage-val">{{ st.need_mm }} mm need</div>
-          <div class="fd-stage-short">Shortfall in {{ st.short_pct }}% of yrs</div>
-          {% if st.is_riskiest %}
-            <span class="fd-risk-pill">Riskiest Stage</span>
+  <section class="fd-card" style="margin-bottom:18px;" aria-label="Crop and rainfall scenario switcher">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div class="fd-label-row" style="margin-bottom:8px;">
+          <span class="fd-label" data-lang-ha="ZABI SHUKA DON GWADA BUKATAR RUWA:">Inspect Crop Water Profile ({{ cw.total_days }}d maturity):</span>
+          <button
+            type="button"
+            class="fd-term-btn"
+            data-explain-term="evapotranspiration"
+            data-lga="{{ cw.lga }}"
+          >What is ETc &amp; Kc? ⓘ</button>
+        </div>
+        <div class="fd-chip-group" role="group" aria-label="Available crops">
+          {% set crop_order = ['maize', 'soybean', 'cowpea', 'sorghum', 'groundnut', 'millet', 'sesame', 'rice', 'cassava', 'tomato'] %}
+          {% for cname in crop_order %}
+            {% if cname in cw.available_crops %}
+              <a
+                href="/season/crop-check?{{ advisor_qs(stype_val=cw.season_type, crop_val=cname) }}"
+                class="fd-chip {% if cname == cw.crop %}is-selected{% endif %}"
+                aria-pressed="{{ 'true' if cname == cw.crop else 'false' }}"
+                style="text-decoration:none;"
+              >{{ cname | capitalize }}</a>
+            {% endif %}
+          {% endfor %}
+          {% for cname in cw.available_crops if cname not in crop_order %}
+            <a
+              href="/season/crop-check?{{ advisor_qs(stype_val=cw.season_type, crop_val=cname) }}"
+              class="fd-chip {% if cname == cw.crop %}is-selected{% endif %}"
+              aria-pressed="{{ 'true' if cname == cw.crop else 'false' }}"
+              style="text-decoration:none;"
+            >{{ cname | capitalize }}</a>
+            {% endfor %}
+        </div>
+      </div>
+
+      <div style="padding-top:12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;">
+        <span class="fd-label" data-lang-ha="YANAYIN DAMINA:">Weather Scenario ({{ cw.lga }} · {{ cw.zone }} Zone):</span>
+        <div class="fd-chip-group" role="group" aria-label="Weather scenario">
+          {% set preferred_st = ['Typical', 'Late start', 'Dry spell', 'Wet'] %}
+          {% for st in preferred_st %}
+            {% if st in cw.season_types %}
+              <a
+                href="/season/crop-check?{{ advisor_qs(stype_val=st, crop_val=cw.crop) }}"
+                class="fd-chip {% if st == cw.season_type %}is-selected{% endif %}"
+                aria-pressed="{{ 'true' if st == cw.season_type else 'false' }}"
+                data-crop-season-choice="{{ st }}"
+                style="text-decoration:none;min-height:38px;padding:6px 12px;"
+              >{{ st }}</a>
+            {% endif %}
+          {% endfor %}
+          {% for st in cw.season_types if st not in preferred_st %}
+            <a
+              href="/season/crop-check?{{ advisor_qs(stype_val=st, crop_val=cw.crop) }}"
+              class="fd-chip {% if st == cw.season_type %}is-selected{% endif %}"
+              aria-pressed="{{ 'true' if st == cw.season_type else 'false' }}"
+              data-crop-season-choice="{{ st }}"
+              style="text-decoration:none;min-height:38px;padding:6px 12px;"
+            >{{ st }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="fd-grid-2">
+    <section class="fd-card" aria-label="Growth stage crop water demand">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:14px;">
+        <h2
+          class="fd-section-label"
+          style="margin:0;color:var(--ink);font-size:12px;"
+          data-lang-ha="BUKATAR RUWA TA MATAKAN GIRMA (ETc)"
+        >GROWTH STAGE DEMAND (ETc) &amp; SHORTFALL RISK</h2>
+        <span style="font-size:12.5px;font-weight:700;color:var(--blue);">
+          Seasonal Need: {{ cw.water_need_mm }} mm · Rain Over Season: {{ cw.season_rain_mm }} mm · Fits Rainy Window: {{ cw.fits_pct }}% of yrs
+        </span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        {% set safe_total_need = cw.water_need_mm if cw.water_need_mm > 0 else 1 %}
+        {% for stage in cw.stages %}
+          {% set is_alert = stage.is_riskiest or stage.short_pct >= 15 %}
+          {% set raw_width = ((stage.need_mm / safe_total_need) * 180) | round | int %}
+          {% set bar_width = 100 if raw_width > 100 else (14 if raw_width < 14 else raw_width) %}
+
+          <div
+            style="{% if is_alert %}background:var(--danger-soft);border:1px solid var(--danger-border);border-radius:12px;padding:12px 14px;{% else %}padding:4px 2px;{% endif %}"
+          >
+            <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px;">
+              <strong style="font-size:13.5px;{% if is_alert %}color:var(--danger);{% else %}color:var(--ink);{% endif %}">
+                {{ stage.label }}{% if stage.is_riskiest %} — CRITICAL STAGE{% endif %}
+              </strong>
+              <span style="font-family:var(--font-mono);font-size:12px;color:var(--muted);">
+                {{ stage.days }} days · Kc {{ stage.kc }}
+              </span>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:7px;font-size:12.5px;{% if is_alert %}color:var(--danger);font-weight:700;{% else %}color:var(--blue);font-weight:600;{% endif %}">
+              <span>Need: {{ stage.need_mm }} mm · Shortfall in {{ stage.short_pct }}% of {{ cw.season_type | lower }} seasons</span>
+              {% if is_alert %}
+                <span>DEFICIT RISK ▲</span>
+              {% elif stage.short_pct == 0 %}
+                <span style="color:var(--green);">Buffered ✓</span>
+              {% endif %}
+            </div>
+
+            <div class="fd-bar-track" role="img" aria-label="{{ stage.label }} water need {{ stage.need_mm }} mm, shortfall in {{ stage.short_pct }} percent of seasons">
+              <div
+                class="fd-bar-fill {% if is_alert %}is-danger{% elif stage.short_pct == 0 %}is-ok{% endif %}"
+                style="width:{{ bar_width }}%;"
+              ></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0 10px;">
+      <p style="margin:0;font-size:12px;line-height:1.5;color:var(--muted);">
+        * Root-zone available water computed via Saxton-Rawls pedotransfer functions (A8) from iSDAsoil 0–50 cm layers. Actual crop water used (ETa): <strong>{{ cw.water_used_mm }} mm</strong> over <strong>{{ cw.total_days }} days</strong> from median onset <strong>{{ cw.onset_label }}</strong>.
+      </p>
+    </section>
+
+    <section class="fd-card" aria-label="Agronomic water risk and crop comparison">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;">
+        <h2
+          class="fd-section-label"
+          style="margin:0;color:var(--ink);font-size:12px;"
+          data-lang-ha="HADARIN RUWA DA KWATANCIN SHUKA"
+        >AGRONOMIC WATER RISK &amp; ROTATION COMPARISON</h2>
+        <button
+          type="button"
+          class="fd-term-btn"
+          data-explain-term="water_balance"
+          data-lga="{{ cw.lga }}"
+        >Bucket model ⓘ</button>
+      </div>
+
+      {% set has_water_risk = (cw.short_pct > 0) or (cw.fits_pct < 85) %}
+      <div class="fd-alert {% if has_water_risk %}fd-alert-amber{% else %}fd-alert-green{% endif %}" style="margin-bottom:16px;">
+        <div style="font-weight:800;margin-bottom:4px;">
+          {% if has_water_risk %}
+            Water Deficit Alert ({{ cw.crop_label }} · {{ cw.season_type }} Seasons):
+          {% else %}
+            Low Water Deficit Risk ({{ cw.crop_label }} · {{ cw.season_type }} Seasons):
           {% endif %}
         </div>
-      {% endfor %}
-    </div>
-  </div>
+        <p style="margin:0;line-height:1.5;">
+          Planted at median onset <strong>{{ cw.onset_label }}</strong> in {{ cw.lga }} LGA, {{ cw.crop_label | lower }} experiences <strong>{{ cw.stress_days }}</strong> median water-stressed days and <strong>{{ cw.shortfall_mm }} mm</strong> median seasonal shortfall (short in <strong>{{ cw.short_pct }}%</strong> of seasons), fitting the rainy window in <strong>{{ cw.fits_pct }}%</strong> of years.
+          <strong>Riskiest stage: {{ cw.riskiest_label }}</strong>.
+        </p>
+      </div>
 
-  <div class="fd-card fd-compare-crops-card">
-    <h2>Water Demand Comparison with Rotational Crops</h2>
-    <table class="fd-table">
-      <thead>
-        <tr>
-          <th>Crop</th>
-          <th>Water Need</th>
-          <th>Season Length</th>
-          <th>Fits Season %</th>
-          <th>Shortfall Risk %</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for comp in cw.comparisons %}
-          <tr {% if comp.crop == cw.crop %}class="is-selected"{% endif %}>
-            <td><strong>{{ comp.label }}</strong></td>
-            <td>{{ comp.need_mm }} mm</td>
-            <td>{{ comp.days }} days</td>
-            <td>{{ comp.fits_pct }}%</td>
-            <td>{{ comp.short_pct }}%</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+      <p class="fd-section-label" style="margin-bottom:8px;" data-lang-ha="KWATANCIN BUKATAR RUWA A {{ cw.lga | upper }}">
+        SAVANNA ROTATION CROPS IN {{ cw.lga | upper }} ({{ cw.season_type | upper }} YEARS)
+      </p>
 
-  <div class="fd-form-actions">
-    <a href="/season?{{ query_string }}" class="fd-btn-outline">← Back to Season Strip</a>
-    <a href="/compare?{{ query_string }}" class="fd-btn-primary">Proceed to Rotation Cards (Step 4) →</a>
+      <div class="fd-table-wrap">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Crop</th>
+              <th>Season Days</th>
+              <th>Water Need (mm)</th>
+              <th>Fits Rainy Season (%)</th>
+              <th>Seasons Short (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for comp in cw.comparisons %}
+              <tr style="{% if comp.crop == cw.crop %}background:var(--bg-warm);font-weight:700;{% endif %}">
+                <td>
+                  <a
+                    href="/season/crop-check?{{ advisor_qs(stype_val=cw.season_type, crop_val=comp.crop) }}"
+                    style="font-weight:700;text-decoration:none;color:var(--ink);"
+                  >{{ comp.label }}{% if comp.crop == cw.crop %} (Active){% endif %}</a>
+                </td>
+                <td style="font-family:var(--font-mono);">{{ comp.days }}d</td>
+                <td style="font-family:var(--font-mono);">{{ comp.need_mm }} mm</td>
+                <td>
+                  <span class="fd-badge {% if comp.fits_pct >= 85 %}fd-badge-ok{% elif comp.fits_pct >= 65 %}fd-badge-amber{% else %}fd-badge-danger{% endif %}">
+                    {{ comp.fits_pct }}%
+                  </span>
+                </td>
+                <td>
+                  <span class="fd-badge {% if comp.short_pct == 0 %}fd-badge-ok{% elif comp.short_pct < 20 %}fd-badge-amber{% else %}fd-badge-danger{% endif %}">
+                    {{ comp.short_pct }}%
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <a
+        href="/compare?{{ query_string }}"
+        class="fd-btn fd-btn-dark fd-btn-block"
+        style="margin-top:16px;"
+        data-lang-ha="Kwatanta Dukkan Musaya 3 Yanzu →"
+      >Compare All 3 Rotations Now →</a>
+    </section>
   </div>
-</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    document.querySelectorAll("[data-crop-season-choice]").forEach(function (link) {
+      link.addEventListener("click", function () {
+        var st = link.getAttribute("data-crop-season-choice");
+        if (st && window.FDStore) {
+          window.FDStore.save({ season_type: st });
+        }
+      });
+    });
+  })();
+</script>
 {% endblock %}

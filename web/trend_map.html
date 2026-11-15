@@ -1,69 +1,740 @@
 {% extends "_base.html" %}
+{% set cur = trends_map[advisor_req.lga] %}
 
-{% block title %}Kaduna 23-LGA Agroclimatic Trend Map · FieldDynamics{% endblock %}
+{% block title %}Kaduna 23-LGA Climate Trend Explorer · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<style>
+  .fd-map-layout {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 1024px) {
+    .fd-map-layout {
+      grid-template-columns: minmax(0, 1fr) 395px;
+      align-items: stretch;
+    }
+  }
+  .fd-map-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+  }
+  .fd-map-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .fd-map-canvas {
+    position: relative;
+    min-height: 490px;
+    border-radius: 12px;
+    background: #f5f3ed;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fd-svg-map {
+    width: 100%;
+    height: 100%;
+    max-height: 560px;
+    user-select: none;
+  }
+  .fd-lga-path {
+    cursor: pointer;
+    transition: opacity 0.14s ease, stroke-width 0.14s ease;
+    vector-effect: non-scaling-stroke;
+  }
+  .fd-lga-path:hover,
+  .fd-lga-path:focus-visible {
+    opacity: 0.88;
+    outline: none;
+  }
+  .fd-lga-label {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 800;
+    fill: #1f2922;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: rgba(255, 253, 249, 0.86);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+  .fd-lga-label.is-selected {
+    font-size: 12px;
+    fill: #111613;
+  }
+  .fd-leaflet-host {
+    width: 100%;
+    height: 520px;
+    z-index: 1;
+  }
+  .fd-leaflet-host[hidden],
+  .fd-svg-map[hidden] {
+    display: none !important;
+  }
+  .fd-map-legend {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .fd-legend-swatches {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .fd-swatch-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .fd-swatch-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    border: 1px solid rgba(24, 32, 27, 0.28);
+    flex-shrink: 0;
+  }
+  .fd-inspector-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .fd-insp-coords {
+    margin: 2px 0 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fd-map-tooltip {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 20;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(24, 32, 27, 0.9);
+    color: #faf8f5;
+    font-size: 12px;
+    font-weight: 700;
+    pointer-events: none;
+  }
+  .fd-map-tooltip[hidden] {
+    display: none;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-page-head">
+<div class="fd-page-head">
   <div>
-    <span class="fd-kicker is-green">Geospatial Choropleth (F8)</span>
-    <h1 class="fd-h1">Kaduna State 23 LGAs Agroclimatic Trend Map</h1>
-    <p class="fd-sub">Interactive choropleth exploring multi-decade climate shifts, erosion vulnerabilities, and rainfall baselines across all 23 LGAs.</p>
-  </div>
-  <div style="display:flex;gap:10px;">
-    <a class="fd-btn fd-btn-outline" href="/compare?{{ query_string }}">← Back to Compare</a>
-  </div>
-</section>
-
-<div class="fd-card" style="margin-bottom:24px;padding:20px;">
-  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-bottom:16px;">
-    <div>
-      <span class="fd-section-label">ACTIVE CHOROPLETH LAYER</span>
-      <h2 style="font-size:20px;font-weight:800;margin:4px 0 0;">Kaduna 23-LGA Climate & Topsoil Indicators</h2>
-    </div>
-    <div style="display:flex;gap:8px;">
-      <a href="/api/map/trends" target="_blank" class="fd-btn fd-btn-sm fd-btn-outline">Download JSON Trends</a>
-      <a href="/api/legend" target="_blank" class="fd-btn fd-btn-sm fd-btn-outline">View Layer Legends</a>
-    </div>
+    <h1 class="fd-h1" data-lang-ha="Taswirar Yanayin Kananan Hukumomi 23 na Jihar Kaduna">Kaduna State Climate Trend Explorer (23 LGAs)</h1>
+    <p class="fd-sub" data-lang-ha="Binciken yanayi na shekaru 45 (1981–2025), hadarin zaizayar kasa na SRTM × IMERG, da yawan gonaki.">
+      Precomputed 45-year agroclimatic trends (1981–2025), SRTM × IMERG erosion risk, and cropland density.
+    </p>
   </div>
 
-  <div class="fd-table-wrap">
-    <table class="fd-table" style="width:100%;font-size:12.5px;">
-      <thead>
-        <tr>
-          <th>LGA Name</th>
-          <th>Zone</th>
-          <th>Cropland %</th>
-          <th>Annual Rain</th>
-          <th>Heat Days</th>
-          <th>Onset Trend</th>
-          <th>Erosion Risk</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for name, tr in trends_map.items() %}
-          <tr {% if name == advisor_req.lga %}class="is-selected" style="background:var(--green-soft);font-weight:600;"{% endif %}>
-            <td><strong>{{ name }}</strong></td>
-            <td>{{ tr.zone }}</td>
-            <td>{{ tr.cropland_pct }}%</td>
-            <td>{{ tr.annual_rain_mm }} mm</td>
-            <td>{{ tr.heat_days_yr }} d/yr</td>
-            <td>
-              {{ tr.onset_slope_days_dec|string }} d/dec
-              {% if tr.onset_significant %}<span class="fd-badge fd-badge-amber">Significant</span>{% endif %}
-            </td>
-            <td>
-              <span class="fd-badge {% if tr.erosion_band == 'High' %}fd-badge-danger{% elif tr.erosion_band == 'Medium' %}fd-badge-amber{% else %}fd-badge-green{% endif %}">
-                {{ tr.erosion_band }} ({{ tr.erosion_index }})
-              </span>
-            </td>
-            <td>
-              <a href="/farm?lga={{ name }}" class="fd-link" style="color:var(--green);font-weight:700;">Select LGA →</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="fd-chip-group" id="metricSwitcher" role="group" aria-label="Climate map metric layer">
+    <button type="button" class="fd-chip is-selected" data-metric="onset_slope_days_dec" aria-pressed="true" data-lang-ha="Jinkirin Farkon Ruwa">Rain Onset Shift</button>
+    <button type="button" class="fd-chip" data-metric="heat_days_yr" aria-pressed="false" data-lang-ha="Kwanakin Zafi">Heat Stress Days</button>
+    <button type="button" class="fd-chip" data-metric="erosion_index" aria-pressed="false" data-lang-ha="Hadarin Zaizaya">Erosion Hazard</button>
+    <button type="button" class="fd-chip" data-metric="cropland_pct" aria-pressed="false" data-lang-ha="Kason Gonaki">Cropland Share</button>
   </div>
 </div>
+
+<div class="fd-map-layout">
+  <section class="fd-card fd-map-card" id="mapStageCard" aria-label="Interactive 23-LGA Kaduna choropleth map">
+    <div class="fd-map-toolbar">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <label for="mobileLgaSelect" class="fd-label" style="margin:0;">Jump to LGA:</label>
+        <select id="mobileLgaSelect" class="fd-select" style="width:auto;min-height:38px;padding:0 10px;font-size:13.5px;">
+          {% for item in lgas %}
+          <option value="{{ item.lga }}" {% if item.lga == advisor_req.lga %}selected{% endif %}>{{ item.lga }} ({{ item.zone }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <button type="button" id="toggleBasemapBtn" class="fd-btn fd-btn-outline" style="min-height:38px;padding:0 12px;font-size:12.5px;" data-lang-ha="Dora Taswirar Tituna / NASA GIBS MODIS">
+          Overlay Street / NASA GIBS MODIS Layer
+        </button>
+        <button type="button" id="toggleGibsBtn" class="fd-btn fd-btn-outline" style="min-height:38px;padding:0 12px;font-size:12.5px;" hidden>
+          NASA GIBS MODIS NDVI: Off
+        </button>
+      </div>
+    </div>
+
+    <div class="fd-map-canvas" id="mapCanvasWrap">
+      <div id="mapHoverTip" class="fd-map-tooltip" hidden></div>
+      <svg id="kadunaSvgMap" class="fd-svg-map" viewBox="0 0 760 620" role="img" aria-label="Interactive vector choropleth map of Kaduna's 23 LGAs">
+        <text x="380" y="310" text-anchor="middle" fill="#5a665d" font-size="14" font-weight="600">Loading 23 Kaduna LGA boundaries…</text>
+      </svg>
+      <div id="kadunaLeafletMap" class="fd-leaflet-host" hidden></div>
+    </div>
+
+    <div class="fd-map-legend">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <strong id="legendTitle" style="color:var(--ink);">Trend Legend:</strong>
+        <div class="fd-legend-swatches" id="legendSwatches"></div>
+      </div>
+      <small id="legendResolution" style="font-family:var(--font-mono);font-size:11px;color:var(--muted);">
+        Native: CHIRPS v2.0 0.05° (~5.5 km) · EPSG:4326
+      </small>
+    </div>
+    <p id="mapModeNote" style="margin:0;font-size:12px;color:var(--muted);">
+      Tap any of the 23 LGA polygons to inspect its 45-year climate profile and launch rotation cards.
+    </p>
+  </section>
+
+  <aside class="fd-card fd-inspector-card" aria-live="polite">
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <p class="fd-section-label" style="margin:0;" data-lang-ha="Binciken Karamar Hukuma">LGA Profile Inspector</p>
+        <span class="fd-badge fd-badge-ok" data-lang-ha="Zabin Yanzu">Active Selection</span>
+      </div>
+
+      <h2 id="inspLgaName" style="margin:8px 0 2px;font-size:23px;font-weight:800;letter-spacing:-0.025em;color:var(--ink);">
+        {{ cur.lga }} LGA · {{ cur.zone }} Zone
+      </h2>
+      <p id="inspCoords" class="fd-insp-coords">Centroid: resolving EPSG:4326 coordinates…</p>
+
+      <div id="inspLowCroplandAlert" class="fd-alert fd-alert-amber" style="margin-top:12px;padding:10px 12px;font-size:12.5px;" {% if not cur.low_cropland %}hidden{% endif %}>
+        <strong>Urban / Low-Cropland LGA:</strong> Agricultural land covers under 15% of this LGA and IMERG overstates city storm peaks. Verify peri-urban plot conditions locally.
+      </div>
+
+      <div class="fd-score-list" style="margin-top:14px;">
+        <div class="fd-score-row">
+          <span class="fd-score-name">Median Rain Onset</span>
+          <span class="fd-score-val" id="inspOnset">{{ cur.onset_label }} ({{ cur.length_days }}d · ends {{ cur.cessation_label }})</span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Rainfall Onset Shift</span>
+          <span class="fd-score-val" id="inspOnsetSlope" style="color:var(--amber);">
+            {{ "%+.2f"|format(cur.onset_slope_days_dec) }} d/dec ({% if cur.onset_significant %}MK sig.{% else %}not sig. FDR{% endif %})
+          </span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Annual Rainfall Median</span>
+          <span class="fd-score-val" id="inspRain">{{ "{:,}".format(cur.annual_rain_mm) }} mm</span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Heat Stress Days (≥35°C)</span>
+          <span class="fd-score-val" id="inspHeat" style="color:var(--danger);">
+            {{ cur.heat_days_yr }} d/yr ({{ "%+.1f"|format(cur.heat_slope_days_dec) }}/dec{% if cur.heat_significant %} · sig.{% endif %})
+          </span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Erosion Risk Band</span>
+          <span class="fd-score-val" id="inspErosion">
+            {{ cur.erosion_band }} (SRTM slope {{ cur.slope_pct }}% · idx {{ "%.2f"|format(cur.erosion_index) }})
+          </span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Cropland Area Share</span>
+          <span class="fd-score-val" id="inspCropland">
+            {{ cur.cropland_pct }}%{% if cur.low_cropland %} (urban / low cropland){% elif cur.cropland_pct >= 65 %} (high farming density){% else %} (savanna mosaic){% endif %}
+          </span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Dominant Soil (iSDAsoil)</span>
+          <span class="fd-score-val" id="inspSoil">
+            {{ cur.soil_default }}{% if cur.soil_ph %} (pH {{ cur.soil_ph }}){% endif %}
+          </span>
+        </div>
+        <div class="fd-score-row">
+          <span class="fd-score-name">Evidence Confidence (A12)</span>
+          <span class="fd-score-val" id="inspConfidence">
+            <span class="fd-badge fd-badge-{{ cur.confidence_level|lower }}">{{ cur.confidence_level }}</span>
+            <small style="display:block;font-weight:500;color:var(--muted);margin-top:2px;">{{ cur.confidence_reason }}</small>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:8px;">
+      <a id="launchLgaAdvisorBtn" class="fd-btn fd-btn-dark fd-btn-block" href="/farm?{{ query_string }}" data-lang-ha="Bude Mai Ba da Shawara na LGA →">
+        Launch Advisor for {{ cur.lga }} →
+      </a>
+      <a id="launchLgaSeasonBtn" class="fd-btn fd-btn-outline fd-btn-block" href="/season?{{ query_string }}" data-lang-ha="Duba Kalandar Damina ta Wata 12">
+        Inspect {{ cur.lga }} 12-Month Season Strip
+      </a>
+    </div>
+  </aside>
+</div>
+
+<script type="application/json" id="trendsMapData">{{ trends_map | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var rawEl = document.getElementById("trendsMapData");
+  var TRENDS = rawEl ? JSON.parse(rawEl.textContent || "{}") : {};
+  var activeLga = {{ advisor_req.lga | tojson }};
+  var activeMetric = "onset_slope_days_dec";
+  var geojsonData = null;
+  var centroids = {};
+  var usingLeaflet = false;
+  var leafletMap = null;
+  var leafletGeoLayer = null;
+  var leafletMarker = null;
+  var gibsLayer = null;
+  var gibsEnabled = false;
+
+  var METRIC_CONFIG = {
+    onset_slope_days_dec: {
+      title: "Rain Onset Shift:",
+      resolution: "Native: CHIRPS v2.0 0.05° (~5.5 km) · 1981–2025 Sen Slope",
+      bins: [
+        { max: 1.5, fill: "#bbf7d0", stroke: "#15803d", label: "≤ +1.5 d/dec (Stable)" },
+        { max: 2.8, fill: "#fef3c7", stroke: "#b45309", label: "+1.5 to +2.8 d/dec" },
+        { max: 3.8, fill: "#fcd34d", stroke: "#b45309", label: "+2.8 to +3.8 d/dec" },
+        { max: Infinity, fill: "#f59e0b", stroke: "#92400e", label: "> +3.8 d/dec (Later)" }
+      ],
+      fmt: function (d) { return (d.onset_slope_days_dec >= 0 ? "+" : "") + d.onset_slope_days_dec.toFixed(2) + " d/dec"; }
+    },
+    heat_days_yr: {
+      title: "Heat Days (≥35°C):",
+      resolution: "Native: NASA POWER MERRA-2 (0.5° × 0.625°) · 1981–2025",
+      bins: [
+        { max: 42, fill: "#dcfce7", stroke: "#15803d", label: "< 42 d/yr" },
+        { max: 50, fill: "#fef08a", stroke: "#a16207", label: "42–50 d/yr" },
+        { max: 60, fill: "#fdba74", stroke: "#c2410c", label: "50–60 d/yr" },
+        { max: Infinity, fill: "#ea580c", stroke: "#7c2d12", label: "> 60 d/yr" }
+      ],
+      fmt: function (d) { return d.heat_days_yr.toFixed(1) + " d/yr"; }
+    },
+    erosion_index: {
+      title: "Erosion Hazard:",
+      resolution: "Native: SRTM 30 m × GPM IMERG V07 0.1° (~11 km) × iSDAsoil 30 m",
+      bins: [
+        { max: 0.34, fill: "#bbf7d0", stroke: "#15803d", label: "Low (< 0.34)" },
+        { max: 0.67, fill: "#fde68a", stroke: "#b45309", label: "Medium (0.34–0.67)" },
+        { max: Infinity, fill: "#fca5a5", stroke: "#991b1b", label: "High (> 0.67)" }
+      ],
+      fmt: function (d) { return d.erosion_band + " (" + d.erosion_index.toFixed(2) + ")"; }
+    },
+    cropland_pct: {
+      title: "Cropland Share:",
+      resolution: "Native: ESA WorldCover v200 (10 m cropland class 40)",
+      bins: [
+        { max: 20, fill: "#fde68a", stroke: "#b45309", label: "< 20% (Urban / Wooded)" },
+        { max: 50, fill: "#bbf7d0", stroke: "#15803d", label: "20–50% Mosaic" },
+        { max: 75, fill: "#86efac", stroke: "#15803d", label: "50–75% Cropland" },
+        { max: Infinity, fill: "#22c55e", stroke: "#14532d", label: "> 75% Intensive Belt" }
+      ],
+      fmt: function (d) { return d.cropland_pct.toFixed(1) + "% cropland"; }
+    }
+  };
+
+  function styleForLga(lgaName) {
+    var cfg = METRIC_CONFIG[activeMetric];
+    var row = TRENDS[lgaName];
+    var val = row ? Number(row[activeMetric]) : 0;
+    for (var i = 0; i < cfg.bins.length; i++) {
+      if (val <= cfg.bins[i].max) return cfg.bins[i];
+    }
+    return cfg.bins[cfg.bins.length - 1];
+  }
+
+  function renderLegend() {
+    var cfg = METRIC_CONFIG[activeMetric];
+    document.getElementById("legendTitle").textContent = cfg.title;
+    document.getElementById("legendResolution").textContent = cfg.resolution;
+    var wrap = document.getElementById("legendSwatches");
+    wrap.innerHTML = cfg.bins
+      .map(function (b) {
+        return (
+          '<span class="fd-swatch-item">' +
+          '<span class="fd-swatch-dot" style="background:' + b.fill + ';border-color:' + b.stroke + ';"></span>' +
+          "<span>" + b.label + "</span></span>"
+        );
+      })
+      .join("");
+  }
+
+  function updateInspector(lgaName) {
+    var info = TRENDS[lgaName];
+    if (!info) return;
+    activeLga = lgaName;
+    var selectEl = document.getElementById("mobileLgaSelect");
+    if (selectEl && selectEl.value !== lgaName) selectEl.value = lgaName;
+
+    document.getElementById("inspLgaName").textContent = info.lga + " LGA · " + info.zone + " Zone";
+    var c = centroids[lgaName];
+    document.getElementById("inspCoords").textContent = c
+      ? "Latitude: " + c.lat.toFixed(2) + "° N · Longitude: " + c.lon.toFixed(2) + "° E"
+      : "Kaduna State · EPSG:4326";
+
+    document.getElementById("inspLowCroplandAlert").hidden = !info.low_cropland;
+    document.getElementById("inspOnset").textContent =
+      info.onset_label + " (" + info.length_days + "d · ends " + info.cessation_label + ")";
+
+    var sign = info.onset_slope_days_dec >= 0 ? "+" : "";
+    document.getElementById("inspOnsetSlope").textContent =
+      sign + info.onset_slope_days_dec.toFixed(2) + " d/dec (" + (info.onset_significant ? "MK sig." : "not sig. FDR") + ")";
+    document.getElementById("inspRain").textContent = Number(info.annual_rain_mm).toLocaleString() + " mm";
+
+    var hSign = info.heat_slope_days_dec >= 0 ? "+" : "";
+    document.getElementById("inspHeat").textContent =
+      info.heat_days_yr.toFixed(1) + " d/yr (" + hSign + info.heat_slope_days_dec.toFixed(1) + "/dec" +
+      (info.heat_significant ? " · sig." : "") + ")";
+
+    document.getElementById("inspErosion").textContent =
+      info.erosion_band + " (SRTM slope " + info.slope_pct.toFixed(1) + "% · idx " + info.erosion_index.toFixed(2) + ")";
+
+    var cropTag = info.low_cropland
+      ? " (urban / low cropland)"
+      : info.cropland_pct >= 65
+        ? " (high farming density)"
+        : " (savanna mosaic)";
+    document.getElementById("inspCropland").textContent = info.cropland_pct.toFixed(1) + "%" + cropTag;
+    document.getElementById("inspSoil").textContent =
+      info.soil_default + (info.soil_ph ? " (pH " + info.soil_ph.toFixed(1) + ")" : "");
+
+    var confEl = document.getElementById("inspConfidence");
+    var levelLower = String(info.confidence_level || "Medium").toLowerCase();
+    confEl.innerHTML = "";
+    var badge = document.createElement("span");
+    badge.className = "fd-badge fd-badge-" + levelLower;
+    badge.textContent = info.confidence_level;
+    var reason = document.createElement("small");
+    reason.style.cssText = "display:block;font-weight:500;color:var(--muted);margin-top:2px;";
+    reason.textContent = info.confidence_reason;
+    confEl.appendChild(badge);
+    confEl.appendChild(reason);
+
+    var launchBtn = document.getElementById("launchLgaAdvisorBtn");
+    var seasonBtn = document.getElementById("launchLgaSeasonBtn");
+    var q = window.FDStore ? window.FDStore.toQuery({ lga: info.lga, soil: info.soil_default }) : "lga=" + encodeURIComponent(info.lga);
+    launchBtn.href = "/farm?" + q;
+    launchBtn.textContent = "Launch Advisor for " + info.lga + " →";
+    launchBtn.setAttribute("data-lang-en", "Launch Advisor for " + info.lga + " →");
+    seasonBtn.href = "/season?" + q;
+    seasonBtn.textContent = "Inspect " + info.lga + " 12-Month Season Strip";
+    seasonBtn.setAttribute("data-lang-en", "Inspect " + info.lga + " 12-Month Season Strip");
+  }
+
+  function eachRing(geometry, cb) {
+    if (!geometry) return;
+    if (geometry.type === "Polygon") {
+      geometry.coordinates.forEach(cb);
+    } else if (geometry.type === "MultiPolygon") {
+      geometry.coordinates.forEach(function (poly) { poly.forEach(cb); });
+    }
+  }
+
+  function renderSvgChoropleth() {
+    var svg = document.getElementById("kadunaSvgMap");
+    if (!svg || !geojsonData) return;
+
+    var minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+    geojsonData.features.forEach(function (feat) {
+      eachRing(feat.geometry, function (ring) {
+        ring.forEach(function (pt) {
+          if (pt[0] < minLon) minLon = pt[0];
+          if (pt[0] > maxLon) maxLon = pt[0];
+          if (pt[1] < minLat) minLat = pt[1];
+          if (pt[1] > maxLat) maxLat = pt[1];
+        });
+      });
+    });
+
+    var pad = 28;
+    var width = 760 - pad * 2;
+    var height = 620 - pad * 2;
+    var cosLat = Math.cos(((minLat + maxLat) / 2) * (Math.PI / 180));
+    var spanLon = (maxLon - minLon) * cosLat;
+    var spanLat = maxLat - minLat;
+    var scale = Math.min(width / spanLon, height / spanLat);
+    var offsetX = pad + (width - spanLon * scale) / 2;
+    var offsetY = pad + (height - spanLat * scale) / 2;
+
+    function project(lon, lat) {
+      var x = offsetX + (lon - minLon) * cosLat * scale;
+      var y = offsetY + (maxLat - lat) * scale;
+      return [x, y];
+    }
+
+    svg.innerHTML = "";
+    var ns = "http://www.w3.org/2000/svg";
+    var polyGroup = document.createElementNS(ns, "g");
+    var labelGroup = document.createElementNS(ns, "g");
+    var tip = document.getElementById("mapHoverTip");
+
+    var ordered = geojsonData.features.slice().sort(function (a, b) {
+      return a.properties.lga === activeLga ? 1 : b.properties.lga === activeLga ? -1 : 0;
+    });
+
+    ordered.forEach(function (feat) {
+      var name = feat.properties.lga;
+      var isSelected = name === activeLga;
+      var bin = styleForLga(name);
+      var dParts = [];
+
+      eachRing(feat.geometry, function (ring) {
+        ring.forEach(function (pt, idx) {
+          var xy = project(pt[0], pt[1]);
+          dParts.push((idx === 0 ? "M" : "L") + xy[0].toFixed(1) + " " + xy[1].toFixed(1));
+        });
+        dParts.push("Z");
+      });
+
+      var path = document.createElementNS(ns, "path");
+      path.setAttribute("d", dParts.join(" "));
+      path.setAttribute("class", "fd-lga-path");
+      path.setAttribute("fill", bin.fill);
+      path.setAttribute("stroke", isSelected ? "#18201b" : bin.stroke);
+      path.setAttribute("stroke-width", isSelected ? "3.2" : "1.25");
+      path.setAttribute("tabindex", "0");
+      path.setAttribute("role", "button");
+      path.setAttribute("aria-label", name + " LGA");
+
+      path.addEventListener("click", function () {
+        selectLga(name);
+      });
+      path.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter" || ev.key === " ") {
+          ev.preventDefault();
+          selectLga(name);
+        }
+      });
+      path.addEventListener("mouseenter", function () {
+        var row = TRENDS[name];
+        if (row && tip) {
+          tip.textContent = name + " LGA · " + METRIC_CONFIG[activeMetric].fmt(row);
+          tip.hidden = false;
+        }
+      });
+      path.addEventListener("mouseleave", function () {
+        if (tip) tip.hidden = true;
+      });
+      polyGroup.appendChild(path);
+
+      var c = centroids[name];
+      if (c) {
+        var cxy = project(c.lon, c.lat);
+        if (isSelected) {
+          var dot = document.createElementNS(ns, "circle");
+          dot.setAttribute("cx", cxy[0].toFixed(1));
+          dot.setAttribute("cy", cxy[1].toFixed(1) - 12);
+          dot.setAttribute("r", "6.5");
+          dot.setAttribute("fill", "#dc2626");
+          dot.setAttribute("stroke", "#ffffff");
+          dot.setAttribute("stroke-width", "2.5");
+          labelGroup.appendChild(dot);
+        }
+        var hideTinyLabel = (name === "Kaduna North" || name === "Kaduna South") && !isSelected;
+        if (!hideTinyLabel) {
+          var lbl = document.createElementNS(ns, "text");
+          lbl.setAttribute("x", cxy[0].toFixed(1));
+          lbl.setAttribute("y", (cxy[1] + (isSelected ? 4 : 2)).toFixed(1));
+          lbl.setAttribute("text-anchor", "middle");
+          lbl.setAttribute("class", "fd-lga-label" + (isSelected ? " is-selected" : ""));
+          lbl.textContent = isSelected ? name.toUpperCase() + " LGA" : name;
+          labelGroup.appendChild(lbl);
+        }
+      }
+    });
+
+    svg.appendChild(polyGroup);
+    svg.appendChild(labelGroup);
+  }
+
+  function refreshLeafletStyles() {
+    if (!leafletMap || !geojsonData || !window.L) return;
+    if (leafletGeoLayer) leafletMap.removeLayer(leafletGeoLayer);
+    if (leafletMarker) leafletMap.removeLayer(leafletMarker);
+
+    leafletGeoLayer = window.L.geoJSON(geojsonData, {
+      style: function (feat) {
+        var name = feat.properties.lga;
+        var isSel = name === activeLga;
+        var bin = styleForLga(name);
+        return {
+          fillColor: bin.fill,
+          fillOpacity: gibsEnabled ? 0.35 : 0.72,
+          color: isSel ? "#18201b" : bin.stroke,
+          weight: isSel ? 3.4 : 1.4
+        };
+      },
+      onEachFeature: function (feat, layer) {
+        var name = feat.properties.lga;
+        var row = TRENDS[name];
+        if (row) {
+          layer.bindTooltip(name + " LGA · " + METRIC_CONFIG[activeMetric].fmt(row), { sticky: true });
+        }
+        layer.on("click", function () {
+          selectLga(name);
+        });
+      }
+    }).addTo(leafletMap);
+
+    var c = centroids[activeLga];
+    if (c) {
+      leafletMarker = window.L.circleMarker([c.lat, c.lon], {
+        radius: 7,
+        fillColor: "#dc2626",
+        fillOpacity: 1,
+        color: "#ffffff",
+        weight: 2.5
+      }).addTo(leafletMap);
+    }
+  }
+
+  function enableLeafletOverlay() {
+    var note = document.getElementById("mapModeNote");
+    if (!window.L || navigator.onLine === false) {
+      note.textContent = "Offline mode detected: keeping built-in 23-LGA vector choropleth active with zero external tile dependency.";
+      return;
+    }
+    var svg = document.getElementById("kadunaSvgMap");
+    var host = document.getElementById("kadunaLeafletMap");
+    var toggleBtn = document.getElementById("toggleBasemapBtn");
+    var gibsBtn = document.getElementById("toggleGibsBtn");
+
+    usingLeaflet = !usingLeaflet;
+    svg.hidden = usingLeaflet;
+    host.hidden = !usingLeaflet;
+    gibsBtn.hidden = !usingLeaflet;
+    toggleBtn.textContent = usingLeaflet ? "Return to Clean Vector Map" : "Overlay Street / NASA GIBS MODIS Layer";
+
+    if (usingLeaflet) {
+      if (!leafletMap) {
+        leafletMap = window.L.map(host, { scrollWheelZoom: false }).setView([10.52, 7.75], 8);
+        window.L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+          attribution: "&copy; OpenStreetMap &copy; CARTO",
+          maxZoom: 14
+        }).addTo(leafletMap);
+      }
+      setTimeout(function () {
+        leafletMap.invalidateSize();
+        refreshLeafletStyles();
+        if (leafletGeoLayer) leafletMap.fitBounds(leafletGeoLayer.getBounds(), { padding: [14, 14] });
+      }, 40);
+      note.textContent = "Live basemap active: CARTO Positron streets under official geoBoundaries 23-LGA polygons.";
+    } else {
+      renderSvgChoropleth();
+      note.textContent = "Tap any of the 23 LGA polygons to inspect its 45-year climate profile and launch rotation cards.";
+    }
+  }
+
+  function toggleGibsModis() {
+    if (!leafletMap || !window.L) return;
+    var gibsBtn = document.getElementById("toggleGibsBtn");
+    gibsEnabled = !gibsEnabled;
+    if (gibsEnabled) {
+      if (!gibsLayer) {
+        gibsLayer = window.L.tileLayer(
+          "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/2024-09-05/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
+          { attribution: "NASA EOSDIS GIBS MODIS Terra NDVI (250 m)", maxNativeZoom: 9, maxZoom: 14, opacity: 0.68 }
+        );
+      }
+      gibsLayer.addTo(leafletMap);
+      gibsBtn.textContent = "NASA GIBS MODIS NDVI: On";
+    } else if (gibsLayer) {
+      leafletMap.removeLayer(gibsLayer);
+      gibsBtn.textContent = "NASA GIBS MODIS NDVI: Off";
+    }
+    refreshLeafletStyles();
+  }
+
+  function selectLga(lgaName) {
+    if (!TRENDS[lgaName]) return;
+    updateInspector(lgaName);
+    if (usingLeaflet) {
+      refreshLeafletStyles();
+    } else {
+      renderSvgChoropleth();
+    }
+  }
+
+  document.getElementById("metricSwitcher").addEventListener("click", function (ev) {
+    var btn = ev.target.closest("[data-metric]");
+    if (!btn) return;
+    activeMetric = btn.getAttribute("data-metric");
+    document.querySelectorAll("#metricSwitcher .fd-chip").forEach(function (c) {
+      var on = c === btn;
+      c.classList.toggle("is-selected", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    renderLegend();
+    if (usingLeaflet) {
+      refreshLeafletStyles();
+    } else {
+      renderSvgChoropleth();
+    }
+  });
+
+  document.getElementById("mobileLgaSelect").addEventListener("change", function (ev) {
+    selectLga(ev.target.value);
+  });
+
+  document.getElementById("toggleBasemapBtn").addEventListener("click", enableLeafletOverlay);
+  document.getElementById("toggleGibsBtn").addEventListener("click", toggleGibsModis);
+
+  document.getElementById("launchLgaAdvisorBtn").addEventListener("click", function (ev) {
+    var info = TRENDS[activeLga];
+    if (info && window.FDStore) {
+      ev.preventDefault();
+      window.FDStore.save({ lga: info.lga, soil: info.soil_default, soilOverridden: false });
+      window.FDStore.go("/farm", { lga: info.lga, soil: info.soil_default });
+    }
+  });
+
+  document.getElementById("launchLgaSeasonBtn").addEventListener("click", function (ev) {
+    var info = TRENDS[activeLga];
+    if (info && window.FDStore) {
+      ev.preventDefault();
+      window.FDStore.save({ lga: info.lga, soil: info.soil_default, soilOverridden: false });
+      window.FDStore.go("/season", { lga: info.lga, soil: info.soil_default });
+    }
+  });
+
+  renderLegend();
+  updateInspector(activeLga);
+
+  fetch("/static/geo/kaduna_lgas.geojson")
+    .then(function (r) {
+      if (!r.ok) throw new Error("Failed to load GeoJSON");
+      return r.json();
+    })
+    .then(function (fc) {
+      geojsonData = fc;
+      (fc.features || []).forEach(function (f) {
+        if (f.properties && f.properties.lga) {
+          centroids[f.properties.lga] = {
+            lat: Number(f.properties.lat_deg),
+            lon: Number(f.properties.lon_deg)
+          };
+        }
+      });
+      updateInspector(activeLga);
+      renderSvgChoropleth();
+    })
+    .catch(function () {
+      document.getElementById("mapModeNote").textContent =
+        "Use the LGA selector above to inspect any of Kaduna's 23 Local Government Areas.";
+    });
+})();
+</script>
 {% endblock %}

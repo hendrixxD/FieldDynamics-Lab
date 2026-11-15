@@ -1,42 +1,92 @@
 {% extends "_base.html" %}
 
-{% block title %}NASA 9-Pattern Diagnostic Grid · FieldDynamics{% endblock %}
+{% block title %}NASA 9 Climate Patterns · {{ sv.lga }} LGA · FieldDynamics{% endblock %}
 
 {% block content %}
-<section class="fd-screen fd-patterns-screen">
-  <div class="fd-step-intro">
-    <div class="fd-step-kicker">CLIMATE TRACEABILITY MATRIX (F3e)</div>
-    <h1 class="fd-title">All 9 NASA Challenge Climate Patterns · {{ sv.lga }} LGA</h1>
-    <p class="fd-sub">Direct evidence from NASA POWER, SMAP, CHIRPS, GPM IMERG, SRTM, and MODIS satellites.</p>
+  <div class="fd-page-head" style="align-items:flex-end;">
+    <div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px;">
+        <span class="fd-kicker is-green" data-lang-ha="MATAKI NA 3 · ALAMOMIN NASA 9 (F3e)">Step 3 Diagnostic · NASA 9-Pattern Panel (F3e)</span>
+        <span class="fd-badge fd-badge-muted">LGA: {{ sv.lga }} ({{ sv.zone }} Zone)</span>
+      </div>
+      <h1
+        class="fd-h1-serif"
+        data-lang-ha="Alamomin Sauyin Yanayi 9 na Tauraron NASA"
+      >NASA Earth Observation Climate Patterns</h1>
+      <p class="fd-sub">
+        Traceability Row 18: All 9 challenge climate patterns mapped to agricultural vulnerability in {{ sv.lga }} LGA ({{ sv.zone }} Zone).
+      </p>
+    </div>
+
+    <div style="text-align:right;font-size:12px;line-height:1.5;color:var(--muted);max-width:440px;">
+      <div style="font-weight:700;color:var(--ink-soft);">
+        Harmonized Baseline (1981–2025)
+      </div>
+      <div style="font-family:var(--font-mono);font-size:11px;">
+        POWER · GPM IMERG · MODIS · SMAP · SRTM · CHIRPS
+      </div>
+    </div>
   </div>
 
-  <div class="fd-patterns-grid">
+  <section class="fd-grid-3" aria-label="9 NASA Earth observation climate patterns">
     {% for p in sv.patterns %}
-      <article class="fd-pattern-card is-{{ p.tone }}">
-        <div class="fd-pat-top">
-          <span class="fd-pat-num">Pattern {{ p.num }}</span>
-          <span class="fd-pat-status is-{{ p.tone }}">{{ p.status }}</span>
+      <article class="fd-card" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;">
+        <div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px;">
+            <h2 style="margin:0;font-size:14px;font-weight:800;line-height:1.3;color:var(--ink);">
+              <span style="font-family:var(--font-mono);font-weight:600;color:var(--muted);margin-right:4px;">{{ p.num }}</span>{{ p.title }}
+            </h2>
+            <span
+              class="fd-badge fd-badge-{{ p.tone }}"
+              style="font-size:10.5px;text-transform:uppercase;letter-spacing:0.03em;flex-shrink:0;"
+            >{{ p.status }}</span>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 10px;margin-bottom:10px;">
+            <div style="font-family:var(--font-serif);font-size:clamp(22px,2.2vw,27px);font-weight:700;line-height:1.12;color:var(--green);">
+              {{ p.headline }}
+            </div>
+            <div style="font-family:var(--font-mono);font-size:11.5px;color:var(--muted);">
+              {{ p.sub }}
+            </div>
+          </div>
+
+          <p style="margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-soft);">
+            {{ p.meaning }}
+          </p>
         </div>
-        <h2 class="fd-pat-title">{{ p.title }}</h2>
-        <div class="fd-pat-headline">{{ p.headline }}</div>
-        <div class="fd-pat-sub">{{ p.sub }}</div>
-        <p class="fd-pat-meaning">{{ p.meaning }}</p>
-        <div class="fd-pat-source">
-          <span class="fd-pat-src-icon" aria-hidden="true">🛰️</span>
-          <span>{{ p.source }}</span>
-        </div>
-        <div class="fd-pat-action">
-          <a href="/season?{{ query_string }}&explain={{ p.term_key }}" class="fd-link-explain">
-            Tap for Meaning & Explanation →
-          </a>
+
+        <div style="padding-top:10px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.35;">
+            {{ p.source }}
+          </span>
+          <button
+            type="button"
+            class="fd-term-btn"
+            data-explain-term="{{ p.term_key }}"
+            data-lga="{{ sv.lga }}"
+            style="flex-shrink:0;"
+          >Explain ⓘ</button>
         </div>
       </article>
     {% endfor %}
-  </div>
+  </section>
 
-  <div class="fd-form-actions">
-    <a href="/season?{{ query_string }}" class="fd-btn-outline">← Back to Season Strip</a>
-    <a href="/compare?{{ query_string }}" class="fd-btn-primary">Continue to Rotation Cards (Step 4) →</a>
+  <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <a
+      href="/season?{{ query_string }}"
+      class="fd-btn fd-btn-outline"
+      data-lang-ha="← Koma Kalanda ta Wata 12"
+    >← Back to Season Strip</a>
+
+    <span style="font-size:12.5px;color:var(--muted);">
+      NASA Space Apps 2026 · Field Shift: Adapting Farms with NASA Data · {{ sv.lga }} LGA
+    </span>
+
+    <a
+      href="/compare?{{ query_string }}"
+      class="fd-btn fd-btn-green"
+      data-lang-ha="Ci Gaba Zuwa Kwatanta 3 (Mataki na 4) →"
+    >Proceed to 3-Way Compare (Step 4) →</a>
   </div>
-</section>
 {% endblock %}

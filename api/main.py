@@ -64,7 +64,7 @@ SCREENS_MANIFEST = (
     ("03-season", "F3. 12-Month Season Strip", "/season", "Step 3", "Journey Step 3"),
     (
         "03a-crop-check",
-        "F3d. Crop Water Check (FAO-56)",
+        "F3d. Crop Water Check",
         "/season/crop-check",
         "Diag",
         "Water Balance",
@@ -88,8 +88,8 @@ SCREENS_MANIFEST = (
     ("04b-decide", "F6. Farmer Decision Selection", "/decide", "Step 5", "Journey Step 5"),
     (
         "04c-low-confidence",
-        "F5b. Uncertainty Dossier (Option B)",
-        "/card/b",
+        "F5b. Low Confidence Dossier (Option B)",
+        "/card/b?soil=Not+sure",
         "Step 4",
         "Uncertainty Check",
     ),

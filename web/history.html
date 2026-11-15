@@ -1,53 +1,518 @@
 {% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_badge, crop_sequence_icons %}
+{% set opt_a = scored.cards[1] if scored.cards|length > 1 else scored.cards[0] %}
 
-{% block title %}Offline Consultation Archive · FieldDynamics{% endblock %}
+{% block title %}Extension Field Records &amp; Offline Archive · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-history-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .fd-stat-num {
+    font-family: var(--font-serif);
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .fd-stat-label {
+    margin-top: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .fd-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .fd-filter-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .fd-filter-pill {
+    min-height: 36px;
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-card);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .fd-filter-pill.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #faf8f5;
+  }
+  .fd-empty-panel {
+    padding: 28px 20px;
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--line-strong);
+    background: var(--bg-elevated);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .fd-row-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .fd-row-actions a {
+    text-decoration: none;
+  }
+  .fd-row-actions a.is-terra {
+    color: var(--terra);
+  }
+  .fd-archive-foot {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-page-head">
+<div class="fd-page-head">
   <div>
-    <span class="fd-kicker is-green">P5 Field Workstation Deliverable</span>
-    <h1 class="fd-h1">Offline CBA Field Logs & Consultation Records</h1>
-    <p class="fd-sub">Locally saved extension consultations and smallholder rotation plans for offline village visits.</p>
+    <h1 class="fd-h1-serif" data-lang-ha="Tarihin Ziyarar Gona da Taskar Ajiya">Extension Field Records &amp; Offline Archive</h1>
+    <p class="fd-sub" data-lang-ha="Bukatar PRD P5 da P9: Taskar bayanan mai ba da shawara a cikin na'ura. Babu bayanan sirri na manomi da ake aikawa uwar garken.">
+      PRD Requirement P5 &amp; P9: Local browser consultation log for extension agents. Zero farmer personal data sent to servers.
+    </p>
   </div>
-  <div style="display:flex;gap:10px;">
-    <a class="fd-btn fd-btn-outline" href="/start">← New Consultation</a>
+
+  <div class="fd-history-actions">
+    <button type="button" id="saveCurrentVisitBtn" class="fd-btn fd-btn-outline" data-lang-ha="+ Ajiye Zaman {{ advisor_req.lga }} na Yanzu">
+      + Save Current {{ advisor_req.lga }} Session
+    </button>
+    <a class="fd-btn fd-btn-green" href="/farm?{{ query_string }}" data-lang-ha="+ Sabon Bincike">+ New Assessment</a>
+    <button type="button" id="exportCsvBtn" class="fd-btn fd-btn-outline" data-lang-ha="Fitar da Rahoton KADA (CSV)">Export KADA Report (CSV)</button>
+  </div>
+</div>
+
+<div id="historyFeedbackBanner" class="fd-alert fd-alert-green" style="margin-bottom:16px;" hidden></div>
+
+<div class="fd-metrics-4" style="margin-bottom:20px;">
+  <div class="fd-card">
+    <div class="fd-stat-num" id="statTotal">0</div>
+    <div class="fd-stat-label" data-lang-ha="Jimillar Gonakin da Aka Duba">Total Farms Evaluated</div>
+  </div>
+  <div class="fd-card">
+    <div class="fd-stat-num" id="statWhatsapp">0</div>
+    <div class="fd-stat-label" data-lang-ha="Sakwannin WhatsApp da Aka Aika">WhatsApp Summaries Sent</div>
+  </div>
+  <div class="fd-card">
+    <div class="fd-stat-num" id="statPrint">0</div>
+    <div class="fd-stat-label" data-lang-ha="Katunan A5 da Aka Buga">A5 Print Cards Handed</div>
+  </div>
+  <div class="fd-card">
+    <div class="fd-stat-num" id="statPending">0</div>
+    <div class="fd-stat-label" data-lang-ha="An Ajiye a Na'ura">Saved / Deferred Locally</div>
+  </div>
+</div>
+
+<section class="fd-card" aria-label="Local browser consultation records">
+  <div class="fd-filter-bar">
+    <div class="fd-filter-pills" id="historyFilterRow" role="group" aria-label="Filter consultations by LGA">
+      <button type="button" class="fd-filter-pill is-active" data-lga-filter="ALL">All Records (0)</button>
+    </div>
+    <small id="historyCountSummary" style="font-size:12.5px;color:var(--muted);">0 consultations stored locally</small>
+  </div>
+
+  <div class="fd-table-wrap" id="historyTableWrap" hidden>
+    <table class="fd-table">
+      <thead>
+        <tr>
+          <th>Farmer / Visit Label</th>
+          <th>LGA &amp; Soil</th>
+          <th>Current Sequence</th>
+          <th>Chosen Rotation</th>
+          <th>Confidence</th>
+          <th>Handoff Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="historyTableBody"></tbody>
+    </table>
+  </div>
+
+  <div id="historyEmptyState" class="fd-empty-panel">
+    <div>
+      <span class="fd-badge fd-badge-ok" style="margin-bottom:8px;">Local-Only Archive · Zero Fabricated Rows</span>
+      <h2 style="margin:0 0 6px;font-size:19px;font-weight:800;color:var(--ink);" data-lang-ha="Babu bayanan ziyara a wannan na'ura tukuna">
+        No consultations saved in this browser yet
+      </h2>
+      <p style="margin:0;font-size:14px;color:var(--ink-soft);max-width:72ch;">
+        Consultations remain exclusively in <code style="font-family:var(--font-mono);">localStorage</code> on this device so smallholder identities never leave the extension officer's phone or tablet. Record your active <strong>{{ advisor_req.lga }}</strong> session below or start a new farm walkthrough.
+      </p>
+    </div>
+
+    <div class="fd-card" style="width:100%;max-width:680px;padding:14px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <p class="fd-section-label" style="margin-bottom:4px;">Active Session Ready to Log · {{ advisor_req.lga }} LGA ({{ selected_lga_info.zone }} Zone)</p>
+          <div style="font-size:14px;font-weight:700;color:var(--ink);">
+            {{ scored.cards[0].title }} → {{ opt_a.badge }} ({{ opt_a.title }})
+          </div>
+          <small style="color:var(--muted);">
+            Soil: {{ advisor_req.soil or selected_lga_info.soil_default }}{% if selected_lga_info.soil_ph %} (pH {{ selected_lga_info.soil_ph }}){% endif %}
+            · Season: {{ advisor_req.season_type }} · Confidence: {{ opt_a.confidence.level }}
+          </small>
+        </div>
+        {{ crop_sequence_icons(opt_a.seasons) }}
+      </div>
+
+      <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <label for="visitLabelInput" class="fd-label" style="margin:0;">Optional Visit Label:</label>
+        <input id="visitLabelInput" type="text" class="fd-input" style="max-width:290px;min-height:40px;font-size:13.5px;" maxlength="60" placeholder="e.g., Ward Demo Plot / Walk-in Visit">
+        <button type="button" id="emptyRecordBtn" class="fd-btn fd-btn-dark" data-lang-ha="Ajiye Zaman {{ advisor_req.lga }} na Yanzu">
+          Save Current {{ advisor_req.lga }} Session ({{ opt_a.title }})
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
-<div class="fd-card" style="margin-bottom:24px;">
-  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px;">
-    <div>
-      <span class="fd-section-label">LOCAL BROWSER ARCHIVE</span>
-      <h2 style="font-size:20px;font-weight:800;margin:4px 0 0;">Offline Consultation Records</h2>
-    </div>
-    <div style="display:flex;gap:8px;">
-      <button type="button" class="fd-btn fd-btn-sm fd-btn-dark" onclick="window.fdApp && window.fdApp.exportLogsCsv()">Export Records (CSV)</button>
-      <button type="button" class="fd-btn fd-btn-sm fd-btn-outline" onclick="window.fdApp && window.fdApp.clearLogs()">Clear Archive</button>
-    </div>
-  </div>
-
-  <div id="fdEmptyLogs" style="padding:40px 20px;text-align:center;color:var(--muted);">
-    <div style="font-size:36px;margin-bottom:12px;">📋</div>
-    <h3 style="margin:0 0 6px;font-size:16px;color:var(--ink);">No Local Records Saved Yet</h3>
-    <p style="margin:0 0 16px;font-size:13px;">Completed farmer consultations saved in the field workstation are stored locally in your browser for offline retrieval and CSV export.</p>
-    <a href="/farm?{{ query_string }}" class="fd-btn fd-btn-primary">Start a New Farm Consultation →</a>
-  </div>
-
-  <div class="fd-table-wrap" id="fdLogsTableWrap" style="display:none;">
-    <table class="fd-table" id="fdLogsTable" style="width:100%;font-size:13px;">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Farmer Name</th>
-          <th>LGA</th>
-          <th>Baseline</th>
-          <th>Selected Plan</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="fdLogsBody">
-      </tbody>
-    </table>
-  </div>
+<div class="fd-archive-foot">
+  <span data-lang-ha="Taskar Cikin Na'ura ta FieldDynamics · Babu bayanan manomi da ake aikawa intanet (PRD P9).">
+    FieldDynamics Local Storage · Zero farmer personal data sent to cloud servers (PRD P9 privacy compliant).
+  </span>
+  <button type="button" id="clearArchiveBtn" class="fd-btn fd-btn-outline" data-lang-ha="Share Taskar Na'ura">Clear Local Cache</button>
 </div>
+
+<div id="cropIconTemplates" hidden aria-hidden="true">
+  {% for crop_id, _crop_name in crop_choices %}
+  <div data-crop-template="{{ crop_id }}">{{ crop_badge(crop_id) }}</div>
+  {% endfor %}
+  <div data-crop-template="other">{{ crop_badge('other') }}</div>
+</div>
+
+<script type="application/json" id="activeSessionPayload">
+{{ {
+  "lga": advisor_req.lga,
+  "zone": selected_lga_info.zone,
+  "soil": advisor_req.soil or selected_lga_info.soil_default,
+  "soilPh": selected_lga_info.soil_ph,
+  "water": advisor_req.water,
+  "equipment": advisor_req.equipment,
+  "seasonType": advisor_req.season_type,
+  "priorities": advisor_req.priorities,
+  "sell": advisor_req.sell,
+  "s1": advisor_req.past_seasons[-1],
+  "s2": advisor_req.past_seasons[0] if advisor_req.past_seasons|length > 1 else [],
+  "currentSeq": scored.cards[0].title,
+  "chosenPlan": opt_a.badge ~ " (" ~ opt_a.title ~ ")",
+  "chosenSeasons": opt_a.seasons,
+  "confidence": opt_a.confidence.level,
+  "pick": "a"
+} | tojson }}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var payloadEl = document.getElementById("activeSessionPayload");
+  var ACTIVE = payloadEl ? JSON.parse(payloadEl.textContent || "{}") : {};
+  var activeFilter = "ALL";
+
+  var iconMap = {};
+  document.querySelectorAll("#cropIconTemplates [data-crop-template]").forEach(function (el) {
+    iconMap[el.getAttribute("data-crop-template")] = el.innerHTML;
+  });
+
+  function showBanner(msg) {
+    var b = document.getElementById("historyFeedbackBanner");
+    if (!b) return;
+    b.textContent = msg;
+    b.hidden = false;
+  }
+
+  function escapeText(val) {
+    var d = document.createElement("div");
+    d.textContent = val == null ? "" : String(val);
+    return d.innerHTML;
+  }
+
+  function inferCropsFromText(text) {
+    var known = ["maize", "soybean", "sorghum", "cowpea", "groundnut", "millet", "sesame", "rice", "cassava", "tomato"];
+    var lower = String(text || "").toLowerCase();
+    var found = [];
+    known.forEach(function (c) {
+      if (lower.indexOf(c) !== -1) found.push(c);
+    });
+    return found.slice(0, 2);
+  }
+
+  function renderSeqIconsHtml(entry) {
+    var seasons = entry.chosenSeasons;
+    var crops = [];
+    if (Array.isArray(seasons) && seasons.length) {
+      seasons.forEach(function (s) {
+        if (Array.isArray(s) && s[0]) crops.push(String(s[0]).toLowerCase());
+      });
+    } else {
+      crops = inferCropsFromText(entry.chosenPlan);
+    }
+    if (!crops.length) return "";
+    var parts = crops.map(function (c) {
+      return iconMap[c] || iconMap.other || "";
+    });
+    return '<span class="fd-crop-seq" style="margin-right:8px;vertical-align:middle;">' +
+      parts.join('<span class="fd-crop-arrow" aria-hidden="true">→</span>') +
+      "</span>";
+  }
+
+  function buildRowQuery(entry) {
+    var q = new URLSearchParams();
+    q.set("lga", entry.lga || "Zaria");
+    if (entry.soil) q.set("soil", entry.soil);
+    if (entry.water) q.set("water", entry.water);
+    if (entry.equipment) q.set("equipment", entry.equipment);
+    if (Array.isArray(entry.s1) && entry.s1.length) q.set("s1", entry.s1.join(","));
+    if (Array.isArray(entry.s2) && entry.s2.length) q.set("s2", entry.s2.join(","));
+    if (Array.isArray(entry.priorities)) q.set("priorities", entry.priorities.join(","));
+    if (entry.sell) q.set("sell", entry.sell);
+    if (entry.seasonType) q.set("season_type", entry.seasonType);
+    q.set("pick", entry.pick || "a");
+    return q.toString();
+  }
+
+  function statusBadgeClass(status) {
+    var s = String(status || "").toLowerCase();
+    if (s.indexOf("whatsapp") !== -1) return "fd-badge-ok";
+    if (s.indexOf("print") !== -1 || s.indexOf("a5") !== -1) return "fd-badge-amber";
+    return "fd-badge-muted";
+  }
+
+  function confidenceBadgeClass(level) {
+    var l = String(level || "Medium").toLowerCase();
+    if (l === "high") return "fd-badge-high";
+    if (l === "low") return "fd-badge-low";
+    return "fd-badge-medium";
+  }
+
+  function formatDate(iso) {
+    if (!iso) return "Today";
+    var dt = new Date(iso);
+    if (isNaN(dt.getTime())) return String(iso).slice(0, 10);
+    return dt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function renderArchive() {
+    var items = window.FDStore ? window.FDStore.logs() : [];
+    var whatsappCount = 0;
+    var printCount = 0;
+    var pendingCount = 0;
+    var lgaCounts = {};
+
+    items.forEach(function (it) {
+      var st = String(it.status || "").toLowerCase();
+      if (st.indexOf("whatsapp") !== -1) whatsappCount += 1;
+      else if (st.indexOf("print") !== -1 || st.indexOf("a5") !== -1) printCount += 1;
+      else pendingCount += 1;
+      var lga = it.lga || "Zaria";
+      lgaCounts[lga] = (lgaCounts[lga] || 0) + 1;
+    });
+
+    document.getElementById("statTotal").textContent = String(items.length);
+    document.getElementById("statWhatsapp").textContent = String(whatsappCount);
+    document.getElementById("statPrint").textContent = String(printCount);
+    document.getElementById("statPending").textContent = String(pendingCount);
+
+    if (activeFilter !== "ALL" && !lgaCounts[activeFilter]) {
+      activeFilter = "ALL";
+    }
+
+    var filterRow = document.getElementById("historyFilterRow");
+    var filterHtml =
+      '<button type="button" class="fd-filter-pill ' + (activeFilter === "ALL" ? "is-active" : "") +
+      '" data-lga-filter="ALL">All Records (' + items.length + ")</button>";
+
+    Object.keys(lgaCounts).sort().forEach(function (lga) {
+      filterHtml +=
+        '<button type="button" class="fd-filter-pill ' + (activeFilter === lga ? "is-active" : "") +
+        '" data-lga-filter="' + escapeText(lga) + '">' + escapeText(lga) + " LGA (" + lgaCounts[lga] + ")</button>";
+    });
+    filterRow.innerHTML = filterHtml;
+
+    var filtered = activeFilter === "ALL"
+      ? items
+      : items.filter(function (it) { return (it.lga || "Zaria") === activeFilter; });
+
+    document.getElementById("historyCountSummary").textContent =
+      items.length === 0
+        ? "0 consultations stored locally"
+        : "Showing " + filtered.length + " of " + items.length + " local consultation" + (items.length === 1 ? "" : "s");
+
+    var tableWrap = document.getElementById("historyTableWrap");
+    var emptyState = document.getElementById("historyEmptyState");
+    var tbody = document.getElementById("historyTableBody");
+
+    if (items.length === 0) {
+      tableWrap.hidden = true;
+      emptyState.hidden = false;
+      tbody.innerHTML = "";
+      return;
+    }
+
+    emptyState.hidden = true;
+    tableWrap.hidden = false;
+    tbody.innerHTML = filtered
+      .map(function (it) {
+        var qs = buildRowQuery(it);
+        var soilLine = escapeText(it.soil || "Loamy") + (it.soilPh ? " (pH " + Number(it.soilPh).toFixed(1) + ")" : "");
+        return (
+          "<tr>" +
+          "<td><strong>" + escapeText(it.farmerLabel || "Walk-in Smallholder") + "</strong>" +
+          '<div style="font-size:12px;color:var(--muted);">' + escapeText(it.lga || "Zaria") + " LGA · " + escapeText(it.seasonType || "Typical") + " season</div></td>" +
+          "<td>" + escapeText(it.lga || "Zaria") + '<div style="font-size:12px;color:var(--muted);">' + soilLine + "</div></td>" +
+          "<td>" + escapeText(it.currentSeq || "Maize → Maize") + "</td>" +
+          "<td><div style='display:flex;align-items:center;gap:4px;flex-wrap:wrap;'>" +
+          renderSeqIconsHtml(it) +
+          "<strong>" + escapeText(it.chosenPlan || "Option A") + "</strong></div></td>" +
+          '<td><span class="fd-badge ' + confidenceBadgeClass(it.confidence) + '">' + escapeText(it.confidence || "Medium") + "</span></td>" +
+          '<td><span class="fd-badge ' + statusBadgeClass(it.status) + '">' + escapeText(it.status || "Saved Locally") + "</span></td>" +
+          '<td style="font-family:var(--font-mono);font-size:12px;color:var(--muted);">' + escapeText(formatDate(it.createdAt)) + "</td>" +
+          '<td><span class="fd-row-actions">' +
+          '<a href="/compare?' + qs + '">Reopen</a>' +
+          '<a class="is-terra" href="/share/print?' + qs + '">Print</a>' +
+          "</span></td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+  }
+
+  function recordCurrentSession() {
+    if (!window.FDStore) return;
+    var labelInput = document.getElementById("visitLabelInput");
+    var customLabel = labelInput && labelInput.value.trim() ? labelInput.value.trim() : "";
+    var storedSession = window.FDStore.load();
+    var farmerLabel = customLabel || storedSession.farmerName || (ACTIVE.lga + " Field Consultation");
+
+    window.FDStore.recordConsultation({
+      farmerLabel: farmerLabel,
+      lga: ACTIVE.lga,
+      soil: ACTIVE.soil,
+      soilPh: ACTIVE.soilPh,
+      water: ACTIVE.water,
+      equipment: ACTIVE.equipment,
+      seasonType: ACTIVE.seasonType,
+      priorities: ACTIVE.priorities,
+      sell: ACTIVE.sell,
+      s1: ACTIVE.s1,
+      s2: ACTIVE.s2,
+      currentSeq: ACTIVE.currentSeq,
+      chosenPlan: ACTIVE.chosenPlan,
+      chosenSeasons: ACTIVE.chosenSeasons,
+      confidence: ACTIVE.confidence,
+      pick: ACTIVE.pick || "a",
+      status: "Saved Locally"
+    });
+    if (labelInput) labelInput.value = "";
+    renderArchive();
+    showBanner("Saved " + ACTIVE.lga + " consultation (" + ACTIVE.chosenPlan + ") to local browser archive.");
+  }
+
+  function csvCell(val) {
+    var str = val == null ? "" : String(val);
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+
+  function exportCsv() {
+    var items = window.FDStore ? window.FDStore.logs() : [];
+    if (!items.length) {
+      showBanner("No local consultations to export yet — save the current session first.");
+      return;
+    }
+    var headers = [
+      "record_id",
+      "visit_label",
+      "lga",
+      "soil_texture",
+      "water_supply",
+      "season_scenario",
+      "current_sequence",
+      "chosen_rotation",
+      "confidence_level",
+      "handoff_status",
+      "recorded_at_iso"
+    ];
+    var lines = [headers.join(",")];
+    items.forEach(function (it) {
+      lines.push([
+        csvCell(it.id),
+        csvCell(it.farmerLabel),
+        csvCell(it.lga),
+        csvCell(it.soil),
+        csvCell(it.water),
+        csvCell(it.seasonType || "Typical"),
+        csvCell(it.currentSeq),
+        csvCell(it.chosenPlan),
+        csvCell(it.confidence),
+        csvCell(it.status),
+        csvCell(it.createdAt)
+      ].join(","));
+    });
+
+    var blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = "kada-field-records-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById("saveCurrentVisitBtn").addEventListener("click", recordCurrentSession);
+  document.getElementById("emptyRecordBtn").addEventListener("click", recordCurrentSession);
+  document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
+
+  document.getElementById("historyFilterRow").addEventListener("click", function (ev) {
+    var btn = ev.target.closest("[data-lga-filter]");
+    if (!btn) return;
+    activeFilter = btn.getAttribute("data-lga-filter") || "ALL";
+    renderArchive();
+  });
+
+  document.getElementById("clearArchiveBtn").addEventListener("click", function () {
+    var count = window.FDStore ? window.FDStore.logs().length : 0;
+    if (!count) {
+      showBanner("Local archive is already empty.");
+      return;
+    }
+    if (window.confirm("Clear all " + count + " locally saved consultation record(s) from this browser?")) {
+      window.FDStore.clearLogs();
+      activeFilter = "ALL";
+      renderArchive();
+      showBanner("Cleared local browser consultation cache.");
+    }
+  });
+
+  renderArchive();
+})();
+</script>
 {% endblock %}

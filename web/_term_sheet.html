@@ -1,36 +1,90 @@
-{# Tap-for-meaning scientific term bottom sheet fragment (F3f, R23) #}
-<div class="fd-term-sheet" id="termSheet">
-  <div class="fd-sheet-header">
-    <div class="fd-sheet-badge">NASA DATA & SCIENTIFIC MEANING</div>
-    <button type="button" class="fd-modal-close" onclick="document.getElementById('fdTermModal').setAttribute('hidden','')" aria-label="Close explainer">&times;</button>
-  </div>
-
-  <h2 class="fd-sheet-title">{{ term.title if term else 'Scientific Term Explainer' }}</h2>
-  <div class="fd-sheet-sub">{{ term.subtitle if term else '' }}</div>
-
-  <div class="fd-reading-card">
-    <div class="fd-reading-label">CURRENT READING FOR THIS LGA</div>
-    <div class="fd-reading-val">{{ term.reading if term else '' }}</div>
-    <p class="fd-reading-note">{{ term.reading_note if term else '' }}</p>
-  </div>
-
-  <div class="fd-sheet-section">
-    <h3>What does this mean in plain language?</h3>
-    <p>{{ term.what if term else '' }}</p>
-  </div>
-
-  <div class="fd-sheet-section">
-    <h3>Why this matters for your rotation plan</h3>
-    <p>{{ term.why if term else '' }}</p>
-  </div>
-
-  <div class="fd-sheet-footer">
-    <div class="fd-source-badge">
-      <span class="fd-source-icon" aria-hidden="true">🛰️</span>
-      <span><strong>Satellite Source:</strong> {{ term.source if term else 'NASA Earth Observations' }}</span>
+{# F3f. Tap-for-Meaning Plain-Language Scientific Term Sheet (R23) #}
+<div class="fd-term-sheet-content">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+    <div>
+      <h2 style="margin:0;font-size:clamp(20px,2.6vw,24px);font-weight:800;line-height:1.18;letter-spacing:-0.02em;color:var(--ink);">
+        {{ term.title }}
+      </h2>
+      <p style="margin:4px 0 0;font-size:13px;font-weight:500;color:var(--muted);">
+        {{ term.subtitle }}
+      </p>
     </div>
-    <p class="fd-judgment-notice">
-      Satellite measurements smooth out local variations across village farms. Always cross-check with your local KADA extension agent.
-    </p>
+    <button
+      type="button"
+      class="fd-btn fd-btn-outline"
+      data-close-term
+      aria-label="Close"
+      style="min-width:44px;padding:0 12px;flex-shrink:0;"
+    >✕</button>
+  </div>
+
+  <hr style="border:0;border-top:1px solid var(--line);margin:16px 0 18px;">
+
+  <div class="fd-grid-2" style="gap:18px;">
+    <div>
+      <p class="fd-section-label" data-lang-ha="ABIN DA YAKE NUFI">WHAT IT MEANS</p>
+      <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:var(--ink-soft);">
+        {{ term.what }}
+      </p>
+
+      <div class="fd-alert fd-alert-blue" style="display:flex;align-items:flex-start;gap:10px;">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          style="flex-shrink:0;margin-top:2px;"
+        >
+          <path d="M13 7 9 3 5 7l4 4"/>
+          <path d="m17 11 4 4-4 4-4-4"/>
+          <path d="m8 12 4 4 6-6-4-4Z"/>
+          <path d="m16 8 3-3"/>
+          <path d="M9 21a6 6 0 0 0-6-6"/>
+        </svg>
+        <div style="line-height:1.45;">
+          <strong>Source:</strong> {{ term.source }}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fd-card-soft" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:16px;">
+        <div style="font-family:var(--font-serif);font-size:24px;font-weight:800;line-height:1.12;color:var(--terra);min-width:110px;">
+          {{ term.reading }}
+        </div>
+        <div style="flex:1;min-width:170px;font-size:13px;line-height:1.5;color:var(--ink-soft);">
+          {{ term.reading_note }}
+        </div>
+      </div>
+
+      <p class="fd-section-label" style="color:var(--green);" data-lang-ha="ME YA SA YAKE DA MUHIMMANCI GA GONARKU">
+        WHY IT MATTERS FOR YOUR FARM
+      </p>
+      <p style="margin:0;font-size:14px;line-height:1.6;color:var(--ink-soft);">
+        {{ term.why }}
+      </p>
+    </div>
+  </div>
+
+  <hr style="border:0;border-top:1px solid var(--line);margin:18px 0 14px;">
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <a
+      href="/learn?{{ query_string }}#glossary"
+      style="font-size:13.5px;font-weight:700;color:var(--green);"
+      data-lang-ha="Kara karatu a Sashen Kimiyya →"
+    >Read more in Learn Science →</a>
+
+    <button
+      type="button"
+      class="fd-btn fd-btn-dark"
+      data-close-term
+      data-lang-ha="← Koma Shafin Damina"
+    >← Return to Season</button>
   </div>
 </div>

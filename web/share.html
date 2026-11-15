@@ -1,58 +1,813 @@
 {% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_sequence_icons %}
+{% set primary_check = picked_card.risks[0].text if picked_card.risks else 'Check seed variety with officer' %}
+{% set primary_who = picked_card.risks[0].check_with if picked_card.risks else 'local KADA extension officer' %}
 
-{% block title %}Share & Smallholder Handoff · FieldDynamics{% endblock %}
+{% block title %}Step 5 · Share Summary · {{ scored.lga }} · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-share-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .fd-input-clear-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .fd-input-clear-wrap .fd-input {
+    padding-right: 78px;
+  }
+  .fd-clear-inline-btn {
+    position: absolute;
+    right: 8px;
+    min-height: 32px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .fd-clear-inline-btn:hover {
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+  .fd-privacy-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 6px 0 4px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .fd-channel-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px 16px;
+  }
+  .fd-channel-card.is-whatsapp {
+    border: 1.5px solid #22c55e;
+    background: #fcfffd;
+  }
+  .fd-channel-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .fd-channel-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+  }
+  .fd-channel-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .fd-channel-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .fd-channel-sub {
+    margin: 2px 0 0;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .fd-channel-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .fd-fallback-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    border-top: 1px dashed var(--green-border);
+  }
+  .fd-preview-shell {
+    background: #eefaf2;
+    border: 1px solid var(--green-border);
+    padding: 0;
+    overflow: hidden;
+  }
+  .fd-preview-head {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--green-border);
+    background: #e3f6ea;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  .fd-preview-body {
+    padding: 18px;
+  }
+  .fd-wa-bubble {
+    background: var(--bg-card);
+    border: 1px solid var(--green-border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    box-shadow: var(--shadow-xs);
+  }
+  .fd-wa-kicker {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--green);
+  }
+  .fd-wa-line {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.52;
+    color: var(--ink);
+  }
+  .fd-wa-disclaimer {
+    margin: 12px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .fd-audio-drawer {
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fd-toast-banner {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-screen fd-share-screen">
-  <div class="fd-step-intro">
-    <div class="fd-step-kicker">OMNICHANNEL HANDOFF (F7)</div>
-    <h1 class="fd-title">Deliver Strategy Card to Farmer</h1>
-    <p class="fd-sub">Deliver {{ picked_card.title }} to the farmer via low-bandwidth channels adapted to Kaduna smallholder conditions.</p>
+<div class="fd-page-head">
+  <div>
+    <h1 class="fd-h1" data-lang-ha="Mataki na 5 · Raba Takaitaccen Shawara da Manomi">Step 5 · Share Summary with Smallholder Farmer</h1>
+    <p class="fd-sub" data-lang-ha="A bar shawara ta hanyoyin da manomi ke amfani da su. (An cire SMS daga wannan tsari.)">Leave advice on channels the farmer already uses. (SMS removed from scope.)</p>
   </div>
+  <div>
+    <button type="button" id="finishVisitBtn" class="fd-btn fd-btn-dark" data-lang-ha="Kammala &amp; Fara Sabuwar Ziyara →">Finish &amp; Start Next Visit →</button>
+  </div>
+</div>
 
-  <div class="fd-channels-grid">
-    <!-- WhatsApp Channel -->
-    <div class="fd-channel-card">
-      <div class="fd-channel-icon">💬</div>
-      <h2>WhatsApp Advisory Summary</h2>
-      <p>Send formatted plain-text advice directly to the farmer or cooperative group without data-heavy attachments.</p>
-      <div class="fd-share-snippet">
-        <code>*FieldDynamics Advisory ({{ sv.lga }})*
-Plan: {{ picked_card.title }}
-Suitability: {{ picked_card.score }}/100
-Rains: Onset ~{{ sv.onset_label }}, ends ~{{ sv.cessation_label }}
-Advice: {{ picked_card.why }}
-_Supports farmer judgment. Consult KADA extension._</code>
+<div class="fd-grid-2">
+  <div class="fd-share-stack">
+    <p class="fd-section-label" style="margin-bottom:0;" data-lang-ha="HANYOYIN MIKA SHAWARA GA MANOMI">ACTIVE FARMER HANDOFF CHANNELS</p>
+
+    <section class="fd-card" aria-labelledby="chosenPlanHeading">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+        <span class="fd-section-label" id="chosenPlanHeading" style="margin:0;" data-lang-ha="TSARIN DA KUKA ZABA">YOUR CHOSEN PLAN</span>
+        <span class="fd-badge {% if picked_card.confidence.level == 'High' %}fd-badge-high{% elif picked_card.confidence.level == 'Medium' %}fd-badge-medium{% else %}fd-badge-low{% endif %}">
+          {{ picked_card.badge }} · {{ picked_card.confidence.level }} Confidence
+        </span>
       </div>
-      <a href="https://api.whatsapp.com/send?text=FieldDynamics%20Rotation%20Plan%20for%20{{ sv.lga }}%3A%20{{ picked_card.title }}" target="_blank" class="fd-btn-primary">
-        Share to WhatsApp →
-      </a>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <h2 style="margin:0;font-size:19px;font-weight:800;letter-spacing:-0.02em;">{{ scored.lga }} · {{ picked_card.title }}</h2>
+          <p style="margin:6px 0 0;font-size:13.5px;color:var(--ink-soft);">
+            <strong>Planting window:</strong> {{ sv.onset_label }} ({{ sv.onset_range }}) ·
+            <strong>Key check:</strong> {{ primary_check }}
+          </p>
+        </div>
+        {{ crop_sequence_icons(picked_card.seasons) }}
+      </div>
+    </section>
+
+    <div class="fd-field" style="margin-bottom:4px;">
+      <label for="farmerNameInput" style="font-size:13.5px;font-weight:700;color:var(--ink);">
+        <span data-lang-ha="Sunan manomi">Farmer's name</span>
+        <span style="font-weight:500;color:var(--muted);" data-lang-ha="(na zabi — yana sanya suna a sakon WhatsApp da katin takarda)">(optional — personalises the WhatsApp message and printed card)</span>
+      </label>
+      <div class="fd-input-clear-wrap">
+        <input
+          type="text"
+          id="farmerNameInput"
+          class="fd-input"
+          maxlength="60"
+          autocomplete="off"
+          placeholder="e.g. Baba Garba"
+        >
+        <button type="button" id="clearFarmerNameBtn" class="fd-clear-inline-btn" aria-label="Clear farmer name">✕ Clear</button>
+      </div>
+      <p class="fd-privacy-note" data-lang-ha="🔒 Sirri A Tabbace: Ba a taba ajiye suna a uwar garke ba. Ana amfani da shi a wannan na'urar kadai.">🔒 Privacy Guaranteed: Never stored on the server. Used only on this device to address the card.</p>
     </div>
 
-    <!-- Print Studio Channel -->
-    <div class="fd-channel-card">
-      <div class="fd-channel-icon">📄</div>
-      <h2>Physical A5 Extension Card (Print Studio)</h2>
-      <p>Generate a high-contrast physical card formatted for black-and-white local printing and field folder storage.</p>
-      <a href="/share/print?{{ query_string }}&pick={{ picked_slot }}" class="fd-btn-outline">
-        Open Physical A5 Print Studio →
-      </a>
-    </div>
+    <section class="fd-card fd-channel-card is-whatsapp" aria-label="WhatsApp share channel">
+      <div class="fd-channel-main">
+        <div class="fd-channel-left">
+          <span class="fd-channel-icon" style="background:#22c55e;color:#ffffff;" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="fd-channel-title" data-lang-ha="Aika ta WhatsApp">Send via WhatsApp</h3>
+            <p class="fd-channel-sub" data-lang-ha="Cikakken bayanin Hausa/Turanci + hoton katin shawara">High-res summary card + formatted Hausa/English advice</p>
+          </div>
+        </div>
+        <div class="fd-channel-actions">
+          <button type="button" id="whatsappSendBtn" class="fd-btn fd-btn-whatsapp" data-lang-ha="Aika Yanzu">Send Now</button>
+        </div>
+      </div>
 
-    <!-- Radio Studio Channel -->
-    <div class="fd-channel-card">
-      <div class="fd-channel-icon">📻</div>
-      <h2>Alheri FM 98.7 Radio Script Studio</h2>
-      <p>Read or record 60-second public extension radio scripts for {{ sv.lga }} in both Hausa and English.</p>
-      <a href="/share/radio?{{ query_string }}" class="fd-btn-outline">
-        Open Radio Broadcast Studio →
-      </a>
-    </div>
+      <div class="fd-fallback-strip">
+        <span style="font-size:12.5px;color:var(--muted);" data-lang-ha="Idan babu WhatsApp: kwafi rubutu ko ajiye hoton PNG don turawa.">If WhatsApp is not installed: copy text or save the card PNG.</span>
+        <div class="fd-channel-actions">
+          <button type="button" id="copyWhatsappTextBtn" class="fd-btn fd-btn-outline" style="min-height:38px;padding:0 12px;font-size:13px;" data-lang-ha="Kwafi Rubutu">Copy Text</button>
+          <button type="button" id="saveSummaryPngBtn" class="fd-btn fd-btn-outline" style="min-height:38px;padding:0 12px;font-size:13px;" data-lang-ha="Ajiye Hoton PNG">Save Summary PNG</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="fd-card fd-channel-card" aria-label="Print physical extension card">
+      <div class="fd-channel-main">
+        <div class="fd-channel-left">
+          <span class="fd-channel-icon" style="background:var(--bg-warm);color:var(--ink);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M7 8V4h10v4M6 17H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+              <rect x="7" y="14" width="10" height="6" rx="1" stroke="currentColor" stroke-width="1.9"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="fd-channel-title" data-lang-ha="Buga Katin Shawara na Takarda (A5)">Print Physical Extension Card (A5)</h3>
+            <p class="fd-channel-sub" data-lang-ha="Tsarin baki-da-fari mai fita sosai ga manoman da ba su da waya">Clean monochrome layout for farmers without a phone</p>
+          </div>
+        </div>
+        <div class="fd-channel-actions">
+          <a class="fd-btn fd-btn-outline" href="/share/print?{{ query_string }}&amp;pick={{ picked_slot }}" data-lang-ha="Buga Kati">Print Card</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="fd-card fd-channel-card" aria-label="Play Hausa audio briefing">
+      <div class="fd-channel-main">
+        <div class="fd-channel-left">
+          <span class="fd-channel-icon" style="background:var(--blue-soft);color:var(--blue);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+              <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="fd-channel-title" data-lang-ha="Kunna Bayanin Murya na Hausa">Play Hausa Audio Briefing</h3>
+            <p class="fd-channel-sub" data-lang-ha="Saurari takaitaccen bayanin Hausa kai tsaye ba tare da intanet ba">Offline voice briefing so non-reading farmers can hear the summary</p>
+          </div>
+        </div>
+        <div class="fd-channel-actions">
+          <button type="button" id="playAudioBtn" class="fd-btn fd-btn-outline" style="background:var(--blue-soft);border-color:var(--blue-border);color:var(--blue);" data-lang-ha="▶ Kunna Murya">▶ Play Audio</button>
+        </div>
+      </div>
+
+      <div class="fd-audio-drawer" id="audioDrawer">
+        <div class="fd-bar-track" aria-hidden="true">
+          <div class="fd-bar-fill" id="audioProgressFill" style="width:0%;transition:width 0.25s linear;"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <span id="audioStatusLabel" style="font-size:12px;color:var(--muted);" data-lang-ha="A shirye don karanta bayanin Hausa a fili">Ready to play concise Hausa &amp; English briefing</span>
+          <button type="button" id="toggleTranscriptBtn" class="fd-term-btn" aria-expanded="false" data-lang-ha="Nuna Rubutun Murya">Show Transcript</button>
+        </div>
+        <div id="audioTranscriptBox" class="fd-card-soft" hidden style="font-size:13px;line-height:1.55;">
+          <p style="margin:0 0 6px;font-weight:700;color:var(--green);">Hausa Spoken Briefing:</p>
+          <p id="audioTranscriptText" style="margin:0;color:var(--ink-soft);"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="fd-card fd-channel-card" aria-label="Export LGA radio script">
+      <div class="fd-channel-main">
+        <div class="fd-channel-left">
+          <span class="fd-channel-icon" style="background:var(--amber-soft);color:var(--amber);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="8" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.9"/>
+              <path d="M6 8 16 4M7 14h4M7 17h2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+              <circle cx="16" cy="14" r="2.2" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="fd-channel-title" data-lang-ha="Fitar da Rubutun Rediyo na LGA">Export LGA Radio Script</h3>
+            <p class="fd-channel-sub" data-lang-ha="Rubutun dakika 60 na Alheri FM 98.7 (babu sunan manomi a ciki)">60-second broadcast text for Alheri FM (contains no farmer data)</p>
+          </div>
+        </div>
+        <div class="fd-channel-actions">
+          <a class="fd-btn fd-btn-outline" href="/share/radio?{{ query_string }}" data-lang-ha="Bude Dakin Rediyo">Open Broadcast Studio</a>
+          <button type="button" id="quickCopyRadioBtn" class="fd-btn fd-btn-outline" style="background:var(--amber-soft);border-color:var(--amber-border);color:var(--amber);" data-lang-ha="Kwafi Rubutu">Copy Script</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="shareFeedbackToast" class="fd-alert fd-alert-green fd-toast-banner" hidden role="status"></div>
   </div>
 
-  <div class="fd-form-actions">
-    <a href="/decide?{{ query_string }}&pick={{ picked_slot }}" class="fd-btn-outline">← Back to Decision</a>
-    <a href="/start" class="fd-btn-primary">Start New Farmer Consultation</a>
+  <div>
+    <section class="fd-card fd-preview-shell" aria-labelledby="whatsappPreviewHeading">
+      <div class="fd-preview-head" id="whatsappPreviewHeading">
+        WHATSAPP MESSAGE PREVIEW · <span id="previewRecipientLabel">WHAT SMALLHOLDER FARMER WILL RECEIVE</span>
+      </div>
+      <div class="fd-preview-body">
+        <div class="fd-wa-bubble" id="whatsappPreviewBox">
+          <p class="fd-wa-kicker">FieldDynamics · {{ scored.lga }} Rotation Advice</p>
+          <p class="fd-wa-line" id="wpGreeting">Sannu! Based on your field visit in {{ scored.lga }}:</p>
+          <p class="fd-wa-line"><strong id="wpPlanLabel">Your chosen plan:</strong> <span id="wpPlanVal">{{ picked_card.title }} ({{ picked_card.badge }})</span></p>
+          <p class="fd-wa-line"><strong id="wpOnsetLabel">Expected onset:</strong> <span id="wpOnsetVal">{{ sv.onset_label }} ({{ sv.onset_range }})</span></p>
+          <p class="fd-wa-line"><strong id="wpWhyLabel">Why:</strong> <span id="wpWhyVal">{{ picked_card.why }}</span></p>
+          <p class="fd-wa-line"><strong id="wpCheckLabel">Check with officer:</strong> <span id="wpCheckVal">{{ primary_check }} ({{ primary_who }})</span></p>
+          <p class="fd-wa-disclaimer" id="wpDisclaimer">"This tool supports farmer judgment and local expertise. Check with your extension officer."</p>
+        </div>
+
+        <p style="margin:14px 2px 0;font-size:12.5px;line-height:1.5;color:var(--ink-soft);" data-lang-ha="Idan babu WhatsApp a waya: yi amfani da maballin 'Kwafi Rubutu' da 'Ajiye Hoton PNG' don tura katin shawara ta duk wata manhaja da manomi ke amfani da ita.">
+          <strong>If WhatsApp is not installed:</strong> use <strong>Copy Text</strong> and <strong>Save Summary PNG</strong> so the formatted advice text and summary image can be shared through any app or offline transfer the farmer uses.
+        </p>
+      </div>
+    </section>
+
+    <p style="margin:12px 4px 0;font-size:12px;color:var(--muted);" data-lang-ha="* Rubutun rediyo yana dauke da bayanan karamar hukuma (LGA) kadai don kare sirrin manomi.">
+      * Radio script export contains LGA-level climate benchmarks only to safeguard farmer anonymity.
+    </p>
   </div>
-</section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var SHARE_DATA = {
+    lga: {{ scored.lga | tojson }},
+    zone: {{ scored.zone | tojson }},
+    slot: {{ picked_slot | tojson }},
+    badge: {{ picked_card.badge | tojson }},
+    title: {{ picked_card.title | tojson }},
+    confidence: {{ picked_card.confidence.level | tojson }},
+    onsetLabel: {{ sv.onset_label | tojson }},
+    onsetRange: {{ sv.onset_range | tojson }},
+    cessationLabel: {{ sv.cessation_label | tojson }},
+    waterLine: {{ picked_card.water_line | tojson }},
+    why: {{ picked_card.why | tojson }},
+    checkText: {{ (primary_check or 'Check seed variety with officer') | tojson }},
+    checkWho: {{ (primary_who or 'local KADA extension officer') | tojson }},
+    soil: {{ (advisor_req.soil or sv.soil_default) | tojson }},
+    nextHistoryUrl: {{ ("/history?" ~ query_string) | tojson }}
+  };
+
+  var nameInput = document.getElementById("farmerNameInput");
+  var clearBtn = document.getElementById("clearFarmerNameBtn");
+  var recipientHeader = document.getElementById("previewRecipientLabel");
+  var wpGreeting = document.getElementById("wpGreeting");
+  var wpPlanLabel = document.getElementById("wpPlanLabel");
+  var wpOnsetLabel = document.getElementById("wpOnsetLabel");
+  var wpWhyLabel = document.getElementById("wpWhyLabel");
+  var wpCheckLabel = document.getElementById("wpCheckLabel");
+  var wpDisclaimer = document.getElementById("wpDisclaimer");
+  var toastEl = document.getElementById("shareFeedbackToast");
+  var audioTranscriptText = document.getElementById("audioTranscriptText");
+
+  var lastChannelStatus = "Shared / Saved Locally";
+  var consultationLogged = false;
+
+  function showToast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    window.clearTimeout(showToast._timer);
+    showToast._timer = window.setTimeout(function () {
+      toastEl.hidden = true;
+    }, 3800);
+  }
+
+  function currentLang() {
+    return (window.FDStore && window.FDStore.load().lang === "ha") ? "ha" : "en";
+  }
+
+  function currentFarmerName() {
+    return (nameInput && nameInput.value ? nameInput.value.trim() : "");
+  }
+
+  function buildWhatsappText() {
+    var farmer = currentFarmerName();
+    var isHa = currentLang() === "ha";
+    if (isHa) {
+      var greetHa = farmer
+        ? "Sannu " + farmer + "! Ga takaitaccen shawarar ziyarar gonarka a " + SHARE_DATA.lga + ":"
+        : "Sannu! Ga takaitaccen shawarar ziyarar gona a " + SHARE_DATA.lga + ":";
+      return [
+        "*FieldDynamics · Shawarar Musayar Shuka (" + SHARE_DATA.lga + ")*",
+        greetHa,
+        "• *Tsarin da aka zaba:* " + SHARE_DATA.title + " (" + SHARE_DATA.badge + ")",
+        "• *Lokacin shuka:* " + SHARE_DATA.onsetLabel + " (" + SHARE_DATA.onsetRange + ")",
+        "• *Dalili:* " + SHARE_DATA.why,
+        "• *Tuntubi malamin gona:* " + SHARE_DATA.checkText + " (" + SHARE_DATA.checkWho + ")",
+        "",
+        "_Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonarku._"
+      ].join("\n");
+    }
+    var greetEn = farmer
+      ? "Sannu " + farmer + "! Based on your field visit in " + SHARE_DATA.lga + ":"
+      : "Sannu! Based on your field visit in " + SHARE_DATA.lga + ":";
+    return [
+      "*FieldDynamics · " + SHARE_DATA.lga + " Rotation Advice*",
+      greetEn,
+      "• *Your chosen plan:* " + SHARE_DATA.title + " (" + SHARE_DATA.badge + ")",
+      "• *Expected onset:* " + SHARE_DATA.onsetLabel + " (" + SHARE_DATA.onsetRange + ")",
+      "• *Why:* " + SHARE_DATA.why,
+      "• *Check with officer:* " + SHARE_DATA.checkText + " (" + SHARE_DATA.checkWho + ")",
+      "",
+      "_This tool supports farmer judgment and local expertise. Check with your extension officer._"
+    ].join("\n");
+  }
+
+  function buildSpokenBriefing() {
+    var farmer = currentFarmerName();
+    var salutation = farmer ? ("Sannu " + farmer + ". ") : "Sannu manomi. ";
+    return (
+      salutation +
+      "A karamar hukumar " + SHARE_DATA.lga +
+      ", tsarin musayar shuka da aka zaba shi ne " + SHARE_DATA.title + ". " +
+      "Ruwan shuka yakan fara kusa da " + SHARE_DATA.onsetLabel + ", tsakanin " + SHARE_DATA.onsetRange + ". " +
+      "Dalilin wannan tsari: " + SHARE_DATA.why + " " +
+      "Kafin shuka, ku duba: " + SHARE_DATA.checkText + " tare da malamin gonar KADA. " +
+      "Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonarku."
+    );
+  }
+
+  function buildQuickRadioText() {
+    return [
+      "ALHERI FM 98.7 KADUNA · 60-SECOND LGA ADVISORY (" + SHARE_DATA.lga.toUpperCase() + " LGA)",
+      "[00:00-00:15] Barka da safiya manoma a karamar hukumar " + SHARE_DATA.lga + ". Ruwan shuka yakan fara kusa da " + SHARE_DATA.onsetLabel + " zuwa " + SHARE_DATA.cessationLabel + ".",
+      "[00:15-00:35] Maimaita shukar hatsi iri daya a kowace shekara yana rage sinadarin nitrogen kuma yana kara matsalar wuta-wuta (Striga).",
+      "[00:35-00:50] Ku duba tsarin " + SHARE_DATA.title + " (" + SHARE_DATA.waterLine + "). " + SHARE_DATA.why,
+      "[00:50-01:00] Wannan bayani yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonar KADA kafin sayen iri."
+    ].join("\n");
+  }
+
+  function refreshPreview() {
+    var farmer = currentFarmerName();
+    var isHa = currentLang() === "ha";
+    if (recipientHeader) {
+      recipientHeader.textContent = farmer
+        ? (isHa ? "ABIN DA " + farmer.toUpperCase() + " ZAI KARBA" : "WHAT " + farmer.toUpperCase() + " WILL RECEIVE")
+        : (isHa ? "ABIN DA MANOMI ZAI KARBA" : "WHAT SMALLHOLDER FARMER WILL RECEIVE");
+    }
+    if (wpGreeting) {
+      wpGreeting.textContent = isHa
+        ? (farmer ? "Sannu " + farmer + "! Ga sakamakon ziyarar gonarka a " + SHARE_DATA.lga + ":" : "Sannu! Ga sakamakon ziyarar gona a " + SHARE_DATA.lga + ":")
+        : (farmer ? "Sannu " + farmer + "! Based on your field visit in " + SHARE_DATA.lga + ":" : "Sannu! Based on your field visit in " + SHARE_DATA.lga + ":");
+    }
+    if (wpPlanLabel) wpPlanLabel.textContent = isHa ? "Tsarin da aka zaba:" : "Your chosen plan:";
+    if (wpOnsetLabel) wpOnsetLabel.textContent = isHa ? "Lokacin shuka:" : "Expected onset:";
+    if (wpWhyLabel) wpWhyLabel.textContent = isHa ? "Dalili:" : "Why:";
+    if (wpCheckLabel) wpCheckLabel.textContent = isHa ? "Tuntubi malamin gona:" : "Check with officer:";
+    if (wpDisclaimer) {
+      wpDisclaimer.textContent = isHa
+        ? "\"Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonarku.\""
+        : "\"This tool supports farmer judgment and local expertise. Check with your extension officer.\"";
+    }
+    if (audioTranscriptText) {
+      audioTranscriptText.textContent = buildSpokenBriefing();
+    }
+  }
+
+  function copyToClipboard(text, okMessage) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast(okMessage);
+      }).catch(function () {
+        fallbackCopy(text, okMessage);
+      });
+      return;
+    }
+    fallbackCopy(text, okMessage);
+  }
+
+  function fallbackCopy(text, okMessage) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "readonly");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showToast(okMessage);
+    } catch (_err) {
+      showToast("Select and copy text from the preview card.");
+    }
+    document.body.removeChild(ta);
+  }
+
+  function logChannelAction(statusText) {
+    lastChannelStatus = statusText;
+    if (window.FDStore) {
+      window.FDStore.save({ farmerName: currentFarmerName(), pick: SHARE_DATA.slot });
+      window.FDStore.recordConsultation({
+        farmerLabel: currentFarmerName() || "Walk-in Smallholder",
+        lga: SHARE_DATA.lga,
+        soil: SHARE_DATA.soil,
+        chosenPlan: SHARE_DATA.badge + " · " + SHARE_DATA.title,
+        confidence: SHARE_DATA.confidence,
+        status: statusText
+      });
+      consultationLogged = true;
+    }
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = String(text || "").split(/\s+/);
+    var line = "";
+    var count = 0;
+    for (var i = 0; i < words.length; i++) {
+      var candidate = line ? line + " " + words[i] : words[i];
+      if (ctx.measureText(candidate).width > maxWidth && line) {
+        ctx.fillText(line, x, y);
+        y += lineHeight;
+        count += 1;
+        line = words[i];
+        if (maxLines && count >= maxLines - 1) break;
+      } else {
+        line = candidate;
+      }
+    }
+    if (line) {
+      ctx.fillText(line, x, y);
+      y += lineHeight;
+    }
+    return y;
+  }
+
+  function downloadSummaryPng() {
+    var canvas = document.createElement("canvas");
+    canvas.width = 960;
+    canvas.height = 560;
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.fillStyle = "#faf8f5";
+    ctx.fillRect(0, 0, 960, 560);
+
+    ctx.strokeStyle = "#1e4d28";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(20, 20, 920, 520);
+
+    ctx.fillStyle = "#1e4d28";
+    ctx.fillRect(20, 20, 920, 74);
+
+    ctx.fillStyle = "#faf8f5";
+    ctx.font = "bold 24px sans-serif";
+    ctx.fillText("FieldDynamics · " + SHARE_DATA.lga + " LGA Rotation Advice", 46, 66);
+
+    var farmer = currentFarmerName();
+    ctx.fillStyle = "#18201b";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText(
+      farmer ? ("Prepared for: " + farmer + " (" + SHARE_DATA.lga + ", " + SHARE_DATA.zone + " Zone)") : ("Prepared for: Smallholder Farm Visit (" + SHARE_DATA.lga + " LGA)"),
+      46,
+      134
+    );
+
+    ctx.fillStyle = "#e8f3ea";
+    ctx.fillRect(46, 154, 868, 82);
+    ctx.fillStyle = "#1e4d28";
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("RECOMMENDED 2-SEASON ROTATION (" + SHARE_DATA.badge.toUpperCase() + " · " + SHARE_DATA.confidence.toUpperCase() + " CONFIDENCE)", 64, 182);
+    ctx.fillStyle = "#18201b";
+    ctx.font = "bold 26px sans-serif";
+    ctx.fillText(SHARE_DATA.title, 64, 218);
+
+    var y = 274;
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillStyle = "#18201b";
+    ctx.fillText("Expected Rain Onset: " + SHARE_DATA.onsetLabel + " (80% range: " + SHARE_DATA.onsetRange + ")", 46, y);
+    y += 34;
+    ctx.font = "17px sans-serif";
+    ctx.fillStyle = "#2e3831";
+    y = wrapCanvasText(ctx, "Water Balance: " + SHARE_DATA.waterLine, 46, y, 868, 25, 2);
+    y += 8;
+    y = wrapCanvasText(ctx, "Why It Works: " + SHARE_DATA.why, 46, y, 868, 25, 3);
+    y += 8;
+    ctx.fillStyle = "#9a4a06";
+    ctx.font = "bold 17px sans-serif";
+    wrapCanvasText(ctx, "Check with Extension Officer: " + SHARE_DATA.checkText + " (" + SHARE_DATA.checkWho + ")", 46, y, 868, 25, 2);
+
+    ctx.fillStyle = "#5a665d";
+    ctx.font = "italic 16px sans-serif";
+    ctx.fillText("This tool supports farmer judgment and local expertise. Check with your extension officer.", 46, 512);
+
+    var filename = "FieldDynamics-" + SHARE_DATA.lga.replace(/\s+/g, "-") + "-Advice.png";
+    if (canvas.toBlob) {
+      canvas.toBlob(function (blob) {
+        if (!blob) return;
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        logChannelAction("PNG Card Saved");
+        showToast("Saved summary card PNG to this device.");
+      }, "image/png");
+    }
+  }
+
+  var playBtn = document.getElementById("playAudioBtn");
+  var progressFill = document.getElementById("audioProgressFill");
+  var audioStatus = document.getElementById("audioStatusLabel");
+  var transcriptBtn = document.getElementById("toggleTranscriptBtn");
+  var transcriptBox = document.getElementById("audioTranscriptBox");
+  var isPlayingAudio = false;
+  var audioTimer = null;
+
+  function stopBriefingAudio() {
+    isPlayingAudio = false;
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    if (audioTimer) {
+      window.clearInterval(audioTimer);
+      audioTimer = null;
+    }
+    if (playBtn) {
+      playBtn.textContent = currentLang() === "ha" ? "▶ Kunna Murya" : "▶ Play Audio";
+    }
+    if (progressFill) progressFill.style.width = "0%";
+    if (audioStatus) {
+      audioStatus.textContent = currentLang() === "ha"
+        ? "An tsayar da murya"
+        : "Ready to play concise Hausa & English briefing";
+    }
+  }
+
+  function startBriefingAudio() {
+    var scriptText = buildSpokenBriefing();
+    isPlayingAudio = true;
+    if (playBtn) {
+      playBtn.textContent = currentLang() === "ha" ? "■ Tsayar" : "■ Stop";
+    }
+    if (audioStatus) {
+      audioStatus.textContent = "Playing Hausa smallholder voice briefing...";
+    }
+    logChannelAction("Hausa Audio Played");
+
+    var pct = 4;
+    if (progressFill) progressFill.style.width = pct + "%";
+    audioTimer = window.setInterval(function () {
+      pct = Math.min(96, pct + 4);
+      if (progressFill) progressFill.style.width = pct + "%";
+    }, 650);
+
+    if ("speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined") {
+      window.speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance(scriptText);
+      var voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      for (var i = 0; i < voices.length; i++) {
+        var vLang = (voices[i].lang || "").toLowerCase();
+        if (vLang.indexOf("ha") === 0 || vLang.indexOf("en-ng") === 0) {
+          utter.voice = voices[i];
+          break;
+        }
+      }
+      utter.rate = 0.94;
+      utter.onend = function () {
+        if (progressFill) progressFill.style.width = "100%";
+        window.setTimeout(stopBriefingAudio, 350);
+      };
+      utter.onerror = function () {
+        if (transcriptBox) transcriptBox.hidden = false;
+        stopBriefingAudio();
+      };
+      window.speechSynthesis.speak(utter);
+    } else {
+      if (transcriptBox) transcriptBox.hidden = false;
+      window.setTimeout(function () {
+        if (progressFill) progressFill.style.width = "100%";
+        stopBriefingAudio();
+      }, 6000);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.FDStore) {
+      var st = window.FDStore.load();
+      if (nameInput && st.farmerName) {
+        nameInput.value = st.farmerName;
+      }
+      window.FDStore.save({ pick: SHARE_DATA.slot });
+    }
+    refreshPreview();
+  });
+
+  if (nameInput) {
+    nameInput.addEventListener("input", function () {
+      if (window.FDStore) {
+        window.FDStore.save({ farmerName: currentFarmerName() });
+      }
+      refreshPreview();
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", function () {
+      if (nameInput) nameInput.value = "";
+      if (window.FDStore) window.FDStore.save({ farmerName: "" });
+      refreshPreview();
+      if (nameInput) nameInput.focus();
+    });
+  }
+
+  document.addEventListener("fd:langchange", refreshPreview);
+
+  var waBtn = document.getElementById("whatsappSendBtn");
+  if (waBtn) {
+    waBtn.addEventListener("click", function () {
+      var msg = buildWhatsappText();
+      logChannelAction("WhatsApp Sent");
+      var waUrl = "https://wa.me/?text=" + encodeURIComponent(msg);
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+      showToast("Opened WhatsApp handoff and logged visit locally.");
+    });
+  }
+
+  var copyWaBtn = document.getElementById("copyWhatsappTextBtn");
+  if (copyWaBtn) {
+    copyWaBtn.addEventListener("click", function () {
+      copyToClipboard(buildWhatsappText(), "Copied formatted WhatsApp advice text to clipboard.");
+      logChannelAction("Advice Text Copied");
+    });
+  }
+
+  var pngBtn = document.getElementById("saveSummaryPngBtn");
+  if (pngBtn) {
+    pngBtn.addEventListener("click", downloadSummaryPng);
+  }
+
+  if (playBtn) {
+    playBtn.addEventListener("click", function () {
+      if (isPlayingAudio) {
+        stopBriefingAudio();
+      } else {
+        startBriefingAudio();
+      }
+    });
+  }
+
+  if (transcriptBtn && transcriptBox) {
+    transcriptBtn.addEventListener("click", function () {
+      var nextHidden = !transcriptBox.hidden;
+      transcriptBox.hidden = nextHidden;
+      transcriptBtn.setAttribute("aria-expanded", nextHidden ? "false" : "true");
+      transcriptBtn.textContent = nextHidden
+        ? (currentLang() === "ha" ? "Nuna Rubutun Murya" : "Show Transcript")
+        : (currentLang() === "ha" ? "Boye Rubutun Murya" : "Hide Transcript");
+    });
+  }
+
+  var quickRadioBtn = document.getElementById("quickCopyRadioBtn");
+  if (quickRadioBtn) {
+    quickRadioBtn.addEventListener("click", function () {
+      copyToClipboard(buildQuickRadioText(), "Copied 60-second LGA radio script (zero farmer PII).");
+    });
+  }
+
+  var finishBtn = document.getElementById("finishVisitBtn");
+  if (finishBtn) {
+    finishBtn.addEventListener("click", function () {
+      if (!consultationLogged) {
+        logChannelAction(lastChannelStatus);
+      }
+      window.location.href = SHARE_DATA.nextHistoryUrl;
+    });
+  }
+
+  window.addEventListener("beforeunload", function () {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  });
+})();
+</script>
 {% endblock %}

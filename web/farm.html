@@ -1,96 +1,747 @@
 {% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_svg, crop_art_bg %}
 
-{% block title %}Step 1: Farm Situation · FieldDynamics{% endblock %}
+{% block title %}Step 1 · Farm Profile & History · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-farm-card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .fd-helper-line {
+    margin: 6px 0 0;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .fd-soil-source {
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: right;
+  }
+  .fd-soil-source.is-satellite {
+    color: var(--green);
+  }
+  .fd-soil-source.is-manual {
+    color: var(--amber);
+  }
+  .fd-chip-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .fd-chip-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .fd-chip-grid-4 .fd-chip,
+  .fd-chip-grid-3 .fd-chip {
+    width: 100%;
+    padding: 8px 10px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .fd-seasons-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .fd-seasons-title {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .fd-seasons-note {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .fd-season-box {
+    margin-bottom: 14px;
+  }
+  .fd-season-box-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+  }
+  .fd-selected-crop-label {
+    font-weight: 700;
+    color: var(--green);
+  }
+  .fd-selected-crop-label.is-empty {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .fd-selected-crop-label.is-warn {
+    color: var(--danger);
+  }
+  .fd-other-crop-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .fd-other-crop-row label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .fd-other-crop-input {
+    min-height: 38px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .fd-baseline-foot {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .fd-baseline-foot strong {
+    color: var(--ink);
+  }
+  .fd-mobile-cta-wrap {
+    margin-top: 18px;
+  }
+  @media (min-width: 520px) {
+    .fd-chip-grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 768px) {
+    .fd-mobile-cta-wrap {
+      display: none;
+    }
+  }
+  @media (min-width: 960px) {
+    .fd-farm-crop-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-screen fd-farm-screen">
-  <div class="fd-step-intro">
-    <div class="fd-step-num">STEP 1 OF 5</div>
-    <h1 class="fd-title">Farm Situation & Field History</h1>
-    <p class="fd-sub">Enter the farm's location, soil reality, water access, and crops planted over the last two seasons in {{ selected_lga_info.lga }}.</p>
+{% set s1_crops = advisor_req.past_seasons[-1] if advisor_req.past_seasons else ['maize'] %}
+{% set s2_crops = advisor_req.past_seasons[0] if advisor_req.past_seasons|length > 1 else [] %}
+{% set ns = namespace(known_ids=[]) %}
+{% for cid, _ in crop_choices %}
+  {% set ns.known_ids = ns.known_ids + [cid] %}
+{% endfor %}
+{% set s1_other_list = s1_crops | reject('in', ns.known_ids) | list %}
+{% set s2_other_list = s2_crops | reject('in', ns.known_ids) | list %}
+{% set default_soil = selected_lga_info.soil_default %}
+{% set is_soil_overridden = (advisor_req.soil is not none) and (advisor_req.soil != default_soil) %}
+{% set active_soil = advisor_req.soil or default_soil %}
+
+<section class="fd-page-head">
+  <div>
+    <h1 class="fd-h1" data-lang-ha="Mataki na 1 · Bayanin Gona da Tarihi">Step 1 · Farm Profile &amp; History</h1>
+    <p class="fd-sub" data-lang-ha="Shigar da karamar hukumar manomi, yanayin kasa, samun ruwa, da amfanin gonar shekaru 2 da suka wuce.">
+      Enter farmer's location, soil characteristics, water access, and past 2 seasons of cropping history.
+    </p>
   </div>
-
-  <form method="get" action="/priorities" class="fd-farm-form">
-    <input type="hidden" name="lga" value="{{ advisor_req.lga }}">
-
-    <div class="fd-grid-2col">
-      <div class="fd-panel">
-        <h2 class="fd-panel-title">1. Location & Soil Context</h2>
-        
-        <div class="fd-field">
-          <label class="fd-label" for="lgaField">Selected LGA (Kaduna State)</label>
-          <select id="lgaField" name="lga" class="fd-select" onchange="window.location.href='/farm?lga=' + this.value">
-            {% for item in lgas %}
-              <option value="{{ item.lga }}" {% if item.lga == advisor_req.lga %}selected{% endif %}>
-                {{ item.lga }} ({{ item.zone }})
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="fd-field">
-          <label class="fd-label" for="soilField">Soil Texture Group</label>
-          <select id="soilField" name="soil" class="fd-select">
-            <option value="Loamy" {% if advisor_req.soil == 'Loamy' or not advisor_req.soil %}selected{% endif %}>Loamy (Balanced medium soil - iSDA default)</option>
-            <option value="Sandy" {% if advisor_req.soil == 'Sandy' %}selected{% endif %}>Sandy (Light, fast-draining, higher Striga risk)</option>
-            <option value="Clay" {% if advisor_req.soil == 'Clay' %}selected{% endif %}>Clay (Heavy, moisture-holding, slower drainage)</option>
-            <option value="Not sure" {% if advisor_req.soil == 'Not sure' %}selected{% endif %}>Not sure (Use satellite default: {{ selected_lga_info.soil_default }})</option>
-          </select>
-          <p class="fd-hint">iSDA 0–20 cm cropland default for {{ selected_lga_info.lga }}: {{ selected_lga_info.soil_default }} (pH {{ selected_lga_info.soil_ph or '6.0' }}).</p>
-        </div>
-
-        <div class="fd-field">
-          <label class="fd-label" for="waterField">Water Access</label>
-          <select id="waterField" name="water" class="fd-select">
-            <option value="Rain only" {% if advisor_req.water == 'Rain only' %}selected{% endif %}>Rain only (Subject to seasonal onset & dry spells)</option>
-            <option value="Irrigation" {% if advisor_req.water == 'Irrigation' %}selected{% endif %}>Irrigation access (Fadama / river pumping)</option>
-            <option value="Both" {% if advisor_req.water == 'Both' %}selected{% endif %}>Both (Supplementary dry-season watering)</option>
-          </select>
-        </div>
-
-        <div class="fd-field">
-          <label class="fd-label" for="equipmentField">Farm Equipment Level</label>
-          <select id="equipmentField" name="equipment" class="fd-select">
-            <option value="Hand tools" {% if advisor_req.equipment == 'Hand tools' %}selected{% endif %}>Hand tools (Hoe and cutlass)</option>
-            <option value="Animal traction" {% if advisor_req.equipment == 'Animal traction' %}selected{% endif %}>Animal traction (Oxen plough)</option>
-            <option value="Tractor" {% if advisor_req.equipment == 'Tractor' %}selected{% endif %}>Tractor hiring service</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="fd-panel">
-        <h2 class="fd-panel-title">2. Recent Cropping History</h2>
-        <p class="fd-panel-desc">We need the last two seasons to check cereal-on-cereal exhaustion and Striga pest buildup.</p>
-
-        <div class="fd-field">
-          <label class="fd-label" for="s1Crop">Most Recent Season Crop (Year 1)</label>
-          <select id="s1Crop" name="s1" class="fd-select">
-            {% for cid, clabel in crop_choices %}
-              <option value="{{ cid }}" {% if advisor_req.past_seasons[-1][0] == cid %}selected{% endif %}>{{ clabel }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="fd-field">
-          <label class="fd-label" for="s2Crop">Previous Season Crop (Year 2)</label>
-          <select id="s2Crop" name="s2" class="fd-select">
-            {% set prev_crop = advisor_req.past_seasons[0][0] if advisor_req.past_seasons|length > 1 else advisor_req.past_seasons[0][0] %}
-            {% for cid, clabel in crop_choices %}
-              <option value="{{ cid }}" {% if prev_crop == cid %}selected{% endif %}>{{ clabel }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="fd-alert-box">
-          <strong>Rotation Note:</strong> Repeating maize or sorghum year after year depletes soil nitrogen and increases root parasite (Striga hermonthica) seedbank.
-        </div>
-      </div>
-    </div>
-
-    <div class="fd-form-actions">
-      <a href="/start?{{ query_string }}" class="fd-btn-outline">← Back to LGA Select</a>
-      <button type="submit" class="fd-btn-primary">Continue to Farmer Priorities (Step 2) →</button>
-    </div>
-  </form>
+  <div>
+    <button
+      type="button"
+      id="continuePrioritiesBtn"
+      class="fd-btn fd-btn-dark"
+      {% if not advisor_req.lga or not s1_crops %}disabled aria-disabled="true"{% endif %}
+      data-lang-ha="Ci gaba zuwa Bukatu (2/6) →"
+    >Continue to Priorities (2/6) →</button>
+  </div>
 </section>
+
+<div class="fd-grid-sidebar">
+  <section class="fd-card fd-farm-card-left" aria-label="Farm location, soil, water, and equipment">
+    <div class="fd-field">
+      <div class="fd-label-row">
+        <label for="lgaSelect" class="fd-label" data-lang-ha="KARAMAR HUKUMA (LGA)">LOCAL GOVERNMENT AREA (LGA)</label>
+      </div>
+      <select id="lgaSelect" name="lga" class="fd-select" aria-describedby="lgaHelperLine lgaUrbanAlert">
+        <option value="" {% if not advisor_req.lga %}selected{% endif %}>-- Choose Kaduna LGA --</option>
+        <optgroup label="North Senatorial Zone">
+          {% for item in lgas if item.zone == 'North' %}
+          <option value="{{ item.lga }}" {% if item.lga == advisor_req.lga %}selected{% endif %}>{{ item.lga }} (North Senatorial Zone)</option>
+          {% endfor %}
+        </optgroup>
+        <optgroup label="Central Senatorial Zone">
+          {% for item in lgas if item.zone == 'Central' %}
+          <option value="{{ item.lga }}" {% if item.lga == advisor_req.lga %}selected{% endif %}>{{ item.lga }} (Central Senatorial Zone)</option>
+          {% endfor %}
+        </optgroup>
+        <optgroup label="South Senatorial Zone">
+          {% for item in lgas if item.zone == 'South' %}
+          <option value="{{ item.lga }}" {% if item.lga == advisor_req.lga %}selected{% endif %}>{{ item.lga }} (South Senatorial Zone)</option>
+          {% endfor %}
+        </optgroup>
+      </select>
+
+      <p class="fd-helper-line" id="lgaHelperLine">
+        Cropland share: {{ selected_lga_info.cropland_pct }}% · Median onset: {{ selected_lga_info.onset_label }} · 45-yr climate record
+      </p>
+
+      <div
+        id="lgaUrbanAlert"
+        class="fd-alert fd-alert-amber"
+        role="status"
+        style="margin-top:8px;"
+        {% if not selected_lga_info.low_cropland %}hidden{% endif %}
+      >
+        Urban LGA notice: Only <strong id="lgaUrbanPct">{{ selected_lga_info.cropland_pct }}%</strong> of land here is mapped as cropland (ESA WorldCover 10m). Results carry lower confidence — check local peri-urban plot conditions.
+      </div>
+    </div>
+
+    <div class="fd-field">
+      <div class="fd-label-row">
+        <span class="fd-label" id="soilGroupLabel" data-lang-ha="YANAYIN KASA">SOIL TEXTURE</span>
+        <span
+          id="soilSourceBadge"
+          class="fd-soil-source {% if is_soil_overridden %}is-manual{% else %}is-satellite{% endif %}"
+        >{% if is_soil_overridden %}Manual override · lowers confidence if Not sure{% else %}✓ iSDAsoil 30m Satellite Default{% if selected_lga_info.soil_ph is not none %} (pH {{ selected_lga_info.soil_ph }}){% endif %}{% endif %}</span>
+      </div>
+      <div class="fd-chip-group fd-chip-grid-4" role="group" aria-labelledby="soilGroupLabel">
+        {% for soil_opt in ['Sandy', 'Loamy', 'Clay', 'Not sure'] %}
+        <button
+          type="button"
+          class="fd-chip {% if active_soil == soil_opt %}is-selected{% endif %}"
+          data-soil="{{ soil_opt }}"
+          aria-pressed="{{ 'true' if active_soil == soil_opt else 'false' }}"
+        >{{ soil_opt }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="fd-field">
+      <div class="fd-label-row">
+        <span class="fd-label" id="waterGroupLabel" data-lang-ha="SAMUN RUWA">WATER ACCESS</span>
+      </div>
+      <div class="fd-chip-group fd-chip-grid-3" role="group" aria-labelledby="waterGroupLabel">
+        {% for water_opt in ['Rain only', 'Irrigation', 'Both'] %}
+        <button
+          type="button"
+          class="fd-chip {% if advisor_req.water == water_opt %}is-selected{% endif %}"
+          data-water="{{ water_opt }}"
+          aria-pressed="{{ 'true' if advisor_req.water == water_opt else 'false' }}"
+        >{{ water_opt }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="fd-field" style="margin-bottom:0;">
+      <div class="fd-label-row">
+        <span class="fd-label" id="equipGroupLabel" data-lang-ha="KAYAN AIKIN GONA">EQUIPMENT AVAILABLE</span>
+      </div>
+      <div class="fd-chip-group fd-chip-grid-3" role="group" aria-labelledby="equipGroupLabel">
+        {% for equip_opt in ['Hand tools', 'Animal traction', 'Tractor'] %}
+        <button
+          type="button"
+          class="fd-chip {% if advisor_req.equipment == equip_opt %}is-selected{% endif %}"
+          data-equipment="{{ equip_opt }}"
+          aria-pressed="{{ 'true' if advisor_req.equipment == equip_opt else 'false' }}"
+        >{{ equip_opt }}</button>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="fd-card" aria-label="Past 2 cropping seasons">
+    <div class="fd-seasons-head">
+      <h2 class="fd-seasons-title" data-lang-ha="AMFANIN GONAR SHEKARU 2 DA SUKA WUCE">PAST 2 CROPPING SEASONS</h2>
+      <span class="fd-seasons-note" data-lang-ha="Zabi amfani 1 ko 2 (don cakuda shuka)">Select 1 crop or 2 (for intercropping)</span>
+    </div>
+
+    <div id="intercropLimitAlert" class="fd-alert fd-alert-amber" role="alert" style="margin-bottom:12px;" hidden>
+      Up to 2 crops can be combined per season for intercropping — tap a selected crop tile first to swap it.
+    </div>
+
+    <div class="fd-card-soft fd-season-box">
+      <div class="fd-season-box-head">
+        <div>
+          <strong data-lang-ha="Kakar Bara (Shekara 1 da ta wuce)">Season 1 (Last Year)</strong>
+          <span aria-hidden="true"> · </span>
+          <span id="s1SelectedLabel" class="fd-selected-crop-label">
+            {{ s1_crops | map('replace', '_', ' ') | map('title') | join(' + ') }} Selected
+          </span>
+        </div>
+      </div>
+
+      <div class="fd-crop-tile-grid fd-farm-crop-grid" id="s1CropGrid" role="group" aria-label="Season 1 crops">
+        {% for cid, cname in crop_choices %}
+        <button
+          type="button"
+          class="fd-crop-tile {% if cid in s1_crops %}is-selected{% endif %}"
+          data-season="1"
+          data-crop="{{ cid }}"
+          data-crop-label="{{ cname }}"
+          aria-pressed="{{ 'true' if cid in s1_crops else 'false' }}"
+        >
+          <div class="fd-crop-art" style="{{ crop_art_bg(cid)|trim }}">{{ crop_svg(cid) }}</div>
+          <div class="fd-crop-tile-name">{{ cname }}</div>
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="fd-other-crop-row">
+        <label for="s1OtherCrop" data-lang-ha="Wani amfanin gona:">Other crop:</label>
+        <input
+          type="text"
+          id="s1OtherCrop"
+          class="fd-input fd-other-crop-input"
+          placeholder="Optional (e.g. ginger, cotton, sweet potato)"
+          value="{{ s1_other_list[0]|replace('_', ' ') if s1_other_list else '' }}"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+
+    <div class="fd-card-soft fd-season-box" style="margin-bottom:0;">
+      <div class="fd-season-box-head">
+        <div>
+          <strong data-lang-ha="Shekaru 2 da suka wuce">Season 2 (2 Years Ago)</strong>
+          <span aria-hidden="true"> · </span>
+          <span id="s2SelectedLabel" class="fd-selected-crop-label {% if not s2_crops %}is-empty{% endif %}">
+            {% if s2_crops %}{{ s2_crops | map('replace', '_', ' ') | map('title') | join(' + ') }} Selected{% else %}None recorded (optional){% endif %}
+          </span>
+        </div>
+      </div>
+
+      <div class="fd-crop-tile-grid fd-farm-crop-grid" id="s2CropGrid" role="group" aria-label="Season 2 crops">
+        {% for cid, cname in crop_choices %}
+        <button
+          type="button"
+          class="fd-crop-tile {% if cid in s2_crops %}is-selected{% endif %}"
+          data-season="2"
+          data-crop="{{ cid }}"
+          data-crop-label="{{ cname }}"
+          aria-pressed="{{ 'true' if cid in s2_crops else 'false' }}"
+        >
+          <div class="fd-crop-art" style="{{ crop_art_bg(cid)|trim }}">{{ crop_svg(cid) }}</div>
+          <div class="fd-crop-tile-name">{{ cname }}</div>
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="fd-other-crop-row">
+        <label for="s2OtherCrop" data-lang-ha="Wani amfanin gona:">Other crop:</label>
+        <input
+          type="text"
+          id="s2OtherCrop"
+          class="fd-input fd-other-crop-input"
+          placeholder="Optional (leave blank if only last season is known)"
+          value="{{ s2_other_list[0]|replace('_', ' ') if s2_other_list else '' }}"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+
+    {% set s1_title = s1_crops | map('replace', '_', ' ') | map('title') | join(' + ') %}
+    {% set s2_title = s2_crops | map('replace', '_', ' ') | map('title') | join(' + ') %}
+    <p class="fd-baseline-foot" id="baselineSummaryNote">
+      {% if s2_crops and s2_crops == s1_crops and s1_crops|length == 1 %}
+      * Farmer baseline established as <strong>Continuous {{ s1_title }}</strong> (monocropping). This becomes Card 1 on the comparison screen.
+      {% elif s2_crops %}
+      * Farmer baseline established as <strong>{{ s2_title }} → {{ s1_title }}</strong> (2-season sequence). This becomes Card 1 on the comparison screen.
+      {% else %}
+      * Farmer baseline established as <strong>{{ s1_title }}</strong> (1-season history). This becomes Card 1 on the comparison screen.
+      {% endif %}
+    </p>
+  </section>
+</div>
+
+<div class="fd-mobile-cta-wrap">
+  <button
+    type="button"
+    id="continuePrioritiesMobileBtn"
+    class="fd-btn fd-btn-dark fd-btn-block"
+    {% if not advisor_req.lga or not s1_crops %}disabled aria-disabled="true"{% endif %}
+    data-lang-ha="Ci gaba zuwa Bukatu (2/6) →"
+  >Continue to Priorities (2/6) →</button>
+</div>
+
+<script type="application/json" id="lgaMetaJson">{{ lgas | tojson }}</script>
+<script type="application/json" id="farmServerStateJson">{{ {
+  "lga": advisor_req.lga,
+  "soil": advisor_req.soil,
+  "soilOverridden": is_soil_overridden,
+  "water": advisor_req.water,
+  "equipment": advisor_req.equipment,
+  "s1": s1_crops,
+  "s2": s2_crops
+} | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var metaEl = document.getElementById("lgaMetaJson");
+  var serverEl = document.getElementById("farmServerStateJson");
+  if (!metaEl || !serverEl) return;
+
+  var lgasList = JSON.parse(metaEl.textContent || "[]");
+  var lgaByName = {};
+  lgasList.forEach(function (item) {
+    lgaByName[item.lga] = item;
+  });
+
+  var serverState = JSON.parse(serverEl.textContent || "{}");
+  var lgaSelect = document.getElementById("lgaSelect");
+  var helperLine = document.getElementById("lgaHelperLine");
+  var urbanAlert = document.getElementById("lgaUrbanAlert");
+  var urbanPct = document.getElementById("lgaUrbanPct");
+  var soilBadge = document.getElementById("soilSourceBadge");
+  var intercropAlert = document.getElementById("intercropLimitAlert");
+  var s1Label = document.getElementById("s1SelectedLabel");
+  var s2Label = document.getElementById("s2SelectedLabel");
+  var s1OtherInput = document.getElementById("s1OtherCrop");
+  var s2OtherInput = document.getElementById("s2OtherCrop");
+  var baselineNote = document.getElementById("baselineSummaryNote");
+  var ctaBtn = document.getElementById("continuePrioritiesBtn");
+  var ctaMobileBtn = document.getElementById("continuePrioritiesMobileBtn");
+
+  var knownCrops = {};
+  document.querySelectorAll("#s1CropGrid [data-crop]").forEach(function (btn) {
+    knownCrops[btn.getAttribute("data-crop")] = btn.getAttribute("data-crop-label");
+  });
+
+  var state = {
+    lga: serverState.lga || "Zaria",
+    soilOverridden: Boolean(serverState.soilOverridden),
+    soil: serverState.soil || "",
+    water: serverState.water || "Rain only",
+    equipment: serverState.equipment || "Hand tools",
+    s1: Array.isArray(serverState.s1) ? serverState.s1.slice(0, 2) : ["maize"],
+    s2: Array.isArray(serverState.s2) ? serverState.s2.slice(0, 2) : []
+  };
+
+  function slugifyCrop(raw) {
+    return String(raw || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+  }
+
+  function formatCropName(cid) {
+    if (knownCrops[cid]) return knownCrops[cid];
+    return String(cid || "")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, function (ch) { return ch.toUpperCase(); });
+  }
+
+  function activeSoilValue() {
+    var info = lgaByName[state.lga];
+    var defSoil = info ? info.soil_default : "Loamy";
+    return state.soilOverridden && state.soil ? state.soil : defSoil;
+  }
+
+  function syncNavLinks() {
+    if (!window.FDStore) return;
+    var qs = window.FDStore.toQuery();
+    document.querySelectorAll(".fd-topbar a[href*='?']").forEach(function (a) {
+      var base = a.getAttribute("href").split("?")[0];
+      a.setAttribute("href", base + "?" + qs);
+    });
+  }
+
+  function persistState() {
+    if (!window.FDStore) return;
+    window.FDStore.save({
+      lga: state.lga,
+      soil: state.soilOverridden ? state.soil : "",
+      soilOverridden: state.soilOverridden,
+      water: state.water,
+      equipment: state.equipment,
+      s1: state.s1.slice(0, 2),
+      s2: state.s2.slice(0, 2)
+    });
+    syncNavLinks();
+  }
+
+  function renderLgaAndSoil() {
+    var info = lgaByName[state.lga];
+    if (lgaSelect.value !== state.lga) {
+      lgaSelect.value = state.lga || "";
+    }
+    if (!info) {
+      helperLine.textContent = "Select one of Kaduna's 23 LGAs to load satellite soil and rainfall onset records.";
+      urbanAlert.hidden = true;
+    } else {
+      helperLine.textContent =
+        "Cropland share: " +
+        info.cropland_pct +
+        "% · Median onset: " +
+        info.onset_label +
+        " · 45-yr climate record";
+      if (info.low_cropland) {
+        urbanPct.textContent = info.cropland_pct + "%";
+        urbanAlert.hidden = false;
+      } else {
+        urbanAlert.hidden = true;
+      }
+    }
+
+    var effectiveSoil = activeSoilValue();
+    document.querySelectorAll("[data-soil]").forEach(function (btn) {
+      var picked = Boolean(state.lga) && btn.getAttribute("data-soil") === effectiveSoil;
+      btn.classList.toggle("is-selected", picked);
+      btn.setAttribute("aria-pressed", picked ? "true" : "false");
+    });
+
+    if (state.soilOverridden) {
+      soilBadge.className = "fd-soil-source is-manual";
+      soilBadge.textContent = "Manual override · lowers confidence if Not sure";
+    } else if (info) {
+      soilBadge.className = "fd-soil-source is-satellite";
+      var phSuffix = info.soil_ph !== null && info.soil_ph !== undefined ? " (pH " + info.soil_ph + ")" : "";
+      soilBadge.textContent = "✓ iSDAsoil 30m Satellite Default" + phSuffix;
+    } else {
+      soilBadge.className = "fd-soil-source is-manual";
+      soilBadge.textContent = "Choose LGA for iSDAsoil default";
+    }
+  }
+
+  function renderChips() {
+    document.querySelectorAll("[data-water]").forEach(function (btn) {
+      var on = btn.getAttribute("data-water") === state.water;
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    document.querySelectorAll("[data-equipment]").forEach(function (btn) {
+      var on = btn.getAttribute("data-equipment") === state.equipment;
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
+  function renderSeasons() {
+    document.querySelectorAll("#s1CropGrid [data-crop]").forEach(function (btn) {
+      var on = state.s1.indexOf(btn.getAttribute("data-crop")) !== -1;
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    document.querySelectorAll("#s2CropGrid [data-crop]").forEach(function (btn) {
+      var on = state.s2.indexOf(btn.getAttribute("data-crop")) !== -1;
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+
+    var s1Names = state.s1.map(formatCropName);
+    var s2Names = state.s2.map(formatCropName);
+
+    if (s1Names.length === 0) {
+      s1Label.textContent = "Select at least 1 crop (required)";
+      s1Label.className = "fd-selected-crop-label is-warn";
+    } else {
+      s1Label.textContent = s1Names.join(" + ") + (s1Names.length > 1 ? " Selected (Intercrop)" : " Selected");
+      s1Label.className = "fd-selected-crop-label";
+    }
+
+    if (s2Names.length === 0) {
+      s2Label.textContent = "None recorded (optional)";
+      s2Label.className = "fd-selected-crop-label is-empty";
+    } else {
+      s2Label.textContent = s2Names.join(" + ") + (s2Names.length > 1 ? " Selected (Intercrop)" : " Selected");
+      s2Label.className = "fd-selected-crop-label";
+    }
+
+    baselineNote.textContent = "";
+    if (s1Names.length === 0) {
+      baselineNote.textContent = "* Choose at least one crop in Season 1 (Last Year) to establish the farmer's baseline rotation.";
+    } else {
+      var s1Joined = s1Names.join(" + ");
+      var s2Joined = s2Names.join(" + ");
+      var sameSingle =
+        state.s2.length === 1 &&
+        state.s1.length === 1 &&
+        state.s2[0] === state.s1[0];
+      baselineNote.appendChild(document.createTextNode("* Farmer baseline established as "));
+      var strong = document.createElement("strong");
+      var tail = "";
+      if (sameSingle) {
+        strong.textContent = "Continuous " + s1Joined;
+        tail = " (monocropping). This becomes Card 1 on the comparison screen.";
+      } else if (s2Names.length > 0) {
+        strong.textContent = s2Joined + " → " + s1Joined;
+        tail =
+          (state.s1.length > 1 || state.s2.length > 1 ? " (intercrop sequence)" : " (2-season sequence)") +
+          ". This becomes Card 1 on the comparison screen.";
+      } else {
+        strong.textContent = s1Joined;
+        tail = " (1-season history). This becomes Card 1 on the comparison screen.";
+      }
+      baselineNote.appendChild(strong);
+      baselineNote.appendChild(document.createTextNode(tail));
+    }
+
+    var canProceed = Boolean(state.lga && lgaByName[state.lga] && state.s1.length >= 1);
+    [ctaBtn, ctaMobileBtn].forEach(function (btn) {
+      if (!btn) return;
+      btn.disabled = !canProceed;
+      btn.setAttribute("aria-disabled", canProceed ? "false" : "true");
+    });
+  }
+
+  function renderAll() {
+    renderLgaAndSoil();
+    renderChips();
+    renderSeasons();
+  }
+
+  function toggleCropSelection(seasonNum, cropId) {
+    intercropAlert.hidden = true;
+    var list = seasonNum === 1 ? state.s1.slice() : state.s2.slice();
+    var idx = list.indexOf(cropId);
+    if (idx !== -1) {
+      list.splice(idx, 1);
+    } else if (list.length >= 2) {
+      intercropAlert.hidden = false;
+      return;
+    } else {
+      list.push(cropId);
+    }
+    if (seasonNum === 1) {
+      state.s1 = list;
+    } else {
+      state.s2 = list;
+    }
+    persistState();
+    renderSeasons();
+  }
+
+  function syncOtherInput(seasonNum, inputEl) {
+    var list = (seasonNum === 1 ? state.s1 : state.s2).filter(function (c) {
+      return Boolean(knownCrops[c]);
+    });
+    var customSlug = slugifyCrop(inputEl.value);
+    if (customSlug) {
+      if (knownCrops[customSlug]) {
+        if (list.indexOf(customSlug) === -1 && list.length < 2) {
+          list.push(customSlug);
+        }
+      } else if (list.length >= 2) {
+        intercropAlert.hidden = false;
+        inputEl.value = "";
+      } else {
+        list.push(customSlug);
+      }
+    }
+    if (seasonNum === 1) {
+      state.s1 = list;
+    } else {
+      state.s2 = list;
+    }
+    persistState();
+    renderSeasons();
+  }
+
+  lgaSelect.addEventListener("change", function () {
+    state.lga = lgaSelect.value;
+    if (!state.soilOverridden) {
+      state.soil = "";
+    }
+    persistState();
+    renderAll();
+  });
+
+  document.querySelectorAll("[data-soil]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var chosen = btn.getAttribute("data-soil");
+      var info = lgaByName[state.lga];
+      if (info && chosen === info.soil_default) {
+        state.soilOverridden = false;
+        state.soil = "";
+      } else {
+        state.soilOverridden = true;
+        state.soil = chosen;
+      }
+      persistState();
+      renderLgaAndSoil();
+    });
+  });
+
+  document.querySelectorAll("[data-water]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.water = btn.getAttribute("data-water");
+      persistState();
+      renderChips();
+    });
+  });
+
+  document.querySelectorAll("[data-equipment]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.equipment = btn.getAttribute("data-equipment");
+      persistState();
+      renderChips();
+    });
+  });
+
+  document.querySelectorAll("[data-season][data-crop]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var sNum = Number(btn.getAttribute("data-season"));
+      var cid = btn.getAttribute("data-crop");
+      toggleCropSelection(sNum, cid);
+    });
+  });
+
+  s1OtherInput.addEventListener("change", function () {
+    syncOtherInput(1, s1OtherInput);
+  });
+  s2OtherInput.addEventListener("change", function () {
+    syncOtherInput(2, s2OtherInput);
+  });
+
+  function goNext() {
+    if (!state.lga || !lgaByName[state.lga] || state.s1.length < 1) return;
+    persistState();
+    if (window.FDStore) {
+      window.FDStore.go("/priorities");
+    }
+  }
+
+  ctaBtn.addEventListener("click", goNext);
+  if (ctaMobileBtn) ctaMobileBtn.addEventListener("click", goNext);
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.FDStore) {
+      if (window.location.search.length > 1) {
+        persistState();
+      } else {
+        var saved = window.FDStore.load();
+        if (saved && saved.savedAt) {
+          if (saved.lga && lgaByName[saved.lga]) state.lga = saved.lga;
+          state.soilOverridden = Boolean(saved.soilOverridden && saved.soil);
+          state.soil = state.soilOverridden ? saved.soil : "";
+          if (saved.water) state.water = saved.water;
+          if (saved.equipment) state.equipment = saved.equipment;
+          if (Array.isArray(saved.s1) && saved.s1.length > 0) state.s1 = saved.s1.slice(0, 2);
+          if (Array.isArray(saved.s2)) state.s2 = saved.s2.slice(0, 2);
+          var s1Custom = state.s1.filter(function (c) { return !knownCrops[c]; });
+          var s2Custom = state.s2.filter(function (c) { return !knownCrops[c]; });
+          s1OtherInput.value = s1Custom.length ? s1Custom[0].replace(/_/g, " ") : "";
+          s2OtherInput.value = s2Custom.length ? s2Custom[0].replace(/_/g, " ") : "";
+          syncNavLinks();
+        }
+      }
+    }
+    renderAll();
+  });
+})();
+</script>
 {% endblock %}

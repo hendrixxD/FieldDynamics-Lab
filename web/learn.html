@@ -1,59 +1,642 @@
 {% extends "_base.html" %}
 
-{% block title %}Science & Data Learn Portal · FieldDynamics{% endblock %}
+{% block title %}Scientific Framework &amp; Data Provenance · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fd-learn-grid.fd-grid-sidebar {
+    gap: 22px;
+  }
+  @media (min-width: 1024px) {
+    .fd-learn-grid.fd-grid-sidebar {
+      grid-template-columns: 285px minmax(0, 1fr);
+      align-items: start;
+    }
+    .fd-learn-toc {
+      position: sticky;
+      top: 76px;
+    }
+  }
+  .fd-toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fd-toc-link {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .fd-toc-link:hover {
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+  .fd-toc-link.is-active {
+    background: var(--ink);
+    color: #faf8f5;
+  }
+  .fd-learn-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+  .fd-learn-section {
+    scroll-margin-top: 84px;
+  }
+  .fd-learn-eyebrow {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .fd-learn-eyebrow.is-blue { color: var(--blue); }
+  .fd-learn-eyebrow.is-green { color: var(--green); }
+  .fd-learn-eyebrow.is-terra { color: var(--terra); }
+  .fd-learn-eyebrow.is-muted { color: var(--muted); }
+  .fd-learn-h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .fd-learn-lead {
+    margin: 0 0 14px;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+  }
+  .fd-mono-pill {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+  .fd-glossary-grid {
+    display: grid;
+    gap: 14px;
+  }
+  @media (min-width: 768px) {
+    .fd-glossary-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .fd-dl-row {
+    margin: 8px 0 0;
+    font-size: 13.5px;
+  }
+  .fd-dl-row strong {
+    color: var(--ink);
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-page-head">
+<div class="fd-page-head">
   <div>
-    <span class="fd-kicker is-green">Methodology & Provenance</span>
-    <h1 class="fd-h1">Scientific Framework & Satellite Data Provenance</h1>
-    <p class="fd-sub">How FieldDynamics harmonizes NASA Earth observations, local soil datasets, and multi-criteria agronomic decision models for Kaduna State.</p>
-  </div>
-  <div style="display:flex;gap:10px;">
-    <a class="fd-btn fd-btn-outline" href="/start?{{ query_string }}">← Back to Advisor</a>
-  </div>
-</section>
-
-<div class="fd-grid-2" style="margin-bottom:28px;">
-  <div class="fd-card">
-    <h2 style="font-size:18px;font-weight:800;margin:0 0 12px;">Satellite Constellations & Datasets Used</h2>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div style="border-left:3px solid #2563eb;padding-left:10px;">
-        <strong>NASA POWER Agroclimatology</strong>
-        <div style="font-size:12.5px;color:var(--muted);">1981–2025 daily radiation, humidity, wind, and temperature for FAO-56 Penman-Monteith reference evapotranspiration (ET0) and heat stress tracking.</div>
-      </div>
-      <div style="border-left:3px solid #059669;padding-left:10px;">
-        <strong>NASA SMAP SPL4SMGP V008</strong>
-        <div style="font-size:12.5px;color:var(--muted);">Root-zone soil moisture anomalies (0–100 cm depth, ~9 km native resolution, 2015–2025) monitoring crop flowering water deficits.</div>
-      </div>
-      <div style="border-left:3px solid #d97706;padding-left:10px;">
-        <strong>CHIRPS v2.0 Rainfall</strong>
-        <div style="font-size:12.5px;color:var(--muted);">0.05° high-resolution rainfall records driving the A2 agronomic onset rule and dry spell duration monitoring.</div>
-      </div>
-      <div style="border-left:3px solid #dc2626;padding-left:10px;">
-        <strong>NASA GPM IMERG V07 & SRTM 30 m</strong>
-        <div style="font-size:12.5px;color:var(--muted);">95th percentile extreme storm rainfall combined with 30 m SRTM elevation slopes and iSDA erodibility K factors for topsoil erosion risk.</div>
-      </div>
-      <div style="border-left:3px solid #7c3aed;padding-left:10px;">
-        <strong>NASA MODIS MOD13Q1 V6.1</strong>
-        <div style="font-size:12.5px;color:var(--muted);">250 m 16-day NDVI masked to ESA WorldCover cropland to detect bare-field duration and vegetative vigor transitions.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="fd-card">
-    <h2 style="font-size:18px;font-weight:800;margin:0 0 12px;">Validation & Uncertainty Handling</h2>
-    <p style="font-size:13.5px;line-height:1.5;color:var(--ink-soft);margin-bottom:12px;">
-      Agricultural models must be held accountable to real smallholder conditions. FieldDynamics validates its models using spatial block GroupKFold and leave-one-year-out cross-validation:
+    <h1 class="fd-h1" data-lang-ha="Tsarin Kimiyya da Asalin Bayanai">Scientific Framework &amp; Data Provenance</h1>
+    <p class="fd-sub" data-lang-ha="Yadda bayanan NASA, lissafin FAO-56, samfuran kididdiga/SI, da gwaje-gwajen Kaduna ke gina kowane kati.">
+      How NASA Earth observations, FAO-56 physics, statistical/SI models, and published Kaduna trials inform every card.
     </p>
-    <ul style="font-size:13px;line-height:1.5;padding-left:18px;color:var(--ink-soft);margin-bottom:14px;">
-      <li><strong>FAO-56 Penman-Monteith ET0:</strong> Validated against published FAO-56 benchmarks.</li>
-      <li><strong>Weight Perturbation Robustness:</strong> Rotation rankings are tested by perturbing weights ±20% over 200 iterations to flag close calls.</li>
-      <li><strong>Confidence Tiering:</strong> Every LGA displays a transparent data confidence level (High, Medium, Low) based on cloud-filling and cropland fraction.</li>
+  </div>
+  <a class="fd-btn fd-btn-dark" href="/compare?{{ query_string }}" data-lang-ha="← Komawa Kayan Shawara">← Return to Advisor Tool</a>
+</div>
+
+<div class="fd-grid-sidebar fd-learn-grid">
+  <aside class="fd-card fd-learn-toc" aria-label="Scientific documentation sections">
+    <p class="fd-section-label" data-lang-ha="Sassan Kimiyya">Methodology Index</p>
+    <ul class="fd-toc-list" id="learnTocList">
+      <li><a class="fd-toc-link is-active" href="#sat-vs-ground">1. Satellite vs Ground Data (R24)</a></li>
+      <li><a class="fd-toc-link" href="#decision-logic">2. 4-Step Decision Engine (R16, R31)</a></li>
+      <li><a class="fd-toc-link" href="#si-models">3. Statistical &amp; SI Models (R27, R28)</a></li>
+      <li><a class="fd-toc-link" href="#datasets">4. NASA Datasets Used &amp; Excluded (R2, R34)</a></li>
+      <li><a class="fd-toc-link" href="#soil-health">5. How Crops Build Soil Health (R30)</a></li>
+      <li><a class="fd-toc-link" href="#uncertainty">6. Uncertainty &amp; Limits (R11, R21, R22)</a></li>
+      <li><a class="fd-toc-link" href="#glossary">7. Plain-Language Glossary (R23)</a></li>
     </ul>
-    <div style="background:var(--bg-warm);padding:10px 14px;border-radius:6px;font-size:12.5px;color:var(--muted);">
-      <strong>Local Expertise:</strong> Satellite observations guide long-term regional probability. Field application always requires the judgment of farmers and local KADA extension officers.
+
+    <div class="fd-card-soft" style="margin-top:14px;">
+      <p class="fd-section-label" style="margin-bottom:4px;">Active Context · {{ sv.lga }} LGA</p>
+      <div style="font-size:13px;color:var(--ink-soft);">
+        <div><strong>Zone:</strong> {{ sv.zone }} Kaduna</div>
+        <div><strong>Cropland Share:</strong> {{ selected_lga_info.cropland_pct }}%</div>
+        <div><strong>A12 Confidence:</strong>
+          <span class="fd-badge fd-badge-{{ selected_lga_info.confidence_level|lower }}">{{ selected_lga_info.confidence_level }}</span>
+        </div>
+      </div>
     </div>
+  </aside>
+
+  <div class="fd-learn-stack">
+    <div class="fd-grid-2">
+      <div class="fd-card">
+        <p class="fd-learn-eyebrow is-blue">Satellite vs Ground Reality</p>
+        <p style="margin:0;font-size:14px;color:var(--ink-soft);">
+          Satellites observe 45 years of regional rainfall (<span class="fd-mono-pill">CHIRPS</span>, <span class="fd-mono-pill">GPM IMERG</span>),
+          250 m cropland greenness (<span class="fd-mono-pill">MODIS NDVI</span>), and ~9 km root-zone wetness (<span class="fd-mono-pill">SMAP</span>).
+          Farmers and KADA extension officers verify laboratory soil phosphorus/sulphur, plot-level <em>Striga</em> history, and local seed supply.
+        </p>
+      </div>
+      <div class="fd-card">
+        <p class="fd-learn-eyebrow is-muted">4-Step Decision Logic</p>
+        <ol style="margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-soft);display:grid;gap:4px;">
+          <li><strong>Candidates:</strong> 72 two-season sequences generated from 14 savanna crops.</li>
+          <li><strong>Physics Filter:</strong> A9 FAO-56 water bucket &amp; A15 suitability drop ill-fitting crops.</li>
+          <li><strong>7 Dimensions:</strong> Nutrients, organic matter, erosion, pests, water, forage, market.</li>
+          <li><strong>Ranking:</strong> LGA tertile need weights multiplied <strong>3×</strong> by farmer priorities.</li>
+        </ol>
+      </div>
+    </div>
+
+    <section id="sat-vs-ground" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-blue">Section 1 · Requirement R24</p>
+      <h2 class="fd-learn-h2" data-lang-ha="1. Bayanan Tauraron Dan Adam da Gaskiyar Kasa (R24)">1. Satellite Observations vs Ground Measurements</h2>
+      <p class="fd-learn-lead">
+        Remote sensing provides consistent multi-decade coverage across all 23 Kaduna Local Government Areas, while field measurements capture plot-level chemistry and biological history invisible from orbit.
+      </p>
+
+      <div class="fd-grid-2" style="margin-bottom:16px;">
+        <div class="fd-card-soft">
+          <p class="fd-section-label" style="color:var(--blue);">What Satellites Observe Well</p>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:6px;">
+            <li><strong>45-year wide-area rainfall (1981–2025):</strong> Daily onset, cessation, and seasonal totals across every LGA via <span class="fd-mono-pill">CHIRPS v2.0</span> (0.05°, ~5.5 km) and storm intensity via <span class="fd-mono-pill">GPM IMERG V07</span> (0.1°).</li>
+            <li><strong>250 m cropland greenness (2000–2025):</strong> 16-day canopy cover and dry-season bare-ground exposure via <span class="fd-mono-pill">MODIS MOD13Q1</span> masked to 10 m cropland.</li>
+            <li><strong>~9 km root-zone wetness (2015–2025):</strong> Standardized root-zone soil moisture anomalies (0–100 cm) from <span class="fd-mono-pill">NASA SMAP SPL4SMGP V008</span>.</li>
+            <li><strong>30 m slope &amp; digital soil baselines:</strong> Topographic slope (<span class="fd-mono-pill">SRTM GL1</span>) and baseline texture, pH, carbon, N, P, and S (<span class="fd-mono-pill">iSDAsoil 30 m</span>).</li>
+          </ul>
+        </div>
+        <div class="fd-card-soft">
+          <p class="fd-section-label" style="color:var(--green);">What Requires Ground Verification</p>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:6px;">
+            <li><strong>Laboratory P &amp; S soil tests:</strong> Legumes require extractable phosphorus and sulphur to nodulate effectively in Zaria and Guinea savanna Alfisols (<em>Franke et al., 2008</em>).</li>
+            <li><strong>Village rain gauges &amp; farmer memory:</strong> Satellite LGA averages smooth out convective village dry spells where rainfall misses single communities.</li>
+            <li><strong>Field-specific <em>Striga</em> seedbanks:</strong> Satellites cannot detect underground witchweed seed load or past manure and fertilizer applications on a specific ridge.</li>
+            <li><strong>Local seed &amp; inoculant supply:</strong> Variety maturity class, rhizobium inoculants, and labor/traction availability require KADA officer confirmation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="fd-section-label">Multi-Sensor &amp; Native-File Cross-Checks (Model Audit)</p>
+      <div class="fd-table-wrap">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Cross-Check Pair</th>
+              <th>Quantitative Result Across Kaduna (23 LGAs)</th>
+              <th>Design Consequence on Strategy Cards</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>NASA POWER vs ERA5-Land Tmax</strong><br><small>1981–2025 warming rate</small></td>
+              <td>POWER Tmax warms <span class="fd-mono-pill">+0.50°C/dec</span> median vs ERA5-Land <span class="fd-mono-pill">+0.22°C/dec</span> median; heat days rise <span class="fd-mono-pill">+11.7 d/dec</span> (16/23 LGAs FDR-significant).</td>
+              <td>Direction of warming is robust, but POWER likely overstates magnitude — cards report <em>"more heat days"</em> qualitatively without over-claiming an exact count.</td>
+            </tr>
+            <tr>
+              <td><strong>CHIRPS v2.0 vs GPM IMERG V07</strong><br><small>Daily rain vs storm intensity</small></td>
+              <td>CHIRPS spreads drizzle across light days (&lt;1 mm), so 7+ day June–Sept dry spells touch only <span class="fd-mono-pill">1–2%</span> of cropland/month even per 5.5 km pixel; IMERG overstates city storm peaks in Kaduna North &amp; South (<span class="fd-mono-pill">imerg_suspect</span>).</td>
+              <td>CHIRPS drives 45-year onset &amp; FAO-56 water balance; IMERG 95th-percentile wet-day rain drives A10 erosion hazard with urban low-cropland warnings.</td>
+            </tr>
+            <tr>
+              <td><strong>Earth Engine SMAP vs Native HDF5</strong><br><small>51 sample days across 23 LGAs</small></td>
+              <td>GEE <span class="fd-mono-pill">sm_rootzone</span> vs NSIDC native EASE-Grid HDF5: <span class="fd-mono-pill">r = 0.996</span>, mean difference <span class="fd-mono-pill">0.0032 m³/m³</span> (bias +0.0002, native mean 0.209); wetness <span class="fd-mono-pill">r = 0.997</span>.</td>
+              <td>Confirms server-side Earth Engine grid reduction introduces negligible error relative to raw NASA Earthdata granules.</td>
+            </tr>
+            <tr>
+              <td><strong>GLDAS-2.1 vs ERA5-Land Soil Water</strong><br><small>2000–2025 root-zone trend</small></td>
+              <td>GLDAS drops <span class="fd-mono-pill">-12 mm/dec</span> in a post-2015 step, whereas ERA5-Land (7–28 cm) has <strong>0</strong> significant LGAs and year-to-year <span class="fd-mono-pill">r = 0.03</span> while rainfall is flat (<span class="fd-mono-pill">+2.9 mm/dec</span>).</td>
+              <td>Flagged as an unconfirmed reanalysis step artifact; excluded from farmer cards and documented transparently here.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="decision-logic" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-green">Section 2 · Requirements R16, R29, R31, R43</p>
+      <h2 class="fd-learn-h2" data-lang-ha="2. Tsarin Yanke Shawara Mataki 4 da Jadawalin LGA (R16, R31)">2. Harmonized LGA × Month Grid &amp; 4-Step Decision Engine</h2>
+      <p class="fd-learn-lead">
+        Data decides; published savanna agronomy checks the decision. Every sensor is harmonized onto a common cropland-masked <strong>LGA × Month</strong> and <strong>LGA × Year</strong> grid in <span class="fd-mono-pill">EPSG:4326</span> (area and slope maths in <span class="fd-mono-pill">UTM Zone 32N</span>).
+      </p>
+
+      <div class="fd-alert fd-alert-green" style="margin-bottom:16px;">
+        <strong>Cropland Masking &amp; Resampling (R29, R43):</strong> All vegetation, terrain, and soil layers are masked to
+        <strong>ESA WorldCover v200 10 m cropland (class 40)</strong> before server-side aggregation in Google Earth Engine, preventing forest reserves and urban roofs from distorting farm indicators. Continuous fields use bilinear/area-mean reduction; categorical layers preserve class rules.
+      </div>
+
+      <div class="fd-grid-2" style="margin-bottom:16px;">
+        <div class="fd-card-soft">
+          <p class="fd-section-label">Step 1 · 72 Data-Generated Sequences</p>
+          <p style="margin:0;font-size:13.5px;">
+            Generates every two-season sequence of two distinct crops from our 14-crop savanna catalog (72 primary water-balanced two-season candidates across maize, sorghum, millet, soybean, cowpea, groundnut, sesame, cassava, tomato, plus ECOCROP season-checked crops). Published trials never whitelist or remove candidates.
+          </p>
+        </div>
+        <div class="fd-card-soft">
+          <p class="fd-section-label">Step 2 · A9 Water &amp; A15 Suitability Filter</p>
+          <p style="margin:0;font-size:13.5px;">
+            Under the chosen season scenario, rainfed crops running short of water (&gt;10% ET deficit) in <strong>&gt;50%</strong> of seasons or fitting the A2 rainy window (onset to cessation) in <strong>≤50%</strong> of years are dropped with a logged reason. Crops fitting <strong>50–80%</strong> of years stay with an explicit harvest-timing risk line.
+          </p>
+        </div>
+        <div class="fd-card-soft">
+          <p class="fd-section-label">Step 3 · 7 Scored Dimensions (0 to 1)</p>
+          <p style="margin:0;font-size:13.5px;">
+            Scores <strong>Nutrients (N)</strong>, <strong>Organic Matter</strong> (<span class="fd-mono-pill">0.7×cover + 0.3×legume</span>), <strong>Erosion &amp; Infiltration</strong> (<span class="fd-mono-pill">0.5×cover + 0.5×root depth</span>), <strong>Pest/Striga Cycle</strong>, <strong>Water Use</strong> (50% chosen scenario + 50% LGA A5 climate mix), <strong>Forage</strong>, and <strong>KDBS Market Fit</strong>. Missing facts remain unscored and lower coverage weight.
+          </p>
+        </div>
+        <div class="fd-card-soft">
+          <p class="fd-section-label">Step 4 · LGA Need × 3× Priority Multipliers</p>
+          <p style="margin:0;font-size:13.5px;">
+            Base weights (<span class="fd-mono-pill">0.5</span>, <span class="fd-mono-pill">1.0</span>, <span class="fd-mono-pill">1.5</span>) reflect whether the LGA sits in the best, middle, or worst third of Kaduna on iSDA N, organic C, A10 erosion, A2 dry spells, and <em>Striga</em> soil risk. Each farmer priority multiplies its row by <strong>3×</strong>; high field <em>Striga</em> adds <strong>+2.0</strong> to Pests. Option B must use a distinct crop set from Option A.
+          </p>
+        </div>
+      </div>
+
+      <div class="fd-alert fd-alert-blue">
+        <strong>Independent Study Benchmark (Notebook <span class="fd-mono-pill">a13_engine_validation.ipynb</span>):</strong>
+        Across all 23 LGAs, 4 season types, and 2 baseline monocultures (continuous maize &amp; continuous sorghum), the <strong>8 published Nigerian and West African Guinea savanna trial sequences rank at the 83rd percentile</strong> on average versus <strong>47% for random sequences</strong> (10,000-draw permutation test, <span class="fd-mono-pill">p = 0.0001</span>). The 6 cereal–grain-legume rotations (<em>sorghum→cowpea 100th</em>, <em>maize→cowpea 96th</em>, <em>sorghum→groundnut 94th</em>, <em>millet→groundnut 92nd</em>, <em>maize→groundnut 91st</em>, <em>maize→soybean 85th</em>) sit at the top of the data-only ranking.
+      </div>
+    </section>
+
+    <section id="si-models" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-terra">Section 3 · Requirements R27, R28, R33</p>
+      <h2 class="fd-learn-h2" data-lang-ha="3. Samfuran Kididdiga da SI da Gwaje-gwajen Gaskiya (R27, R28)">3. Statistical &amp; SI Models: Held-Out Evaluation &amp; Honesty Rule</h2>
+      <p class="fd-learn-lead">
+        Every statistical and SI method is tested on temporally or spatially grouped folds against a simpler baseline — never random splits — and negative results are reported transparently.
+      </p>
+
+      <p class="fd-section-label">A6 Crop Stress Vulnerability Model · 525 LGA-Years (21 Cropland LGAs, 2000–2024)</p>
+      <div class="fd-table-wrap" style="margin-bottom:14px;">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Model (Aug–Sep Cropland NDVI Anomaly)</th>
+              <th>Leave-One-Year-Out RMSE</th>
+              <th>Senatorial Zone CV RMSE</th>
+              <th>Skill vs Normal (Year / Zone)</th>
+              <th>80% Interval Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Climatology Reference</strong> (predict LGA normal)</td>
+              <td><span class="fd-mono-pill">0.980</span></td>
+              <td><span class="fd-mono-pill">0.980</span></td>
+              <td>0.0% / 0.0%</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>Ridge Regression</strong> (documented linear baseline)</td>
+              <td><span class="fd-mono-pill">1.017</span></td>
+              <td><span class="fd-mono-pill">1.004</span></td>
+              <td>-3.8% / -2.5%</td>
+              <td><strong>80%</strong> yr / <strong>81%</strong> zone (LOO residuals)</td>
+            </tr>
+            <tr>
+              <td><strong>LightGBM Regressor</strong> (8 leaves, min 20 rows/leaf)</td>
+              <td><span class="fd-mono-pill">1.032</span></td>
+              <td><span class="fd-mono-pill">1.016</span></td>
+              <td>-5.3% / -3.7%</td>
+              <td>72% yr / 63% zone (10th–90th quantile)</td>
+            </tr>
+            <tr>
+              <td><strong>LightGBM + Optuna</strong> (40 trials, upper bound)</td>
+              <td><span class="fd-mono-pill">0.988</span></td>
+              <td><span class="fd-mono-pill">0.976</span></td>
+              <td>-0.8% / +0.4%</td>
+              <td>Shrunk to flat predictions (21 trees, lr 0.011)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="fd-alert fd-alert-amber" style="margin-bottom:18px;">
+        <strong>Honesty Rule in Action (<span class="fd-mono-pill">weather_risk_a2_a9</span>):</strong>
+        LightGBM (<span class="fd-mono-pill">RMSE 1.032</span>) did not beat Ridge (<span class="fd-mono-pill">1.017</span>), and neither beat Climatology (<span class="fd-mono-pill">0.980</span>). Diagnostics show August–September LGA-mean MODIS NDVI is dominated by monsoon cloud noise (MODIS vs VIIRS agreement <span class="fd-mono-pill">r = 0.27</span>; hotter/sunnier Julys read greener at <span class="fd-mono-pill">r = +0.41</span>). Rather than placing noisy ML scores onto farmer advice, strategy cards take moisture risk directly from <strong>A2 dry spells</strong> and <strong>A9 FAO-56 water deficits</strong> (<span class="fd-mono-pill">card_source = weather_risk_a2_a9</span>), and A12 scores vegetation-stress skill as 0/2.
+      </div>
+
+      <p class="fd-section-label">All Shipped Analytical Modules vs Baselines (Notebooks A4, A5, A7, A9, A16)</p>
+      <div class="fd-table-wrap">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>Primary Method</th>
+              <th>Baseline / Sanity Check</th>
+              <th>Held-Out Result &amp; What Ships</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>A5 Season Types</strong><br><small>2000–2024 anomalies</small></td>
+              <td>K-means (<span class="fd-mono-pill">k = 4</span>, 6 LGA-anomaly features, fixed seed)</td>
+              <td>Gaussian Mixture Model (GMM) + 20-seed stability</td>
+              <td>Silhouette <span class="fd-mono-pill">0.21–0.24</span>, Davies-Bouldin <span class="fd-mono-pill">1.46</span>, seed stability <strong>ARI ≥ 0.91</strong>. GMM BIC independently picks <strong>4 components</strong> with <strong>64%</strong> row agreement (<em>Wet 29%</em>, <em>Late start 25%</em>, <em>Typical 24%</em>, <em>Dry spell 22%</em>).</td>
+            </tr>
+            <tr>
+              <td><strong>A4 Bare-Field Months</strong><br><small>16-day MODIS NDVI</small></td>
+              <td>Savitzky-Golay smoothed per-LGA threshold</td>
+              <td>Raw fixed <span class="fd-mono-pill">0.25</span> NDVI threshold</td>
+              <td>Per-LGA smoothed achieves <strong>1.99 flips/yr</strong> and <strong>0.859</strong> Nov–Apr dry-season agreement vs <strong>0.620</strong> for fixed 0.25 (which misses wooded southern farm mosaics near NDVI 0.30).</td>
+            </tr>
+            <tr>
+              <td><strong>A7 Climate Trends</strong><br><small>1981–2025 series</small></td>
+              <td>Mann-Kendall + Sen slope + stricter Hamed-Rao + BH FDR</td>
+              <td>Ordinary Least Squares (OLS) linear slope</td>
+              <td>Heat days (<span class="fd-mono-pill">+11.7 d/dec</span>) significant in <strong>16/23 LGAs</strong> after FDR; rain onset (<span class="fd-mono-pill">+2.9 d/dec</span> later in 20 LGAs) and seasonal rain (<span class="fd-mono-pill">+2.9 mm/dec</span>) have 0 FDR-significant LGAs.</td>
+            </tr>
+            <tr>
+              <td><strong>A9 Water Balance</strong><br><small>1981–2025 daily bucket</small></td>
+              <td>FAO-56 Penman-Monteith ET0 × dynamic Kc + iSDA AWC</td>
+              <td>Hargreaves temperature ET0 + SMAP L4 check</td>
+              <td>Statewide groundnut shortfall is <strong>5.3%</strong> (Penman-Monteith) vs <strong>4.5%</strong> (Hargreaves); northern LGAs face <strong>20–29%</strong> groundnut ripening shortfall, and late-start years cut 125-day maize season fit to <strong>56%</strong> vs 84–100% for cowpea/soybean.</td>
+            </tr>
+            <tr>
+              <td><strong>A16 System Backtest</strong><br><small>LOO 2000–2024 (R33)</small></td>
+              <td>Card warning (&lt;80% season fit) conditioned on A5 season type</td>
+              <td>Unconditioned LGA warning (no season type)</td>
+              <td><strong>85% hit rate</strong> and <strong>10% false alarms</strong> (<span class="fd-mono-pill">18.7×</span> lift) on maize failing to finish in the rains vs 81% hits and <strong>29% false alarms</strong> (<span class="fd-mono-pill">7.1×</span> lift) without season type; flags 2017 Late-start bad year across 52% of LGAs.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="datasets" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-green">Section 4 · Requirements R2, R34</p>
+      <h2 class="fd-learn-h2" data-lang-ha="4. Bayanan NASA da Aka Yi Amfani da Su da Wanda Aka Cire (R2, R34)">4. NASA &amp; Partner Datasets Catalog (Used &amp; Excluded)</h2>
+      <p class="fd-learn-lead">
+        Every ingested dataset is version-pinned and reduced server-side to Kaduna's 23 LGAs (<span class="fd-mono-pill">docs/sources.md</span>). Datasets whose spatial footprint or orbital sampling cannot support honest LGA rotation advice are explicitly excluded.
+      </p>
+
+      <p class="fd-section-label">(a) NASA &amp; Partner Datasets Used in Production</p>
+      <div class="fd-table-wrap" style="margin-bottom:18px;">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Dataset &amp; Version</th>
+              <th>Native Resolution</th>
+              <th>Record Span</th>
+              <th>Role in FieldDynamics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>NASA POWER</strong><br><small>Agroclimatology Daily API (MERRA-2)</small></td>
+              <td>0.5° × 0.625°</td>
+              <td>1981–2025</td>
+              <td>Daily Tmax, Tmin, solar radiation, wind &amp; humidity for FAO-56 Penman-Monteith ET0, heat days (≥35°C), and frost check (≤2°C; 1981–83 solar gaps flagged via Eq. 50).</td>
+            </tr>
+            <tr>
+              <td><strong>NASA MODIS</strong><br><small>MOD13Q1 / MOD11A2 / MOD16A2GF V6.1</small></td>
+              <td>250 m / 1 km / 500 m</td>
+              <td>2000–2026</td>
+              <td>16-day cropland NDVI bare-field probability (A4), 8-day land surface temperature, and ET checks; continuity checked with <strong>NASA VIIRS VNP13A1 V2</strong> (500 m).</td>
+            </tr>
+            <tr>
+              <td><strong>NASA GPM IMERG</strong><br><small>Final Run V07 (<span class="fd-mono-pill">NASA/GPM_L3/IMERG_V07</span>)</small></td>
+              <td>0.1° (~11 km), 30-min</td>
+              <td>1998–2026</td>
+              <td>95th-percentile wet-day monsoon storm intensity driving topsoil erosion hazard (A10).</td>
+            </tr>
+            <tr>
+              <td><strong>NASA SMAP</strong><br><small>SPL4SMGP V008 Root-Zone &amp; Surface</small></td>
+              <td>~9 km daily</td>
+              <td>2015–2026</td>
+              <td>Standardized monthly root-zone soil moisture z-scores and July flowering dry-soil frequency (A3).</td>
+            </tr>
+            <tr>
+              <td><strong>NASA / USGS SRTM</strong><br><small>SRTM GL1 v3 (<span class="fd-mono-pill">USGS/SRTMGL1_003</span>)</small></td>
+              <td>30 m</td>
+              <td>Static (2000)</td>
+              <td>Cropland slope percentage and terrain relief for A10 erosion index.</td>
+            </tr>
+            <tr>
+              <td><strong>NASA HLS (Landsat + Sentinel-2)</strong><br><small>HLSL30 &amp; HLSS30 v2.0</small></td>
+              <td>30 m</td>
+              <td>2014–2026</td>
+              <td>High-resolution dry- and peak-season cropland NDVI medians verifying MODIS Terra stability.</td>
+            </tr>
+            <tr>
+              <td><strong>CHIRPS v2.0</strong><br><small>UCSB Climate Hazards Center Daily</small></td>
+              <td>0.05° (~5.5 km)</td>
+              <td>1981–2026</td>
+              <td>Primary 45-year daily rainfall for A2 onset/cessation, in-season dry spells, A7 trends, and A9 water balance.</td>
+            </tr>
+            <tr>
+              <td><strong>iSDAsoil v1 &amp; OpenLandMap</strong><br><small>21 African Soil Layers + 33/1500 kPa ref</small></td>
+              <td>30 m (to 1 km grid)</td>
+              <td>Static map</td>
+              <td>Cropland texture, pH, total N, organic C, extractable P &amp; S, erodibility K, and Saxton-Rawls available water capacity (A8).</td>
+            </tr>
+            <tr>
+              <td><strong>ESA WorldCover v200 &amp; geoBoundaries</strong><br><small>Class 40 Cropland + GRID3 NGA ADM2</small></td>
+              <td>10 m / Vector</td>
+              <td>2021 / 2022</td>
+              <td>10 m agricultural land mask (R43) and official 23-LGA polygon boundaries in EPSG:4326.</td>
+            </tr>
+            <tr>
+              <td><strong>FAO ECOCROP &amp; ERA5-Land</strong><br><small>Recocrop 0.4-2 + ECMWF 0.1° Reanalysis</small></td>
+              <td>14 crops / 0.1°</td>
+              <td>Static / 1981–2026</td>
+              <td>SHA-256 pinned crop climate/pH/texture envelopes (A15) and independent reanalysis check on temperature and soil water (A7).</td>
+            </tr>
+            <tr>
+              <td><strong>KDBS Market Prices</strong><br><small>Kaduna Bureau of Statistics Retail API</small></td>
+              <td>23 LGAs, 24 items</td>
+              <td>2026-11-14 export</td>
+              <td>Local retail crop prices per <em>mudu</em> in each LGA powering the Market Fit row.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="fd-section-label">(b) NASA Datasets Considered &amp; Excluded (Requirement R34)</p>
+      <div class="fd-table-wrap">
+        <table class="fd-table">
+          <thead>
+            <tr>
+              <th>Excluded NASA Mission</th>
+              <th>Native Footprint / Coverage</th>
+              <th>Scientific Reason for Exclusion &amp; Chosen Alternative</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>GRACE / GRACE-FO</strong><br><small>Terrestrial Water Storage</small></td>
+              <td>~300 km gravity mascons</td>
+              <td>Covers all of Kaduna State in a handful of coarse cells and cannot distinguish individual LGAs or root-zone topsoil from deep aquifers. Long-term water trends use 45-year <strong>CHIRPS rain minus FAO-56 ET0</strong> and A2 dry spells instead.</td>
+            </tr>
+            <tr>
+              <td><strong>ECOSTRESS</strong><br><small>ISS Thermal Evapotranspiration</small></td>
+              <td>70 m, irregular revisit</td>
+              <td>Patchy cloud-free scene availability over Nigeria prevents uniform 12-month LGA climatologies. Surface heat and crop water demand use <strong>MODIS LST</strong>, <strong>MOD16 ET</strong>, and daily <strong>NASA POWER FAO-56</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>GEDI</strong><br><small>ISS Full-Waveform Lidar</small></td>
+              <td>25 m footprints</td>
+              <td>Measures vertical forest canopy height and woody biomass rather than annual smallholder cereal–legume rotations.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="soil-health" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-green">Section 5 · Requirement R30</p>
+      <h2 class="fd-learn-h2" data-lang-ha="5. Yadda Amfanin Gona Daban-daban Ke Gina Lafiyar Kasa (R30)">5. How Different Functional Crop Groups Build Soil Health</h2>
+      <p class="fd-learn-lead">
+        Rotating crops across botanical families repairs multiple soil and pest constraints simultaneously instead of relying on synthetic nitrogen alone.
+      </p>
+
+      <div class="fd-grid-2">
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-ok" style="margin-bottom:8px;">Biological Nitrogen &amp; Striga Break</span>
+          <h3 style="margin:0 0 6px;font-size:16px;">Nitrogen-Fixing Legumes</h3>
+          <p style="margin:0;font-size:13.5px;color:var(--ink-soft);">
+            <strong>Soybean, cowpea, and groundnut</strong> host root-nodule <em>Rhizobium</em> bacteria that convert atmospheric N₂ into plant-available nitrogen, adding <strong>+0.38 to +1.01 t/ha</strong> to the following maize crop (<em>Kermah et al., 2018</em>) and stimulating suicidal germination of <em>Striga hermonthica</em> witchweed seeds (<strong>35%</strong> cut after 1 year, <strong>76%</strong> after 2 years — <em>Kureh et al., 2003</em>). Zaria trials show legumes still need soil <strong>phosphorus (P) and sulphur (S)</strong> to fix N well (<em>Franke et al., 2008</em>).
+          </p>
+        </div>
+
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-blue" style="margin-bottom:8px;">Topsoil Shield &amp; Organic Carbon</span>
+          <h3 style="margin:0 0 6px;font-size:16px;">Cover &amp; Residue-Building Crops</h3>
+          <p style="margin:0;font-size:13.5px;color:var(--ink-soft);">
+            <strong>Leafy legumes, sorghum stover, and longer-canopy rotations</strong> narrow Kaduna's Nov–Apr bare-field window (A4), shielding exposed ridges from intense July–September monsoon raindrops (<span class="fd-mono-pill">IMERG p95</span>) and returning organic carbon that improves moisture retention during mid-season dry pauses (<em>Ebireri, 2013</em>).
+          </p>
+        </div>
+
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-amber" style="margin-bottom:8px;">Subsoil Biopores &amp; Anchoring</span>
+          <h3 style="margin:0 0 6px;font-size:16px;">Deep-Rooting Crops</h3>
+          <p style="margin:0;font-size:13.5px;color:var(--ink-soft);">
+            <strong>Sorghum (2.0 m), pearl millet (2.0 m), and maize (1.7 m)</strong> rainfed root systems (FAO-56 Table 22) open vertical root channels through Hydrologic Soil Group B loams, slowing surface sheet runoff on sloping fields (<span class="fd-mono-pill">SRTM 30 m</span>) and scavenging leached subsoil moisture and nutrients.
+          </p>
+        </div>
+
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-muted" style="margin-bottom:8px;">Escape Terminal Drought</span>
+          <h3 style="margin:0 0 6px;font-size:16px;">Short-Season &amp; Drought-Tolerant Crops</h3>
+          <p style="margin:0;font-size:13.5px;color:var(--ink-soft);">
+            <strong>Early soybean (85 d), cowpea (100 d), millet (105 d), and sesame (110 d)</strong> finish grain fill safely before October cessation when rains start 4–5 weeks late. In A9 simulations, cowpea and soybean fit <strong>≥84%</strong> of seasons in every LGA even under Late-start scenarios where 125-day maize fits only <strong>56%</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="uncertainty" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-terra">Section 6 · Requirements R11, R21, R22</p>
+      <h2 class="fd-learn-h2" data-lang-ha="6. Rashin Tabbas, Iyakokin Tauraron Dan Adam da Hukuncin Manomi (R11, R21, R22)">6. Uncertainty Scoring, Spatial Limits &amp; Human Extension Role</h2>
+      <p class="fd-learn-lead">
+        Every recommendation carries an explicit <strong>A12 Confidence Score (0–8 points)</strong> and standing data-gap disclosures so uncertainty is never hidden behind a polished score.
+      </p>
+
+      <div class="fd-grid-3" style="margin-bottom:16px;">
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-high">High Confidence (≥ 6 / 8)</span>
+          <p style="margin:8px 0 0;font-size:13px;color:var(--ink-soft);">
+            <strong>4 LGAs:</strong> Ikara, Kubau, Lere, Makarfi. High cropland density (&gt;74%) and cleaner skies yield crisp satellite crop masks.
+          </p>
+        </div>
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-medium">Medium Confidence (4–5 / 8)</span>
+          <p style="margin:8px 0 0;font-size:13px;color:var(--ink-soft);">
+            <strong>14 LGAs</strong> (including Zaria, Giwa, Sabon Gari, Soba, Birnin Gwari, Kauru, Kaura, Sanga, Jema'a, Kagarko, Kajuru, Igabi, Kudan, Zangon Kataf). Moderate monsoon cloud gap-filling or savanna tree mosaic.
+          </p>
+        </div>
+        <div class="fd-card-soft">
+          <span class="fd-badge fd-badge-low">Low Confidence (&lt; 4 / 8 · Check First)</span>
+          <p style="margin:8px 0 0;font-size:13px;color:var(--ink-soft);">
+            <strong>5 LGAs:</strong> Chikun, Jaba, Kachia, Kaduna North, Kaduna South. Wooded southern cloud cover or urban low-cropland share (&lt;15%) triggers <span class="fd-mono-pill">check_first = true</span> (R22).
+          </p>
+        </div>
+      </div>
+
+      <ul style="margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-soft);display:grid;gap:8px;">
+        <li><strong>How A12 is computed:</strong> Sums four 0–2 scores: (1) ESA WorldCover cropland share, (2) cloud-filled MODIS NDVI composite fraction, (3) iSDAsoil relative uncertainty width (2/2 statewide), and (4) A6 vegetation-stress skill (0/2 everywhere until satellite stress prediction beats climatology). Confidence drops one step further if water filters must be relaxed or if soil texture is marked <em>"Not sure"</em>.</li>
+        <li><strong>Why satellites cannot separate mixed smallholder plots:</strong> A 250 m MODIS pixel spans ~6.25 hectares — blending several family farms, maize–cowpea intercrop ridges, boundary trees, and footpaths. Satellites cannot distinguish maize from soybean on a 0.5 ha field or detect localized runoff (A9 sets runoff to zero and extends iSDA subsoil below 50 cm).</li>
+        <li><strong>Advisory boundary:</strong> This tool supports farmer judgment and local expertise; it never replaces them. KADA extension officers validate seed varieties, planting dates after actual village rain, and P/S fertilizer plans.</li>
+      </ul>
+    </section>
+
+    <section id="glossary" class="fd-card fd-learn-section">
+      <p class="fd-learn-eyebrow is-blue">Section 7 · Requirement R23 · Live Values for {{ sv.lga }} LGA</p>
+      <h2 class="fd-learn-h2" data-lang-ha="7. Kamus na Kalmomin Kimiyya cikin Sauki (R23)">7. Plain-Language Agro-Climate Glossary ({{ sv.lga }} LGA)</h2>
+      <p class="fd-learn-lead">
+        Every technical indicator used across the season strip and rotation cards is translated below in plain language alongside its live reading in <strong>{{ sv.lga }}</strong>.
+      </p>
+
+      <div class="fd-glossary-grid">
+        {% for term_key, term in sv.terms.items() %}
+        <article class="fd-card-soft" style="display:flex;flex-direction:column;justify-content:space-between;gap:10px;">
+          <div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+              <h3 style="margin:0;font-size:15.5px;font-weight:800;color:var(--ink);">{{ term.title }}</h3>
+              <span class="fd-badge fd-badge-ok" style="flex-shrink:0;">{{ term.reading }}</span>
+            </div>
+            <p style="margin:2px 0 8px;font-size:11.5px;font-weight:700;color:var(--muted);">{{ term.subtitle }}</p>
+            <p class="fd-dl-row"><strong>What it means:</strong> {{ term.what }}</p>
+            <p class="fd-dl-row"><strong>In {{ sv.lga }}:</strong> {{ term.reading_note }}</p>
+            <p class="fd-dl-row"><strong>Why it matters:</strong> {{ term.why }}</p>
+          </div>
+          <div style="padding-top:8px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+            <small style="font-size:11.5px;color:var(--muted);"><strong>Source:</strong> {{ term.source }}</small>
+            <button type="button" class="fd-term-btn" data-explain-term="{{ term_key }}" data-lga="{{ sv.lga }}">Tap sheet</button>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll("#learnTocList .fd-toc-link"));
+  var sections = links
+    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+    .filter(Boolean);
+
+  function setActive(id) {
+    links.forEach(function (a) {
+      a.classList.toggle("is-active", a.getAttribute("href") === "#" + id);
+    });
+  }
+
+  links.forEach(function (a) {
+    a.addEventListener("click", function () {
+      setActive(a.getAttribute("href").slice(1));
+    });
+  });
+
+  if ("IntersectionObserver" in window && sections.length) {
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-90px 0px -65% 0px", threshold: 0.05 }
+    );
+    sections.forEach(function (sec) { observer.observe(sec); });
+  }
+})();
+</script>
 {% endblock %}

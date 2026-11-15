@@ -1,56 +1,733 @@
 {% extends "_base.html" %}
 
-{% block title %}Step 2: Farmer Priorities · FieldDynamics{% endblock %}
+{% block title %}Step 2 · Farmer Priorities & Market · FieldDynamics{% endblock %}
+
+{% block head_extra %}
+<style>
+  @media (min-width: 1024px) {
+    .fd-prio-layout {
+      grid-template-columns: 1.3fr 0.9fr;
+    }
+  }
+  .fd-prio-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .fd-prio-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .fd-prio-heading {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .fd-prio-count-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #faf8f5;
+    font-size: 11.5px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .fd-prio-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .fd-prio-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .fd-prio-btn.is-wide {
+      grid-column: 1 / -1;
+    }
+  }
+  .fd-prio-btn {
+    --prio-accent: #86efac;
+    width: 100%;
+    min-height: 64px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--bg-card);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .fd-prio-btn:hover {
+    background: var(--bg-warm);
+    border-color: var(--ink-soft);
+  }
+  .fd-prio-btn[data-priority="save_water"] {
+    --prio-accent: #60a5fa;
+  }
+  .fd-prio-btn[data-priority="add_nitrogen"] {
+    --prio-accent: #4ade80;
+  }
+  .fd-prio-btn[data-priority="build_organic_matter"] {
+    --prio-accent: #fbbf24;
+  }
+  .fd-prio-btn[data-priority="stop_erosion"] {
+    --prio-accent: #2dd4bf;
+  }
+  .fd-prio-btn[data-priority="feed_animals"] {
+    --prio-accent: #a3e635;
+  }
+  .fd-prio-btn[data-priority="extra_income"] {
+    --prio-accent: #fcd34d;
+  }
+  .fd-prio-btn[data-priority="fewer_pests"] {
+    --prio-accent: #fb923c;
+  }
+  .fd-prio-icon {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    color: var(--muted);
+  }
+  .fd-prio-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .fd-prio-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .fd-prio-desc {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+  .fd-prio-btn.is-selected,
+  .fd-prio-btn[aria-pressed="true"] {
+    background: #18201b;
+    border-color: #18201b;
+    color: #faf8f5;
+  }
+  .fd-prio-btn.is-selected .fd-prio-icon,
+  .fd-prio-btn[aria-pressed="true"] .fd-prio-icon {
+    color: var(--prio-accent);
+  }
+  .fd-prio-btn.is-selected .fd-prio-desc,
+  .fd-prio-btn[aria-pressed="true"] .fd-prio-desc {
+    color: var(--prio-accent);
+  }
+  .fd-sell-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .fd-sell-row {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--bg-card);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .fd-sell-row:hover {
+    background: var(--bg-warm);
+  }
+  .fd-sell-row.is-selected,
+  .fd-sell-row[aria-pressed="true"] {
+    background: #18201b;
+    border-color: #18201b;
+    color: #faf8f5;
+  }
+  .fd-sell-sub {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 12.5px;
+  }
+  .fd-sell-row.is-selected .fd-sell-sub,
+  .fd-sell-row[aria-pressed="true"] .fd-sell-sub {
+    color: #cbd5cf;
+  }
+  .fd-sell-check {
+    font-size: 12px;
+    font-weight: 800;
+    color: #4ade80;
+    white-space: nowrap;
+    display: none;
+  }
+  .fd-sell-row.is-selected .fd-sell-check,
+  .fd-sell-row[aria-pressed="true"] .fd-sell-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .fd-matrix-box {
+    margin-bottom: 8px;
+  }
+  .fd-matrix-title {
+    margin: 0 0 10px;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .fd-matrix-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .fd-matrix-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .fd-matrix-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .fd-matrix-dim {
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .fd-matrix-row.is-prio .fd-matrix-dim {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .fd-matrix-val {
+    font-size: 12.5px;
+    font-weight: 700;
+    text-align: right;
+  }
+  .fd-matrix-val.is-base {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .fd-matrix-val.is-blue {
+    color: var(--blue);
+  }
+  .fd-matrix-val.is-green {
+    color: var(--green);
+  }
+  .fd-card-footnote {
+    margin: 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fd-mobile-cta-wrap {
+    margin-top: 18px;
+  }
+  @media (min-width: 768px) {
+    .fd-mobile-cta-wrap {
+      display: none;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="fd-screen fd-priorities-screen">
-  <div class="fd-step-intro">
-    <div class="fd-step-num">STEP 2 OF 5</div>
-    <h1 class="fd-title">Farmer Priorities & Market Goals</h1>
-    <p class="fd-sub">Select up to 3 agronomic priorities to weigh candidate rotations for {{ selected_lga_info.lga }} LGA.</p>
+{% set ns = namespace(chosen_dims=[]) %}
+{% for pid, _, _, dkey in priority_meta %}
+  {% if pid in advisor_req.priorities %}
+    {% set ns.chosen_dims = ns.chosen_dims + [dkey] %}
+  {% endif %}
+{% endfor %}
+
+<section class="fd-page-head">
+  <div>
+    <h1 class="fd-h1" data-lang-ha="Mataki na 2 · Bukatun Manomi da Kasuwa">Step 2 · Farmer Priorities &amp; Market</h1>
+    <p class="fd-sub" data-lang-ha="Zabi bukatu har zuwa 3. Bukatun da aka zaba suna samun nauyi ninki 3× a makin musayar shuka.">
+      Select up to 3 goals. Chosen priorities receive 3× weighting in rotation scoring.
+    </p>
   </div>
+  <div>
+    <button
+      type="button"
+      id="continueSeasonBtn"
+      class="fd-btn fd-btn-dark"
+      data-lang-ha="Duba Damina da Kwatanta (3/6) →"
+    >View Season &amp; Compare (3/6) →</button>
+  </div>
+</section>
 
-  <form method="get" action="/season" class="fd-priorities-form">
-    <input type="hidden" name="lga" value="{{ advisor_req.lga }}">
-    <input type="hidden" name="soil" value="{{ advisor_req.soil or '' }}">
-    <input type="hidden" name="water" value="{{ advisor_req.water }}">
-    <input type="hidden" name="equipment" value="{{ advisor_req.equipment }}">
-    <input type="hidden" name="s1" value="{{ advisor_req.past_seasons[-1]|join(',') }}">
-    <input type="hidden" name="s2" value="{{ advisor_req.past_seasons[0]|join(',') if advisor_req.past_seasons|length > 1 else '' }}">
+<div class="fd-grid-2 fd-prio-layout">
+  <section class="fd-card fd-prio-card" aria-label="7 agronomic priority dimensions">
+    <div>
+      <div class="fd-prio-head">
+        <h2 class="fd-prio-heading" data-lang-ha="BANGARORIN BUKATUN GONA 7">7 AGRONOMIC PRIORITY DIMENSIONS</h2>
+        <span class="fd-prio-count-pill" id="prioCountBadge" aria-live="polite">
+          {{ advisor_req.priorities|length }} of 3 chosen
+        </span>
+      </div>
 
-    <div class="fd-section-block">
-      <h2>1. Select Priorities (Choose up to 3)</h2>
-      <div class="fd-priorities-grid">
-        {% for p_key, p_title, p_desc, p_dim in priority_meta %}
-          {% set is_selected = p_key in advisor_req.priorities %}
-          <label class="fd-priority-card {% if is_selected %}is-checked{% endif %}">
-            <input type="checkbox" name="priorities" value="{{ p_key }}" {% if is_selected %}checked{% endif %} class="fd-checkbox">
-            <div class="fd-priority-body">
-              <span class="fd-priority-title">{{ p_title }}</span>
-              <span class="fd-priority-desc">{{ p_desc }}</span>
-              <span class="fd-priority-dim">Dimension: {{ dimension_labels.get(p_dim, p_dim) }}</span>
-            </div>
-          </label>
+      <div id="prioLimitToast" class="fd-alert fd-alert-amber" role="alert" style="margin-bottom:12px;" hidden>
+        Pick up to 3 priorities — deselect one first to choose another.
+      </div>
+
+      <div
+        id="prioZeroNotice"
+        class="fd-alert fd-alert-blue"
+        role="status"
+        style="margin-bottom:12px;"
+        {% if advisor_req.priorities|length > 0 %}hidden{% endif %}
+      >
+        No priority selected: base weights from <strong id="prioZeroLga">{{ advisor_req.lga }}</strong> soil &amp; climate need will rank rotations.
+      </div>
+
+      <div class="fd-prio-grid" role="group" aria-label="Choose up to 3 farmer priorities">
+        {% for pid, label, desc, dim_key in priority_meta %}
+        {% set is_picked = pid in advisor_req.priorities %}
+        <button
+          type="button"
+          class="fd-prio-btn {% if is_picked %}is-selected{% endif %} {% if pid == 'fewer_pests' %}is-wide{% endif %}"
+          data-priority="{{ pid }}"
+          data-dim="{{ dim_key }}"
+          aria-pressed="{{ 'true' if is_picked else 'false' }}"
+        >
+          <span class="fd-prio-icon" aria-hidden="true">
+            {% if pid == 'save_water' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.7l5.5 6.3a7.8 7.8 0 1 1-11 0L12 2.7z"/>
+            </svg>
+            {% elif pid == 'add_nitrogen' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/>
+              <path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/>
+            </svg>
+            {% elif pid == 'build_organic_matter' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19h16"/>
+              <path d="M7 19v-4a5 5 0 0 1 10 0v4"/>
+            </svg>
+            {% elif pid == 'stop_erosion' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 17 9 11 13 15 21 7"/>
+              <polyline points="15 7 21 7 21 13"/>
+            </svg>
+            {% elif pid == 'feed_animals' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            {% elif pid == 'extra_income' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="2" x2="12" y2="22"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            {% else %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="6" width="8" height="14" rx="4"/>
+              <path d="M9 6l-2-3"/>
+              <path d="M15 6l2-3"/>
+              <path d="M4 13h4"/>
+              <path d="M16 13h4"/>
+            </svg>
+            {% endif %}
+          </span>
+          <span class="fd-prio-copy">
+            <span class="fd-prio-title">{{ label }}</span>
+            <span class="fd-prio-desc">{{ desc }}</span>
+          </span>
+        </button>
         {% endfor %}
       </div>
     </div>
 
-    <div class="fd-section-block">
-      <h2>2. Market & Harvest Destination</h2>
-      <div class="fd-field">
-        <label class="fd-label" for="sellSelect">Where will the harvest be sold or used?</label>
-        <select id="sellSelect" name="sell" class="fd-select">
-          <option value="Local market" {% if advisor_req.sell == 'Local market' %}selected{% endif %}>Local market (Retail mudu sales across Kaduna markets)</option>
-          <option value="Buyer, processor or feed mill" {% if advisor_req.sell == 'Buyer, processor or feed mill' %}selected{% endif %}>Commercial buyer / feed mill (Soybean, yellow maize contract)</option>
-          <option value="Mostly home use" {% if advisor_req.sell == 'Mostly home use' %}selected{% endif %}>Mostly home use & subsistence security (Sorghum, cowpea food security)</option>
-        </select>
+    <p class="fd-card-footnote">
+      * R42 compliance: Nitrogen and organic matter are evaluated as separate scientific dimensions.
+    </p>
+  </section>
+
+  <section class="fd-card fd-prio-card" aria-label="Crop market destination and algorithm weighting matrix">
+    <div>
+      <div class="fd-prio-head">
+        <h2 class="fd-prio-heading" data-lang-ha="INDA AKE SAYAR DA AMFANIN GONA">WHERE CROP IS SOLD</h2>
+      </div>
+
+      <div class="fd-sell-stack" role="group" aria-label="Where crop is sold">
+        {% set sell_options = [
+          ('Local market', 'Local market', advisor_req.lga ~ ' grain market (KDBS mudu prices)'),
+          ('Buyer, processor or feed mill', 'Buyer, processor or feed mill', 'Commercial grain & poultry feed demand'),
+          ('Mostly home use', 'Mostly home use', 'Household food first; cash-crop market weight halved')
+        ] %}
+        {% for sell_val, sell_title, sell_note in sell_options %}
+        {% set sell_on = advisor_req.sell == sell_val %}
+        <button
+          type="button"
+          class="fd-sell-row {% if sell_on %}is-selected{% endif %}"
+          data-sell="{{ sell_val }}"
+          aria-pressed="{{ 'true' if sell_on else 'false' }}"
+        >
+          <span>
+            <span>{{ sell_title }}</span>
+            <span class="fd-sell-sub"> · {{ sell_note }}</span>
+          </span>
+          <span class="fd-sell-check" aria-hidden="true">✓ Selected</span>
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="fd-card-soft fd-matrix-box">
+        <h3 class="fd-matrix-title" data-lang-ha="TSARIN AUNA NAUYIN MAKI">ALGORITHM WEIGHTING MATRIX</h3>
+        <div class="fd-matrix-rows" id="weightingMatrixRows" aria-live="polite">
+          {% for dim_key in dimensions_order %}
+          {% set w_val = scored.weights[dim_key] %}
+          {% set is_prio_dim = dim_key in ns.chosen_dims %}
+          <div class="fd-matrix-row {% if is_prio_dim %}is-prio{% endif %}" data-matrix-dim="{{ dim_key }}">
+            <span class="fd-matrix-dim">{{ dimension_labels[dim_key] }}:</span>
+            {% if is_prio_dim %}
+            <span class="fd-matrix-val {% if dim_key == 'water' %}is-blue{% else %}is-green{% endif %}">
+              Weight 3× (Priority · {{ "%.2g"|format(w_val) }})
+            </span>
+            {% else %}
+            <span class="fd-matrix-val is-base">
+              Base {{ "%.2g"|format(w_val) }}×
+            </span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if scored.striga_risk.level == 'High' %}
+        <p id="strigaWeightNote" style="margin:10px 0 0;font-size:11.5px;color:var(--amber);">
+          {{ scored.striga_risk.reason }}
+        </p>
+        {% else %}
+        <p id="strigaWeightNote" style="margin:10px 0 0;font-size:11.5px;color:var(--amber);" hidden></p>
+        {% endif %}
       </div>
     </div>
 
-    <div class="fd-form-actions">
-      <a href="/farm?{{ query_string }}" class="fd-btn-outline">← Back to Farm Profile</a>
-      <button type="submit" class="fd-btn-primary">View Seasonal Reality & Strip (Step 3) →</button>
-    </div>
-  </form>
-</section>
+    <p class="fd-card-footnote">
+      Privacy Guarantee: Inputs remain on device; no personal details stored server-side.
+    </p>
+  </section>
+</div>
+
+<div class="fd-mobile-cta-wrap">
+  <button
+    type="button"
+    id="continueSeasonMobileBtn"
+    class="fd-btn fd-btn-dark fd-btn-block"
+    data-lang-ha="Duba Damina da Kwatanta (3/6) →"
+  >View Season &amp; Compare (3/6) →</button>
+</div>
+
+<script type="application/json" id="prioritiesInitJson">{{ {
+  "lga": advisor_req.lga,
+  "soil": advisor_req.soil,
+  "water": advisor_req.water,
+  "equipment": advisor_req.equipment,
+  "past_seasons": advisor_req.past_seasons,
+  "priorities": advisor_req.priorities,
+  "sell": advisor_req.sell,
+  "season_type": advisor_req.season_type,
+  "weights": scored.weights,
+  "dimensions_order": dimensions_order,
+  "dimension_labels": dimension_labels,
+  "priority_to_dim": {
+    "save_water": "water",
+    "add_nitrogen": "nutrients",
+    "build_organic_matter": "organic_matter",
+    "stop_erosion": "erosion",
+    "feed_animals": "forage",
+    "extra_income": "market",
+    "fewer_pests": "pests"
+  }
+} | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var initEl = document.getElementById("prioritiesInitJson");
+  if (!initEl) return;
+
+  var init = JSON.parse(initEl.textContent || "{}");
+  var countBadge = document.getElementById("prioCountBadge");
+  var limitToast = document.getElementById("prioLimitToast");
+  var zeroNotice = document.getElementById("prioZeroNotice");
+  var zeroLga = document.getElementById("prioZeroLga");
+  var matrixContainer = document.getElementById("weightingMatrixRows");
+  var strigaNote = document.getElementById("strigaWeightNote");
+  var ctaBtn = document.getElementById("continueSeasonBtn");
+  var ctaMobileBtn = document.getElementById("continueSeasonMobileBtn");
+
+  var prioToDim = init.priority_to_dim || {};
+  var dimOrder = init.dimensions_order || [];
+  var dimLabels = init.dimension_labels || {};
+
+  var initialChosenDims = {};
+  (init.priorities || []).forEach(function (p) {
+    if (prioToDim[p]) initialChosenDims[prioToDim[p]] = true;
+  });
+
+  var baseWeights = {};
+  dimOrder.forEach(function (d) {
+    var rawW = Number((init.weights || {})[d] || 1);
+    baseWeights[d] = initialChosenDims[d] ? rawW / 3 : rawW;
+  });
+
+  var state = {
+    lga: init.lga || "Zaria",
+    soil: init.soil || null,
+    water: init.water || "Rain only",
+    equipment: init.equipment || "Hand tools",
+    past_seasons: init.past_seasons || [["maize"], ["maize"]],
+    priorities: Array.isArray(init.priorities) ? init.priorities.slice(0, 3) : [],
+    sell: init.sell || "Local market",
+    season_type: init.season_type || "Typical",
+    weights: Object.assign({}, init.weights || {})
+  };
+
+  var fetchSeq = 0;
+
+  function formatWeight(num) {
+    var rounded = Math.round(Number(num) * 100) / 100;
+    return String(rounded);
+  }
+
+  function computeOptimisticWeights() {
+    var chosenDims = {};
+    state.priorities.forEach(function (p) {
+      if (prioToDim[p]) chosenDims[prioToDim[p]] = true;
+    });
+    var next = {};
+    dimOrder.forEach(function (d) {
+      var b = baseWeights[d] !== undefined ? baseWeights[d] : 1;
+      next[d] = chosenDims[d] ? b * 3 : b;
+    });
+    return next;
+  }
+
+  function syncNavLinks() {
+    if (!window.FDStore) return;
+    var qs = window.FDStore.toQuery();
+    document.querySelectorAll(".fd-topbar a[href*='?']").forEach(function (a) {
+      var base = a.getAttribute("href").split("?")[0];
+      a.setAttribute("href", base + "?" + qs);
+    });
+  }
+
+  function persistState() {
+    if (!window.FDStore) return;
+    window.FDStore.save({
+      priorities: state.priorities.slice(0, 3),
+      sell: state.sell
+    });
+    syncNavLinks();
+  }
+
+  function renderMatrix(weightsMap) {
+    var chosenDims = {};
+    state.priorities.forEach(function (p) {
+      if (prioToDim[p]) chosenDims[prioToDim[p]] = true;
+    });
+    matrixContainer.textContent = "";
+    dimOrder.forEach(function (dimKey) {
+      var isPrio = Boolean(chosenDims[dimKey]);
+      var wVal = weightsMap[dimKey] !== undefined ? weightsMap[dimKey] : 1;
+
+      var row = document.createElement("div");
+      row.className = "fd-matrix-row" + (isPrio ? " is-prio" : "");
+      row.setAttribute("data-matrix-dim", dimKey);
+
+      var nameSpan = document.createElement("span");
+      nameSpan.className = "fd-matrix-dim";
+      nameSpan.textContent = (dimLabels[dimKey] || dimKey) + ":";
+
+      var valSpan = document.createElement("span");
+      if (isPrio) {
+        valSpan.className = "fd-matrix-val " + (dimKey === "water" ? "is-blue" : "is-green");
+        valSpan.textContent = "Weight 3× (Priority · " + formatWeight(wVal) + ")";
+      } else {
+        valSpan.className = "fd-matrix-val is-base";
+        valSpan.textContent = "Base " + formatWeight(wVal) + "×";
+      }
+
+      row.appendChild(nameSpan);
+      row.appendChild(valSpan);
+      matrixContainer.appendChild(row);
+    });
+  }
+
+  function renderUI() {
+    var count = state.priorities.length;
+    countBadge.textContent = count + " of 3 chosen";
+    if (zeroLga) zeroLga.textContent = state.lga;
+    zeroNotice.hidden = count > 0;
+
+    document.querySelectorAll("[data-priority]").forEach(function (btn) {
+      var pid = btn.getAttribute("data-priority");
+      var on = state.priorities.indexOf(pid) !== -1;
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+
+    document.querySelectorAll("[data-sell]").forEach(function (btn) {
+      var on = btn.getAttribute("data-sell") === state.sell;
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+
+    renderMatrix(state.weights);
+  }
+
+  function refreshServerScore() {
+    fetchSeq += 1;
+    var seq = fetchSeq;
+    var validSoil =
+      state.soil === "Sandy" || state.soil === "Loamy" || state.soil === "Clay" || state.soil === "Not sure"
+        ? state.soil
+        : null;
+
+    var payload = {
+      lga: state.lga || "Zaria",
+      soil: validSoil,
+      water: state.water || "Rain only",
+      equipment: state.equipment || "Hand tools",
+      past_seasons: state.past_seasons && state.past_seasons.length ? state.past_seasons : [["maize"]],
+      priorities: state.priorities.slice(0, 3),
+      sell: state.sell || "Local market",
+      season_type: state.season_type || "Typical"
+    };
+
+    fetch("/api/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("Score fetch failed");
+        return r.json();
+      })
+      .then(function (data) {
+        if (seq !== fetchSeq || !data || !data.weights) return;
+        state.weights = data.weights;
+        var currentChosen = {};
+        state.priorities.forEach(function (p) {
+          if (prioToDim[p]) currentChosen[prioToDim[p]] = true;
+        });
+        dimOrder.forEach(function (d) {
+          baseWeights[d] = currentChosen[d] ? Number(data.weights[d]) / 3 : Number(data.weights[d]);
+        });
+        renderMatrix(state.weights);
+        if (strigaNote && data.striga_risk) {
+          if (data.striga_risk.level === "High") {
+            strigaNote.textContent = data.striga_risk.reason;
+            strigaNote.hidden = false;
+          } else {
+            strigaNote.hidden = true;
+          }
+        }
+      })
+      .catch(function () {
+        /* Offline fallback keeps optimistic local weights */
+      });
+  }
+
+  document.querySelectorAll("[data-priority]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var pid = btn.getAttribute("data-priority");
+      var idx = state.priorities.indexOf(pid);
+      limitToast.hidden = true;
+      if (idx !== -1) {
+        state.priorities.splice(idx, 1);
+      } else if (state.priorities.length >= 3) {
+        limitToast.hidden = false;
+        return;
+      } else {
+        state.priorities.push(pid);
+      }
+      state.weights = computeOptimisticWeights();
+      persistState();
+      renderUI();
+      refreshServerScore();
+    });
+  });
+
+  document.querySelectorAll("[data-sell]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      state.sell = btn.getAttribute("data-sell");
+      persistState();
+      renderUI();
+      refreshServerScore();
+    });
+  });
+
+  function goSeason() {
+    persistState();
+    if (window.FDStore) {
+      window.FDStore.go("/season");
+    }
+  }
+
+  ctaBtn.addEventListener("click", goSeason);
+  if (ctaMobileBtn) ctaMobileBtn.addEventListener("click", goSeason);
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.FDStore) {
+      if (window.location.search.length > 1) {
+        persistState();
+      } else {
+        var saved = window.FDStore.load();
+        if (saved && saved.savedAt) {
+          if (saved.lga) state.lga = saved.lga;
+          state.soil = saved.soilOverridden && saved.soil ? saved.soil : null;
+          if (saved.water) state.water = saved.water;
+          if (saved.equipment) state.equipment = saved.equipment;
+          var s1 = Array.isArray(saved.s1) && saved.s1.length ? saved.s1 : ["maize"];
+          var s2 = Array.isArray(saved.s2) ? saved.s2 : [];
+          state.past_seasons = s2.length ? [s2, s1] : [s1];
+          if (Array.isArray(saved.priorities)) {
+            state.priorities = saved.priorities.filter(function (p) { return Boolean(prioToDim[p]); }).slice(0, 3);
+          }
+          if (saved.sell) state.sell = saved.sell;
+          if (saved.season_type) state.season_type = saved.season_type;
+          state.weights = computeOptimisticWeights();
+          syncNavLinks();
+          renderUI();
+          refreshServerScore();
+          return;
+        }
+      }
+    }
+    renderUI();
+  });
+})();
+</script>
 {% endblock %}

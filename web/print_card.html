@@ -1,92 +1,435 @@
 {% extends "_base.html" %}
+{% from "_crop_icon.html" import crop_sequence_icons %}
 
-{% block title %}A5 Extension Card · {{ picked_card.title }} · FieldDynamics{% endblock %}
+{% block title %}Print Studio · A5 Extension Card · {{ scored.lga }} · FieldDynamics{% endblock %}
 
 {% block head_extra %}
 <style>
-@media print {
-  body { background: #fff !important; color: #000 !important; font-size: 11pt; }
-  .fd-topbar, .fd-footer, .fd-print-actions, .fd-mobile-strip { display: none !important; }
-  .fd-print-sheet { border: 2px solid #000 !important; box-shadow: none !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
-}
+  .print-card-sheet {
+    border: 2px dashed #6b7280;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #111827;
+    padding: 26px 28px;
+    transition: max-width 0.2s ease;
+  }
+  .print-card-sheet.is-a5 {
+    max-width: 780px;
+  }
+  .print-card-sheet.is-a4 {
+    max-width: 100%;
+  }
+  .fd-print-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #111827;
+  }
+  .fd-print-stamp {
+    border: 1.5px solid #111827;
+    padding: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .fd-print-meta {
+    margin: 14px 0 18px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--bg-warm);
+    border: 1px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 18px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .fd-print-scheme {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border: 1.5px solid #111827;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .fd-print-checklist {
+    margin: 8px 0 16px;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 13.5px;
+    line-height: 1.48;
+  }
+  .fd-print-hausa {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border: 1px solid #111827;
+    border-radius: 8px;
+    background: #fafafa;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .fd-print-signoff {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed #6b7280;
+    font-size: 12px;
+  }
+  .fd-sign-line {
+    margin-top: 24px;
+    border-bottom: 1px solid #111827;
+    padding-bottom: 3px;
+    font-weight: 700;
+  }
+  .fd-print-foot {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1.5px solid #111827;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .fd-ref-qr {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1.5px solid #111827;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  @media (max-width: 600px) {
+    .fd-print-signoff {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media print {
+    .fd-grid-sidebar {
+      display: block !important;
+    }
+    .print-card-sheet {
+      max-width: 100% !important;
+      padding: 16px 20px !important;
+    }
+    .fd-print-meta,
+    .fd-print-hausa {
+      background: #ffffff !important;
+      border-color: #000000 !important;
+    }
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="fd-page-head fd-print-actions">
+<div class="fd-page-head no-print">
   <div>
-    <span class="fd-kicker is-green">P4 Physical Extension Deliverable</span>
-    <h1 class="fd-h1">Physical A5 Extension Card Print Studio</h1>
-    <p class="fd-sub">Printable black-and-white field advisory card for smallholder farmers and extension folders in {{ sv.lga }}.</p>
+    <h1 class="fd-h1" data-lang-ha="Dakin Bugawa · Katin Shawara na Takarda (A5)">Print Studio · A5 Physical Extension Card</h1>
+    <p class="fd-sub" data-lang-ha="An tsara don injin buga takarda na ofis da fotokofi mai saukin gani.">Formatted for standard office printers and high-contrast monochrome photocopying.</p>
   </div>
-  <div style="display:flex;gap:10px;">
-    <button type="button" class="fd-btn fd-btn-primary" onclick="window.print()">🖨️ Print A5 Card</button>
-    <a class="fd-btn fd-btn-outline" href="/share?{{ query_string }}">← Back to Share</a>
-  </div>
-</section>
-
-<div class="fd-print-sheet fd-card" style="max-width:760px;margin:0 auto 30px;padding:32px;border:2px solid var(--line-strong);background:#fff;">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:18px;">
-    <div>
-      <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;">KADUNA AGRICULTURAL DEVELOPMENT AGENCY (KADA) · FIELD ADVISORY</span>
-      <h2 style="font-size:24px;font-weight:900;margin:4px 0 0;letter-spacing:-0.02em;">PHYSICAL A5 EXTENSION CARD</h2>
-    </div>
-    <div style="text-align:right;">
-      <span class="fd-badge fd-badge-dark">{{ sv.lga }} LGA</span>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px;">{{ sv.zone }} Zone · Season: {{ sv.season_type }}</div>
-    </div>
-  </div>
-
-  <div style="background:var(--bg-warm);padding:14px 18px;border-radius:8px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;">
-    <div>
-      <span class="fd-badge fd-badge-green">{{ picked_card.badge }} STRATEGY</span>
-      <h3 style="font-size:20px;font-weight:800;margin:6px 0 2px;">{{ picked_card.title }}</h3>
-      <div style="font-size:13px;color:var(--muted);">{{ picked_card.water_line }}</div>
-    </div>
-    <div style="text-align:right;">
-      <div style="font-size:26px;font-weight:900;color:var(--green);">{{ picked_card.score }}<span style="font-size:14px;color:var(--muted);">/100</span></div>
-      <div style="font-size:11px;color:var(--muted);">Suitability Score</div>
-    </div>
-  </div>
-
-  <div style="margin-bottom:18px;">
-    <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Seasonal Timeline & Planting Window</h4>
-    <p style="font-size:13.5px;line-height:1.5;margin:0;">
-      Satellite rainfall records (CHIRPS 1981–2025) indicate median planting onset near <strong>{{ sv.onset_label }}</strong>, with rains tapering by <strong>{{ sv.cessation_label }}</strong> (approx <strong>{{ sv.length_days }} days</strong> duration). Scheduled planting should avoid early false starts.
-    </p>
-  </div>
-
-  <div style="margin-bottom:18px;">
-    <h4 style="font-size:13px;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Scientific Rationale</h4>
-    <p style="font-size:13.5px;line-height:1.5;margin:0;">{{ picked_card.why }}</p>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-    <div style="background:#fff;border:1px solid var(--line);padding:12px;border-radius:6px;">
-      <h5 style="margin:0 0 6px;font-size:12px;font-weight:800;text-transform:uppercase;color:var(--green);">Expected Benefits</h5>
-      <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.4;">
-        {% for b in picked_card.benefits %}
-          <li>{{ b }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div style="background:#fff;border:1px solid var(--line);padding:12px;border-radius:6px;">
-      <h5 style="margin:0 0 6px;font-size:12px;font-weight:800;text-transform:uppercase;color:var(--danger);">Local Risks & Extension Checks</h5>
-      <ul style="margin:0;padding-left:16px;font-size:12.5px;line-height:1.4;">
-        {% for r in picked_card.risks %}
-          <li>{{ r }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-  <div style="border-top:1px dashed var(--line-strong);padding-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted);">
-    <span>Advisory prepared with KADA Extension Agent · LGA: {{ sv.lga }}</span>
-    <span>Confidence: {{ sv.confidence.level }}</span>
-  </div>
-
-  <div style="margin-top:14px;padding:8px 12px;background:#fef2f2;border-left:3px solid #dc2626;font-size:11px;color:#991b1b;">
-    <strong>Judicial Directive:</strong> This tool supports farmer judgment and local expertise; it never replaces them. Check seed variety suitability and phosphorus fertilizer requirements with your local KADA extension officer before planting.
+  <div>
+    <button type="button" id="printNowBtn" class="fd-btn fd-btn-dark" data-lang-ha="Buga Takarda Yanzu →">Print Document Now →</button>
   </div>
 </div>
+
+<div class="fd-grid-sidebar">
+  <aside class="fd-card no-print" aria-label="Print configuration">
+    <p class="fd-section-label" data-lang-ha="SAITIN BUGA TAKARDA">PRINT CONFIGURATION</p>
+
+    <div class="fd-field">
+      <span class="fd-label" data-lang-ha="Girman Takarda">Paper Size</span>
+      <div class="fd-chip-group" role="group" aria-label="Paper size">
+        <button type="button" class="fd-chip is-selected" data-paper-size="a5" aria-pressed="true">A5 (Half Letter)</button>
+        <button type="button" class="fd-chip" data-paper-size="a4" aria-pressed="false">A4 Standard</button>
+      </div>
+    </div>
+
+    <div class="fd-field">
+      <span class="fd-label" data-lang-ha="Harshen Kati">Language</span>
+      <div class="fd-chip-group" role="group" aria-label="Card language">
+        <button type="button" class="fd-chip is-selected" data-card-lang="bilingual" aria-pressed="true">English &amp; Hausa Summary</button>
+        <button type="button" class="fd-chip" data-card-lang="en" aria-pressed="false">English Only</button>
+      </div>
+    </div>
+
+    <div class="fd-field">
+      <label class="fd-label" for="printFarmerInput" data-lang-ha="Sunan Manomi (Na Zabi)">Farmer Name (Client-Side Only)</label>
+      <input type="text" id="printFarmerInput" class="fd-input" maxlength="60" autocomplete="off" placeholder="e.g. Smallholder Visit">
+    </div>
+
+    <div class="fd-field">
+      <label class="fd-label" for="printAdvisorInput" data-lang-ha="Sunan Malamin Gona">Advisor Name / Station</label>
+      <input type="text" id="printAdvisorInput" class="fd-input" maxlength="60" autocomplete="off" placeholder="e.g. CBA Officer (KADA)">
+    </div>
+
+    <div class="fd-field" style="margin-bottom:8px;">
+      <span class="fd-label" data-lang-ha="Sa Hannun Malamin Gona">Signature Stamp</span>
+      <div class="fd-chip-group">
+        <button type="button" id="toggleSignoffBtn" class="fd-chip is-selected" aria-pressed="true" data-lang-ha="Sanya Akwatin Sa Hannun Malamin Gona">Include Extension Officer Sign-Off Box</button>
+      </div>
+    </div>
+
+    <p style="margin:8px 0 0;font-size:12px;color:var(--green);font-weight:700;" data-lang-ha="🔒 Ba a tura sunan manomi zuwa uwar garke ba.">
+      🔒 Names stay on this device only and are never sent to any server.
+    </p>
+
+    <a class="fd-btn fd-btn-outline fd-btn-block" style="margin-top:18px;" href="/share?{{ query_string }}&amp;pick={{ picked_slot }}" data-lang-ha="← Koma Zabin Aikawa">← Return to Share Options</a>
+  </aside>
+
+  <article id="printableExtensionCard" class="fd-card print-card-sheet is-a5" aria-label="Printable extension card preview">
+    <header class="fd-print-head">
+      <div>
+        <h2 style="margin:0;font-size:19px;font-weight:800;letter-spacing:0.01em;">FIELDDYNAMICS EXTENSION CARD</h2>
+        <p style="margin:3px 0 0;font-size:13px;color:#374151;">
+          Kaduna State Agricultural Extension Advisory · {{ scored.lga }} LGA ({{ scored.zone }} Zone)
+        </p>
+      </div>
+      <span class="fd-print-stamp" id="printPaperStamp">OFFICIAL A5 ADVICE</span>
+    </header>
+
+    <div class="fd-print-meta">
+      <span>Farmer: <strong id="printFarmerSpan">Smallholder Visit</strong></span>
+      <span>Advisor: <strong id="printAdvisorSpan">CBA Officer (KADA)</strong></span>
+      <span>Soil: <strong>{{ advisor_req.soil or sv.soil_default }}</strong></span>
+    </div>
+
+    <section aria-labelledby="printSchemeLabel">
+      <p id="printSchemeLabel" style="margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:#374151;">
+        RECOMMENDED 2-SEASON ROTATION SCHEME
+      </p>
+      <div class="fd-print-scheme">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          {{ crop_sequence_icons(picked_card.seasons) }}
+          <div>
+            <div style="font-size:20px;font-weight:800;line-height:1.2;">{{ picked_card.title }}</div>
+            <div style="margin-top:3px;font-size:12.5px;font-weight:700;color:#374151;">
+              {{ picked_card.badge }} · {{ picked_card.confidence.level }} Confidence · {{ scored.season_type }} Season Check
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="printChecklistLabel">
+      <p id="printChecklistLabel" style="margin:0 0 6px;font-size:11.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:#111827;">
+        FIELD MANAGEMENT &amp; RISK CHECKLIST
+      </p>
+      <ul class="fd-print-checklist">
+        <li>
+          <strong>Planting Window:</strong> {{ sv.onset_label }} median rain onset (80% historical range: {{ sv.onset_range }}; rains ease near {{ sv.cessation_label }}, ~{{ sv.length_days }} days).
+        </li>
+        <li>
+          <strong>Water Balance:</strong> {{ picked_card.water_line }}
+        </li>
+        <li>
+          <strong>Agronomic Benefit:</strong> {{ picked_card.why }}
+        </li>
+        {% if picked_card.risks %}
+          {% for risk in picked_card.risks %}
+          <li>
+            <strong>Local Risk to Verify:</strong> {{ risk.text }} <em>(check with {{ risk.check_with }})</em>.
+          </li>
+          {% endfor %}
+        {% else %}
+          <li>
+            <strong>Local Risk to Verify:</strong> Confirm locally adapted seed variety and phosphorus rate with your extension officer.
+          </li>
+        {% endif %}
+      </ul>
+    </section>
+
+    <section id="printHausaBlock" class="fd-print-hausa" aria-label="Hausa summary">
+      <p style="margin:0 0 4px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;">
+        Takaitaccen Bayani a Hausa (Hausa Summary)
+      </p>
+      <p style="margin:0;">
+        A karamar hukumar <strong>{{ scored.lga }}</strong>, tsarin da aka zaba shi ne <strong>{{ picked_card.title }}</strong> ({{ picked_card.badge }}).
+        Ruwan shuka yakan fara kusa da <strong>{{ sv.onset_label }}</strong> ({{ sv.onset_range }}).
+        Kafin sayen iri ko taki, ku tuntubi malamin gonar KADA don tabbatar da irin da ya dace da kasar gonarku.
+        <em>Wannan kayan aiki yana taimaka wa hukuncin manomi da kwarewar gida. Tuntubi malamin gonarku.</em>
+      </p>
+    </section>
+
+    <section id="printSignoffBlock" class="fd-print-signoff" aria-label="Extension officer sign-off">
+      <div>
+        <div class="fd-sign-line">Extension Officer Signature &amp; KADA Ward</div>
+        <div style="margin-top:4px;color:#4b5563;">Verified seed variety &amp; local soil check</div>
+      </div>
+      <div>
+        <div class="fd-sign-line">Field Visit Date &amp; Farmer Notes</div>
+        <div style="margin-top:4px;color:#4b5563;" id="printVisitDateLine">Season planning record · {{ scored.lga }} LGA</div>
+      </div>
+    </section>
+
+    <footer class="fd-print-foot">
+      <div style="max-width:460px;font-size:12px;line-height:1.45;color:#374151;">
+        <div style="font-weight:700;">
+          Study check: {{ picked_card.studies[0].evidence if picked_card.studies else 'Savanna cereal-legume rotation trials (IAR Samaru / IITA)' }}
+        </div>
+        <div style="font-style:italic;margin-top:2px;">
+          "This tool supports farmer judgment and local expertise. Check with your extension officer."
+        </div>
+      </div>
+
+      <div class="fd-ref-qr" aria-label="Reference route /compare?lga={{ scored.lga }}">
+        <svg width="38" height="38" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="10" height="10" stroke="#111827" stroke-width="2"/>
+          <rect x="5" y="5" width="4" height="4" fill="#111827"/>
+          <rect x="24" y="2" width="10" height="10" stroke="#111827" stroke-width="2"/>
+          <rect x="27" y="5" width="4" height="4" fill="#111827"/>
+          <rect x="2" y="24" width="10" height="10" stroke="#111827" stroke-width="2"/>
+          <rect x="5" y="27" width="4" height="4" fill="#111827"/>
+          <rect x="15" y="4" width="3" height="3" fill="#111827"/>
+          <rect x="15" y="10" width="3" height="3" fill="#111827"/>
+          <rect x="15" y="16" width="6" height="6" fill="#111827"/>
+          <rect x="4" y="16" width="6" height="3" fill="#111827"/>
+          <rect x="24" y="16" width="4" height="4" fill="#111827"/>
+          <rect x="30" y="20" width="4" height="4" fill="#111827"/>
+          <rect x="16" y="26" width="4" height="8" fill="#111827"/>
+          <rect x="24" y="26" width="8" height="4" fill="#111827"/>
+          <rect x="28" y="31" width="6" height="3" fill="#111827"/>
+        </svg>
+        <div style="font-family:var(--font-mono);font-size:10.5px;line-height:1.35;">
+          <div style="font-weight:700;">LGA BENCHMARK REF</div>
+          <div>/compare?lga={{ scored.lga }}</div>
+        </div>
+      </div>
+    </footer>
+  </article>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var PRINT_META = {
+    lga: {{ scored.lga | tojson }},
+    soil: {{ (advisor_req.soil or sv.soil_default) | tojson }},
+    badge: {{ picked_card.badge | tojson }},
+    title: {{ picked_card.title | tojson }},
+    confidence: {{ picked_card.confidence.level | tojson }},
+    slot: {{ picked_slot | tojson }}
+  };
+
+  var cardEl = document.getElementById("printableExtensionCard");
+  var stampEl = document.getElementById("printPaperStamp");
+  var hausaBlock = document.getElementById("printHausaBlock");
+  var signoffBlock = document.getElementById("printSignoffBlock");
+  var farmerInput = document.getElementById("printFarmerInput");
+  var advisorInput = document.getElementById("printAdvisorInput");
+  var farmerSpan = document.getElementById("printFarmerSpan");
+  var advisorSpan = document.getElementById("printAdvisorSpan");
+  var signoffBtn = document.getElementById("toggleSignoffBtn");
+  var dateLine = document.getElementById("printVisitDateLine");
+
+  function syncLabels() {
+    var fVal = farmerInput && farmerInput.value.trim() ? farmerInput.value.trim() : "Smallholder Visit";
+    var aVal = advisorInput && advisorInput.value.trim() ? advisorInput.value.trim() : "CBA Officer (KADA)";
+    if (farmerSpan) farmerSpan.textContent = fVal;
+    if (advisorSpan) advisorSpan.textContent = aVal;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.FDStore) {
+      var st = window.FDStore.load();
+      if (farmerInput && st.farmerName) {
+        farmerInput.value = st.farmerName;
+      }
+      if (advisorInput) {
+        advisorInput.value = st.advisorName || "CBA Officer (KADA)";
+      }
+    }
+    if (dateLine) {
+      var d = new Date();
+      dateLine.textContent = d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) + " · " + PRINT_META.lga + " LGA";
+    }
+    syncLabels();
+  });
+
+  if (farmerInput) {
+    farmerInput.addEventListener("input", function () {
+      if (window.FDStore) window.FDStore.save({ farmerName: farmerInput.value.trim() });
+      syncLabels();
+    });
+  }
+
+  if (advisorInput) {
+    advisorInput.addEventListener("input", function () {
+      if (window.FDStore) window.FDStore.save({ advisorName: advisorInput.value.trim() });
+      syncLabels();
+    });
+  }
+
+  document.querySelectorAll("[data-paper-size]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var size = btn.getAttribute("data-paper-size");
+      document.querySelectorAll("[data-paper-size]").forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle("is-selected", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      if (cardEl) {
+        cardEl.classList.toggle("is-a5", size === "a5");
+        cardEl.classList.toggle("is-a4", size === "a4");
+      }
+      if (stampEl) {
+        stampEl.textContent = size === "a4" ? "OFFICIAL A4 ADVICE" : "OFFICIAL A5 ADVICE";
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-card-lang]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var mode = btn.getAttribute("data-card-lang");
+      document.querySelectorAll("[data-card-lang]").forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle("is-selected", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      if (hausaBlock) {
+        hausaBlock.hidden = mode === "en";
+      }
+    });
+  });
+
+  if (signoffBtn && signoffBlock) {
+    signoffBtn.addEventListener("click", function () {
+      var nextOn = signoffBlock.hidden;
+      signoffBlock.hidden = !nextOn;
+      signoffBtn.classList.toggle("is-selected", nextOn);
+      signoffBtn.setAttribute("aria-pressed", nextOn ? "true" : "false");
+    });
+  }
+
+  var printNowBtn = document.getElementById("printNowBtn");
+  if (printNowBtn) {
+    printNowBtn.addEventListener("click", function () {
+      if (window.FDStore) {
+        window.FDStore.recordConsultation({
+          farmerLabel: (farmerInput && farmerInput.value.trim()) || "Walk-in Smallholder",
+          lga: PRINT_META.lga,
+          soil: PRINT_META.soil,
+          chosenPlan: PRINT_META.badge + " · " + PRINT_META.title,
+          confidence: PRINT_META.confidence,
+          status: "A5 Print Handed"
+        });
+      }
+      window.print();
+    });
+  }
+})();
+</script>
 {% endblock %}
