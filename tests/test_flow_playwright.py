@@ -64,6 +64,12 @@ def _launch_browser(p: Any) -> Any:
     except Exception as exc:  # noqa: BLE001
         logger.debug("Default chromium launch failed, checking cache: %s", exc)
 
+    preinstalled = Path("/opt/pw-browsers/chromium")
+    if preinstalled.exists():
+        return p.chromium.launch(
+            executable_path=str(preinstalled), headless=True, args=["--no-sandbox"]
+        )
+
     cache_root = Path.home() / "Library/Caches/ms-playwright"
     shell_pattern = (
         "chromium_headless_shell-*/chrome-headless-shell-mac-arm64/chrome-headless-shell"
@@ -176,3 +182,31 @@ def test_core_flow_fastapi_client() -> None:
     )
     assert compare_res2.status_code == 200
     assert "Option A" in compare_res2.text or "OPTION A" in compare_res2.text
+
+
+PHONE_WIDTHS_PX = (320, 360, 390, 430)
+PHONE_PAGES = ("/start", "/farm", "/compare", "/season", "/share", "/map")
+
+
+def test_phone_layout_stacks_and_does_not_scroll_sideways(live_server: str) -> None:
+    """At phone widths a page has no sideways scroll and card grids sit in one column."""
+    from playwright.sync_api import sync_playwright
+
+    with sync_playwright() as p:
+        browser = _launch_browser(p)
+        try:
+            for width in PHONE_WIDTHS_PX:
+                page = browser.new_context(
+                    viewport={"width": width, "height": 740}, is_mobile=True
+                ).new_page()
+                for path in PHONE_PAGES:
+                    page.goto(f"{live_server}{path}?lga=Zaria")
+                    scroll_w = page.evaluate("document.documentElement.scrollWidth")
+                    assert scroll_w <= width, f"{path} scrolls sideways at {width}px"
+                    columns = page.evaluate(
+                        "[...document.querySelectorAll('.fd-grid-2, .fd-grid-3')]"
+                        ".map(e => getComputedStyle(e).gridTemplateColumns.split(' ').length)"
+                    )
+                    assert all(n == 1 for n in columns), f"{path} grid not stacked at {width}px"
+        finally:
+            browser.close()

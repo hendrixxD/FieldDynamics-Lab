@@ -144,7 +144,7 @@ a {
   background: var(--green-soft);
   border: 1px solid var(--green-border);
   color: var(--green);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: 0.04em;
@@ -691,7 +691,7 @@ a {
 }
 
 .fd-month-cell span {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -699,7 +699,7 @@ a {
 
 .fd-month-cell small {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   opacity: 0.85;
 }
 
@@ -887,7 +887,7 @@ a {
 }
 
 .fd-crop-tile-family {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--muted);
   margin-top: 3px;
@@ -1076,6 +1076,7 @@ a {
   }
 }
 
+@media (min-width: 1120px) {
   .fd-main {
     padding: 28px 24px 48px;
   }
@@ -1131,5 +1132,57 @@ a {
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+}
+
+/* Phones and tablets: tap targets of at least 44 px (WCAG 2.5.8 target size, PRD mobile rule).
+   Inline links inside running text keep their size. */
+@media (max-width: 1023px) {
+  .fd-lang-btn,
+  .fd-month-cell,
+  .fd-chip,
+  .fd-toc-link,
+  .fd-step-link,
+  .fd-util-link,
+  .fd-brand,
+  .fd-landing-brand,
+  .fd-resume-link,
+  .fd-preview-foot-link,
+  .fd-start-science-link,
+  .fd-footer-inner a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .fd-lang-btn {
+    height: 44px;
+  }
+
+  .fd-preview-select,
+  .fd-btn,
+  .fd-clear-inline-btn,
+  .fd-input,
+  .fd-select {
+    min-height: 44px;
+  }
+
+  .fd-mobile-strip a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Glossary buttons sit inside sentences, so they keep their size and grow the hit area. */
+  .fd-term-btn {
+    position: relative;
+  }
+
+  .fd-term-btn::after {
+    content: "";
+    position: absolute;
+    inset: -11px -4px;
   }
 }
