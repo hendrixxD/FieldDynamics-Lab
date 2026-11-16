@@ -1,0 +1,14 @@
+# Render deploy. The Vercel project is paused until 2026-12-16 (Hobby fair use limit), so the app
+# runs here too. Render builds from the same hashed serve requirements the Vercel deploy used.
+services:
+  - type: web
+    name: fielddynamics
+    runtime: python
+    plan: free
+    buildCommand: pip install --require-hashes --only-binary :all: -r requirements-serve.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
